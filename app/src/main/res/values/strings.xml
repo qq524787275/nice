@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">nice</string>
+    <string name="main_session">消息</string>
+    <string name="main_work">工作台</string>
+    <string name="main_contact">联系人</string>
+    <string name="main_person">我的</string>
+</resources>
