@@ -1,8 +1,10 @@
 package com.zhuzichu.library.dto;
 
+import java.io.Serializable;
+
 import me.yokeyword.indexablerv.IndexableEntity;
 
-public class DTOCountry implements IndexableEntity {
+public class DTOCountry implements IndexableEntity,Serializable {
 
     /**
      * label : 中国

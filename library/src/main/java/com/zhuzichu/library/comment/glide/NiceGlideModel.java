@@ -1,4 +1,4 @@
-package com.zhuzichu.library.glide;
+package com.zhuzichu.library.comment.glide;
 
 import android.content.Context;
 import android.os.Handler;

@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 import com.zhuzichu.library.Nice;
 
-public class Preferences {
+public class UserPreferences {
     private static final String KEY_USER_ACCOUNT = "account";
     private static final String KEY_USER_TOKEN = "token";
 

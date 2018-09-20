@@ -6,7 +6,6 @@ import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.netease.nimlib.sdk.msg.model.RecentContact;
@@ -25,6 +24,7 @@ public class SessionListFragment extends NiceFragment {
     private FragmentSessionListBinding mBinding;
     private SessionListAdapter mAdapter;
     private static final String TAG = "SessionListFragment";
+
     public static SessionListFragment newInstance() {
 
         Bundle args = new Bundle();
@@ -51,6 +51,7 @@ public class SessionListFragment extends NiceFragment {
         mVMRecentContact = ViewModelProviders.of(getActivity()).get(VMRecentContact.class);
         initView();
         initObserve();
+        mVMRecentContact.loadRecentContact();
     }
 
     private void initView() {
@@ -63,22 +64,27 @@ public class SessionListFragment extends NiceFragment {
         mVMRecentContact.getRecentContact().observe(getActivity(), new Observer<List<RecentContact>>() {
             @Override
             public void onChanged(@Nullable List<RecentContact> recentContacts) {
+                mBinding.layoutEmpty.hide();
                 if (mAdapter.getData().size() == 0) {
                     mAdapter.addData(recentContacts);
-                    mBinding.layoutEmpty.hide();
-                    return;
-                }
-                for (RecentContact item : recentContacts) {
-                    Log.i(TAG, "onChanged: "+item.getContactId());
-                    for (int i = 0; i < mAdapter.getData().size(); i++) {
-                        if (item.getContactId().equals(mAdapter.getData().get(i).getContactId())) {
-                            //该会话已存在
-                            mAdapter.getData().remove(i);
-                            mAdapter.getData().add(i,item);
+                } else {
+                    int index;
+                    for (RecentContact item : recentContacts) {
+                        index = -1;
+                        for (int i = 0; i < mAdapter.getData().size(); i++) {
+                            if (item.getContactId().equals(mAdapter.getData().get(i).getContactId())
+                                    && item.getSessionType() == (mAdapter.getData().get(i).getSessionType())) {
+                                index = i;
+                                break;
+                            }
                         }
+                        if (index >= 0) {
+                            mAdapter.getData().remove(index);
+                        }
+                        mAdapter.getData().add(item);
                     }
+                    mAdapter.notifyDataSetChanged();
                 }
-                mAdapter.notifyDataSetChanged();
             }
         });
     }

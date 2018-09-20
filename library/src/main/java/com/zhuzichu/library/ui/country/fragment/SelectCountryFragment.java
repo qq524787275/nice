@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.databinding.FragmentSelectCountryBinding;
@@ -50,9 +51,28 @@ public class SelectCountryFragment extends NiceSwipeFragment {
     @Override
     public void init(ViewDataBinding binding) {
         mBinding= (FragmentSelectCountryBinding) binding;
+        initTopBar();
         initView();
         initData();
     }
+
+    private void initTopBar() {
+        mBinding.topbar.setTitle("地区选择");
+        mBinding.topbar.addLeftBackImageButton().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pop();
+            }
+        });
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        _status.setColor(R.color.qmui_config_color_white);
+        QMUIStatusBarHelper.setStatusBarLightMode(getActivity());
+    }
+
     private void initData() {
         mCountryViewModel = ViewModelProviders.of(this).get(VMCountry.class);
         mCountryViewModel.getLiveCountrys().observe(this, new Observer<List<DTOCountry>>() {
@@ -105,5 +125,11 @@ public class SelectCountryFragment extends NiceSwipeFragment {
                 }
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        QMUIStatusBarHelper.setStatusBarDarkMode(getActivity());
     }
 }

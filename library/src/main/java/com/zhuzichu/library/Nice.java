@@ -2,12 +2,8 @@ package com.zhuzichu.library;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.support.v4.app.FragmentActivity;
-import android.text.TextUtils;
-import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
@@ -61,16 +57,5 @@ public class Nice {
                 ViewModelProviders.of(activity).get(VMRecentContact.class).getRecentContact().setValue(messages);
             }
         };
-    }
-
-    @BindingAdapter({"imageUrl"})
-    public static void loadImage(ImageView imageView,String url){
-        if (TextUtils.isEmpty(url)) {
-            //如果网址为空, 默认加载ic_launcher
-            imageView.setImageResource(R.mipmap.avatar_default);
-        } else {
-            //使用Glide加载图片
-            Glide.with(imageView.getContext()).load(url).into(imageView);
-        }
     }
 }

@@ -10,8 +10,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:srlEnablePureScrollMode="true"
-            app:srlEnableLoadMore="true"
-            app:srlDragRate="0.2">
+            app:srlEnableOverScrollDrag="true"
+            app:srlDragRate="0.3">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_list"
             android:layout_width="match_parent"

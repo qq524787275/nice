@@ -1,28 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <me.yokeyword.indexablerv.IndexableLayout
-            android:id="@+id/layout_index"
+        <com.qmuiteam.qmui.widget.QMUITopBar
+            android:id="@+id/topbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:indexBar_background="#08000000"
-            app:indexBar_layout_width="20dp"
-            app:indexBar_selectedTextColor="@color/colorPrimary"
-            app:indexBar_textColor="#000000"
-            app:indexBar_textSize="14sp"
-            app:indexBar_textSpace="6dp"></me.yokeyword.indexablerv.IndexableLayout>
+            android:layout_height="wrap_content"
+            app:qmui_topbar_bg_color="@color/qmui_config_color_white"
+            app:qmui_topbar_title_color="@color/color_grey_333333"
+            app:qmui_topbar_left_back_drawable_id="@mipmap/icon_cancel"
+            />
 
-        <com.qmuiteam.qmui.widget.QMUIEmptyView
-            android:id="@+id/layout_empty"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/qmui_config_color_white"
-            app:qmui_show_loading="true"
-            ></com.qmuiteam.qmui.widget.QMUIEmptyView>
-    </android.support.constraint.ConstraintLayout>
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <me.yokeyword.indexablerv.IndexableLayout
+                android:id="@+id/layout_index"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:indexBar_background="#08000000"
+                app:indexBar_layout_width="20dp"
+                app:indexBar_selectedTextColor="@color/colorPrimary"
+                app:indexBar_textColor="#000000"
+                app:indexBar_textSize="14sp"
+                app:indexBar_textSpace="6dp"></me.yokeyword.indexablerv.IndexableLayout>
+
+            <com.qmuiteam.qmui.widget.QMUIEmptyView
+                android:id="@+id/layout_empty"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/qmui_config_color_white"
+                app:qmui_show_loading="true"></com.qmuiteam.qmui.widget.QMUIEmptyView>
+        </android.support.constraint.ConstraintLayout>
+
+
+    </LinearLayout>
 </layout>
+

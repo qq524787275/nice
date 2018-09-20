@@ -8,7 +8,7 @@ import android.view.View;
 
 public abstract class NiceSwipeFragment extends BaseSwipeFragment {
     public abstract void init(ViewDataBinding binding);
-    final StatusDelegate _status = new StatusDelegate();
+    public final StatusDelegate _status = new StatusDelegate();
 
     @Override
     public View getRootView(View rootView) {

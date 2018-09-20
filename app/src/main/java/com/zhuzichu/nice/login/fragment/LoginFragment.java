@@ -3,6 +3,8 @@ package com.zhuzichu.nice.login.fragment;
 import android.content.DialogInterface;
 import android.databinding.ViewDataBinding;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -12,11 +14,12 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.enmu.ErrorEnmu;
 import com.zhuzichu.library.utils.MD5;
-import com.zhuzichu.library.utils.Preferences;
+import com.zhuzichu.library.utils.UserPreferences;
 import com.zhuzichu.nice.MainActivity;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentLoginBinding;
@@ -60,6 +63,13 @@ public class LoginFragment extends NiceFragment {
 
     }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        _status.setColor(R.color.qmui_config_color_white);
+        QMUIStatusBarHelper.setStatusBarLightMode(getActivity());
+    }
+
     private void initView() {
         mLoading = new QMUITipDialog.Builder(getContext())
                 .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
@@ -74,11 +84,12 @@ public class LoginFragment extends NiceFragment {
                 }
             }
         });
+        showSoftInput(mBinding.tietPassword);
     }
 
 
     private void initTopBar() {
-        mBinding.topbar.setTitle("登陆");
+        mBinding.topbar.setTitle("登录");
     }
 
     public void doLogin(String account, String token) {
@@ -93,7 +104,7 @@ public class LoginFragment extends NiceFragment {
             @Override
             public void onSuccess(LoginInfo param) {
                 Log.i(TAG, "onSuccess: ");
-                Preferences.saveUserAccountAndToken(param.getAccount(), param.getToken());
+                UserPreferences.saveUserAccountAndToken(param.getAccount(), param.getToken());
                 mLoading.cancel();
                 MainActivity.start(getActivity());
                 getActivity().finish();
@@ -113,5 +124,12 @@ public class LoginFragment extends NiceFragment {
                 mLoading.cancel();
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        hideSoftInput();
+        QMUIStatusBarHelper.setStatusBarDarkMode(getActivity());
     }
 }

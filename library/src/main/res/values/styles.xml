@@ -23,17 +23,6 @@
     </style>
 
 
-    <style name="NCRadiusButton" parent="@style/Button">
-        <item name="android:layout_height">40dp</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:paddingLeft">?attr/qmui_content_spacing_horizontal</item>
-        <item name="android:paddingRight">?attr/qmui_content_spacing_horizontal</item>
-        <item name="android:background">@drawable/s_radius_button_bg</item>
-        <item name="android:textColor">@color/app_color_blue</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:gravity">center</item>
-    </style>
-
     <style name="NCTopBar" parent="QMUI.TopBar">
         <item name="qmui_topbar_bg_color">?attr/app_primary_color</item>
         <item name="qmui_topbar_title_color">@color/qmui_config_color_white</item>
