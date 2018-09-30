@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 public abstract class NiceFragment extends BaseFragment {
     public final StatusDelegate _status = new StatusDelegate();
+
     public abstract void init(ViewDataBinding binding);
 
     @Override
@@ -23,7 +24,8 @@ public abstract class NiceFragment extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ViewDataBinding binding = DataBindingUtil.bind(rootView);
+        rootView = _status.init(binding.getRoot(), this);
         init(binding);
-        return _status.init(binding.getRoot(),this);
+        return rootView;
     }
 }
