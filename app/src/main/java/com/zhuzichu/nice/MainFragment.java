@@ -1,12 +1,12 @@
 package com.zhuzichu.nice;
 
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.view.bottom.BottomBar;
 import com.zhuzichu.library.view.bottom.BottomBarTab;
 import com.zhuzichu.nice.contact.ContactFragment;
@@ -15,7 +15,7 @@ import com.zhuzichu.nice.person.PersonFragment;
 import com.zhuzichu.nice.session.SessionFragment;
 import com.zhuzichu.nice.work.WorkFragment;
 
-public class MainFragment extends NiceFragment {
+public class MainFragment extends NiceFragment<FragmentMainBinding> {
     private FragmentMainBinding mBinding;
     private NiceFragment[] mFragments=new NiceFragment[4];
     public static final int SESSION = 0;
@@ -38,8 +38,9 @@ public class MainFragment extends NiceFragment {
     }
 
     @Override
-    public void init(ViewDataBinding binding) {
-        mBinding = (FragmentMainBinding) binding;
+    public void init(FragmentMainBinding binding) {
+        mBinding = binding;
+        mBinding.setColor(ColorManager.getInstance().color);
         initView();
     }
 

@@ -1,6 +1,7 @@
 package com.zhuzichu.library.view.bottom;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,6 +13,8 @@ import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
+
+import com.zhuzichu.library.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +34,10 @@ public class BottomBar extends LinearLayout {
     private int mCurrentPosition = 0;
     private OnTabSelectedListener mListener;
 
+    private int mSelectColor;
+
+    private int mUnSelectColor;
+
     public BottomBar(Context context) {
         this(context, null);
     }
@@ -47,9 +54,10 @@ public class BottomBar extends LinearLayout {
     private void init(Context context, AttributeSet attrs) {
         setOrientation(VERTICAL);
 
-//        ImageView shadowView = new ImageView(context);
-//        shadowView.setBackgroundResource(R.drawable.actionbar_shadow_up);
-//        addView(shadowView, new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.BottomBar);
+        mSelectColor=typedArray.getColor(R.styleable.BottomBar_selectColor, context.getResources().getColor(R.color.colorPrimary));
+        mUnSelectColor=typedArray.getColor(R.styleable.BottomBar_unSelectColor,context.getResources().getColor(R.color.tab_unselect));
+        typedArray.recycle();
 
         mTabLayout = new LinearLayout(context);
         mTabLayout.setBackgroundColor(Color.WHITE);
@@ -61,6 +69,7 @@ public class BottomBar extends LinearLayout {
     }
 
     public BottomBar addItem(final BottomBarTab tab) {
+        tab.attachView(this);
         tab.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,12 +99,13 @@ public class BottomBar extends LinearLayout {
     }
 
     public void setCurrentItem(final int position) {
-        mTabLayout.post(new Runnable() {
-            @Override
-            public void run() {
-                mTabLayout.getChildAt(position).performClick();
-            }
-        });
+         mTabs.get(position).setSelected(true);
+//        mTabLayout.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                mTabLayout.getChildAt(position).performClick();
+//            }
+//        });
     }
 
     public int getCurrentItemPosition() {
@@ -218,5 +228,21 @@ public class BottomBar extends LinearLayout {
                 ViewCompat.setTranslationY(this, translationY);
             }
         }
+    }
+
+    public int getSelectColor() {
+        return mSelectColor;
+    }
+
+    public int getUnSelectColor() {
+        return mUnSelectColor;
+    }
+
+    public void setSelectColor(int mSelectColor) {
+        this.mSelectColor = mSelectColor;
+    }
+
+    public void setUnSelectColor(int mUnSelectColor) {
+        this.mUnSelectColor = mUnSelectColor;
     }
 }

@@ -4,9 +4,17 @@
     <item
         android:id="@+id/action_logout"
         android:title="注销"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
     <item
         android:id="@+id/action_setting"
         android:title="设置"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_color"
+        android:title="主题颜色"
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/action_dark"
+        android:title="夜间模式"
+        app:showAsAction="never"></item>
 </menu>

@@ -10,7 +10,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.zhuzichu.library.R;
 
-public class GlideUtils {
+public class GlideAdapter {
     private static RequestOptions mCircleOptions=RequestOptions.bitmapTransform(new CircleCrop());
 
     @BindingAdapter({"avatarUserUrl"})

@@ -2,7 +2,6 @@ package com.zhuzichu.uikit.session.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,7 +18,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-public class SessionListFragment extends NiceFragment {
+public class SessionListFragment extends NiceFragment<FragmentSessionListBinding> {
     private VMRecentContact mVMRecentContact;
     private FragmentSessionListBinding mBinding;
     private SessionListAdapter mAdapter;
@@ -46,8 +45,8 @@ public class SessionListFragment extends NiceFragment {
     }
 
     @Override
-    public void init(ViewDataBinding binding) {
-        mBinding = (FragmentSessionListBinding) binding;
+    public void init(FragmentSessionListBinding binding) {
+        mBinding = binding;
         mVMRecentContact = ViewModelProviders.of(getActivity()).get(VMRecentContact.class);
         initView();
         initObserve();

@@ -5,8 +5,9 @@ import android.os.Bundle;
 
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.nice.R;
+import com.zhuzichu.nice.databinding.FragmentWorkBinding;
 
-public class WorkFragment extends NiceFragment {
+public class WorkFragment extends NiceFragment<FragmentWorkBinding> {
     public static WorkFragment newInstance() {
         
         Bundle args = new Bundle();
@@ -17,7 +18,7 @@ public class WorkFragment extends NiceFragment {
     }
 
     @Override
-    public void init(ViewDataBinding binding) {
+    public void init(FragmentWorkBinding binding) {
 
     }
 

@@ -24,7 +24,7 @@ import com.zhuzichu.nice.MainActivity;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentLoginBinding;
 
-public class LoginFragment extends NiceFragment {
+public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
     private static final String TAG = "LoginFragment";
     private FragmentLoginBinding mBinding;
     private QMUITipDialog mLoading;
@@ -45,8 +45,8 @@ public class LoginFragment extends NiceFragment {
     }
 
     @Override
-    public void init(ViewDataBinding binding) {
-        mBinding = (FragmentLoginBinding) binding;
+    public void init(FragmentLoginBinding binding) {
+        mBinding = binding;
         initTopBar();
         initView();
         initListener();

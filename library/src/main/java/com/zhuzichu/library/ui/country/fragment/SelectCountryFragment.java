@@ -2,7 +2,6 @@ package com.zhuzichu.library.ui.country.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
@@ -27,7 +26,7 @@ import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 
-public class SelectCountryFragment extends NiceSwipeFragment {
+public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCountryBinding> {
     private static final String TAG = "SelectCountryFragment";
     public static final String SELECT_COUNTRY="select_country";
     private FragmentSelectCountryBinding mBinding;
@@ -49,8 +48,8 @@ public class SelectCountryFragment extends NiceSwipeFragment {
     }
 
     @Override
-    public void init(ViewDataBinding binding) {
-        mBinding= (FragmentSelectCountryBinding) binding;
+    public void init(FragmentSelectCountryBinding binding) {
+        mBinding=binding;
         initTopBar();
         initView();
         initData();
@@ -70,6 +69,7 @@ public class SelectCountryFragment extends NiceSwipeFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         _status.setColor(R.color.qmui_config_color_white);
+        _status.autoColorPrimary(false);
         QMUIStatusBarHelper.setStatusBarLightMode(getActivity());
     }
 

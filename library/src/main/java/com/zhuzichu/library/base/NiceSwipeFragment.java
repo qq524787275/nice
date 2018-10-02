@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-public abstract class NiceSwipeFragment extends BaseSwipeFragment {
-    public abstract void init(ViewDataBinding binding);
+public abstract class NiceSwipeFragment<T> extends BaseSwipeFragment {
+    public abstract void init(T binding);
 
     public final StatusDelegate _status = new StatusDelegate();
 
@@ -16,7 +16,7 @@ public abstract class NiceSwipeFragment extends BaseSwipeFragment {
         super.getRootView(rootView);
         ViewDataBinding binding = DataBindingUtil.bind(rootView);
         rootView = _status.init(binding.getRoot(), this);
-        init(binding);
+        init((T)binding);
         return rootView;
     }
 

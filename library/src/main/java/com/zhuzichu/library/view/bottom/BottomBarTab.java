@@ -22,9 +22,8 @@ import com.zhuzichu.library.R;
 public class BottomBarTab extends FrameLayout {
     private ImageView mIcon;
     private TextView mTvTitle;
-    private Context mContext;
     private int mTabPosition = -1;
-
+    private BottomBar mBottomBar;
     private TextView mTvUnreadCount;
 
     public BottomBarTab(Context context, @DrawableRes int icon, CharSequence title) {
@@ -40,8 +39,10 @@ public class BottomBarTab extends FrameLayout {
         init(context, icon, title);
     }
 
+    public void attachView(BottomBar bottomBar) {
+        this.mBottomBar=bottomBar;
+    }
     private void init(Context context, int icon, CharSequence title) {
-        mContext = context;
         TypedArray typedArray = context.obtainStyledAttributes(new int[]{R.attr.selectableItemBackgroundBorderless});
         Drawable drawable = typedArray.getDrawable(0);
         setBackgroundDrawable(drawable);
@@ -95,11 +96,11 @@ public class BottomBarTab extends FrameLayout {
     public void setSelected(boolean selected) {
         super.setSelected(selected);
         if (selected) {
-            mIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.colorPrimary));
-            mTvTitle.setTextColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+            mIcon.setColorFilter(mBottomBar.getSelectColor());
+            mTvTitle.setTextColor(mBottomBar.getSelectColor());
         } else {
-            mIcon.setColorFilter(ContextCompat.getColor(mContext, R.color.tab_unselect));
-            mTvTitle.setTextColor(ContextCompat.getColor(mContext, R.color.tab_unselect));
+            mIcon.setColorFilter(mBottomBar.getUnSelectColor());
+            mTvTitle.setTextColor(mBottomBar.getUnSelectColor());
         }
     }
 
@@ -152,4 +153,5 @@ public class BottomBarTab extends FrameLayout {
     private int dip2px(Context context, float dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
+
 }

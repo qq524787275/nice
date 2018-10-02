@@ -8,6 +8,7 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.model.VMRecentContact;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class Nice {
      */
     private Nice(Context ctx) {
         context = ctx;
+        //初始化主题颜色
+        ColorManager.getInstance();
     }
 
     /**
@@ -57,5 +60,13 @@ public class Nice {
                 ViewModelProviders.of(activity).get(VMRecentContact.class).getRecentContact().setValue(messages);
             }
         };
+    }
+
+    public static Nice getNice() {
+        return mNice;
+    }
+
+    public static int getColor(int id){
+        return context.getResources().getColor(id);
     }
 }

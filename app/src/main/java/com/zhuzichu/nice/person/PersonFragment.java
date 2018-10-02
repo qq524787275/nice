@@ -1,12 +1,12 @@
 package com.zhuzichu.nice.person;
 
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.nice.R;
+import com.zhuzichu.nice.databinding.FragmentPersonBinding;
 
-public class PersonFragment extends NiceFragment {
+public class PersonFragment extends NiceFragment<FragmentPersonBinding> {
     public static PersonFragment newInstance() {
         
         Bundle args = new Bundle();
@@ -16,7 +16,7 @@ public class PersonFragment extends NiceFragment {
         return fragment;
     }
     @Override
-    public void init(ViewDataBinding binding) {
+    public void init(FragmentPersonBinding binding) {
 
     }
 
