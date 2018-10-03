@@ -15,7 +15,7 @@ public class ColorConfig extends BaseObservable {
     public int textColorPrimary;
     public int textColorSeconday;
     public int windowBackground;
-
+    public int itemBackground;
     //是否夜间模式
     public boolean isDark;
 
@@ -66,19 +66,30 @@ public class ColorConfig extends BaseObservable {
         notifyPropertyChanged(BR.windowBackground);
     }
 
+    @Bindable
+    public int getItemBackground() {
+        return itemBackground;
+    }
+
+    public void setItemBackground(int itemBackground) {
+        this.itemBackground = itemBackground;
+        notifyPropertyChanged(BR.itemBackground);
+    }
+
     public void setDark(boolean dark) {
-        Log.i(TAG, "setDark: "+dark);
+        Log.i(TAG, "setDark: " + dark);
         if (dark) {
             //夜间模式
             setTextColorPrimary(Nice.getColor(R.color.qmui_config_color_white));
             setTextColorSeconday(Nice.getColor(R.color.color_grey_eaeaea));
-            setWindowBackground(Nice.getColor(R.color.color_grey_555555));
-
+            setWindowBackground(Nice.getColor(R.color.color_black_23242E));
+            setItemBackground(Nice.getColor(R.color.color_black_2A2B3A));
         } else {
             //非夜间模式
             setTextColorPrimary(Nice.getColor(R.color.color_grey_333333));
             setTextColorSeconday(Nice.getColor(R.color.color_grey_999999));
             setWindowBackground(Nice.getColor(R.color.qmui_config_color_white));
+            setItemBackground(Nice.getColor(R.color.qmui_config_color_white));
         }
         isDark = dark;
     }

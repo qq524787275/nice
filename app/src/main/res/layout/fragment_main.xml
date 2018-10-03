@@ -10,26 +10,29 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@{color.windowBackground}"
         >
 
         <FrameLayout
             android:id="@+id/fl_tab_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="49dp" />
+            android:layout_marginBottom="55dp" />
 
         <com.zhuzichu.library.view.bottom.BottomBar
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
-            android:layout_height="49dp"
+            android:layout_height="55dp"
             android:layout_gravity="bottom"
-            app:bottomSelectColor="@{color.colorPrimary}"/>
+            app:bottomSelectColor="@{color.colorPrimary}"
+            app:bottomBgColor="@{color.itemBackground}"
+            />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="49dp"
+            android:layout_marginBottom="55dp"
             android:background="@drawable/actionbar_shadow_up" />
     </FrameLayout>
 </layout>

@@ -48,4 +48,7 @@
     <color name="color_grey_999999">#999999</color>
     <color name="color_grey_555555">#555555</color>
     <color name="color_grey_333333">#333333</color>
+
+    <color name="color_black_23242E">#FF23242E</color>
+    <color name="color_black_2A2B3A">#FF2A2B3A</color>
 </resources>

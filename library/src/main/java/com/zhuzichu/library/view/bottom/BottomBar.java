@@ -94,6 +94,10 @@ public class BottomBar extends LinearLayout {
         return this;
     }
 
+    public void setBottomBgColor(int color){
+        mTabLayout.setBackgroundColor(color);
+    }
+
     public void setOnTabSelectedListener(OnTabSelectedListener onTabSelectedListener) {
         mListener = onTabSelectedListener;
     }

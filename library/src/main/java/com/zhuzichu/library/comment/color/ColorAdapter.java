@@ -23,4 +23,9 @@ public class ColorAdapter {
         bottomBar.setSelectColor(color);
         bottomBar.setCurrentItem(bottomBar.getCurrentItemPosition());
     }
+
+    @BindingAdapter({"bottomBgColor"})
+    public static  void bottomBgColor(BottomBar bottomBar, int color){
+        bottomBar.setBottomBgColor(color);
+    }
 }

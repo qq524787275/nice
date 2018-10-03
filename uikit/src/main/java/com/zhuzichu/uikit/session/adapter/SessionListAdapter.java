@@ -23,7 +23,7 @@ import com.zhuzichu.uikit.R;
 
 import java.util.ArrayList;
 
-public class SessionListAdapter extends BaseQuickAdapter<RecentContact, SessionListAdapter.ViewHolder> {
+public class SessionListAdapter extends BaseQuickAdapter<RecentContact, SessionListAdapter.SessionViewHolder> {
 
     public SessionListAdapter() {
         super(R.layout.item_recent_session, new ArrayList<RecentContact>());
@@ -31,7 +31,7 @@ public class SessionListAdapter extends BaseQuickAdapter<RecentContact, SessionL
 
 
     @Override
-    protected void convert(ViewHolder helper, RecentContact item) {
+    protected void convert(SessionViewHolder helper, RecentContact item) {
         ViewDataBinding binding = helper.getBinding();
         binding.setVariable(BR.color, ColorManager.getInstance().color);
         if (item.getSessionType() == SessionTypeEnum.P2P) {
@@ -58,8 +58,8 @@ public class SessionListAdapter extends BaseQuickAdapter<RecentContact, SessionL
         return view;
     }
 
-    public class ViewHolder extends BaseViewHolder {
-        public ViewHolder(View view) {
+    public static class SessionViewHolder extends BaseViewHolder {
+        public SessionViewHolder(View view) {
             super(view);
         }
 
