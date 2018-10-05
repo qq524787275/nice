@@ -11,22 +11,36 @@ import com.bumptech.glide.request.RequestOptions;
 import com.zhuzichu.library.R;
 
 public class GlideAdapter {
-    private static RequestOptions mCircleOptions=RequestOptions.bitmapTransform(new CircleCrop());
+    private static RequestOptions mCircleOptions = RequestOptions.bitmapTransform(new CircleCrop());
 
     @BindingAdapter({"avatarUserUrl"})
-    public static void loadUserAvatar(ImageView imageView, String url){
+    public static void loadUserAvatar(ImageView imageView, String url) {
         Glide.with(imageView.getContext())
-                .load(!TextUtils.isEmpty(url)?url:R.mipmap.avatar_default)
+                .load(!TextUtils.isEmpty(url) ? url : R.mipmap.avatar_default)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(mCircleOptions).into(imageView);
 
     }
 
     @BindingAdapter({"avatarGroupUrl"})
-    public static void loadGroupAvatar(ImageView imageView, String url){
+    public static void loadGroupAvatar(ImageView imageView, String url) {
         Glide.with(imageView.getContext())
-                .load(!TextUtils.isEmpty(url)?url:R.mipmap.avatar_group)
+                .load(!TextUtils.isEmpty(url) ? url : R.mipmap.avatar_group)
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .apply(mCircleOptions).into(imageView);
+    }
+
+    @BindingAdapter({"imageUrl"})
+    public static void imageUrl(ImageView imageView, String url) {
+        Glide.with(imageView.getContext())
+                .load(url)
+                .into(imageView);
+    }
+
+    @BindingAdapter({"imageUrl"})
+    public static void imageUrl(ImageView imageView, Integer url) {
+        Glide.with(imageView.getContext())
+                .load(url)
+                .into(imageView);
     }
 }

@@ -1,9 +1,9 @@
 package com.zhuzichu.nice.work;
 
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentWorkBinding;
 
@@ -19,7 +19,7 @@ public class WorkFragment extends NiceFragment<FragmentWorkBinding> {
 
     @Override
     public void init(FragmentWorkBinding binding) {
-
+        binding.setColor(ColorManager.getInstance().color);
     }
 
     @Override

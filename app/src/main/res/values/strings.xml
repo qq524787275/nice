@@ -4,4 +4,6 @@
     <string name="main_work">工作台</string>
     <string name="main_contact">联系人</string>
     <string name="main_person">我的</string>
+    <string name="kickout_notify">下线通知</string>
+    <string name="kickout_content">你的帐号被%1$s踢出下线，请确定帐号信息安全</string>
 </resources>

@@ -1,12 +1,16 @@
 package com.zhuzichu.nice;
 
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.zhuzichu.library.Nice;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.comment.color.ColorManager;
+import com.zhuzichu.library.comment.livedatabus.LiveDataBus;
 import com.zhuzichu.library.view.bottom.BottomBar;
 import com.zhuzichu.library.view.bottom.BottomBarTab;
 import com.zhuzichu.nice.contact.ContactFragment;
@@ -17,7 +21,7 @@ import com.zhuzichu.nice.work.WorkFragment;
 
 public class MainFragment extends NiceFragment<FragmentMainBinding> {
     private FragmentMainBinding mBinding;
-    private NiceFragment[] mFragments=new NiceFragment[4];
+    private NiceFragment[] mFragments = new NiceFragment[4];
     public static final int SESSION = 0;
     public static final int WORK = 1;
     public static final int CONTACT = 2;
@@ -48,6 +52,16 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initFragments();
+        initObserver();
+    }
+
+    private void initObserver() {
+        LiveDataBus.get().with(Nice.Extra.ACTION_START_FRAGMENT, BaseFragment.class).observe(this, new Observer<BaseFragment>() {
+            @Override
+            public void onChanged(@Nullable BaseFragment target) {
+                start(target);
+            }
+        });
     }
 
     private void initView() {
@@ -56,7 +70,7 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
                 .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon0, getString(R.string.main_session)))
                 .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon1, getString(R.string.main_work)))
                 .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon2, getString(R.string.main_contact)))
-                .addItem(new BottomBarTab(_mActivity, R.mipmap. main_tab_icon3, getString(R.string.main_person)));
+                .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon3, getString(R.string.main_person)));
 
 
         mBinding.bottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {

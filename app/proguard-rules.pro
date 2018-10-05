@@ -107,6 +107,9 @@
   **[] $VALUES;
   public *;
 }
+#LiveData
+-dontwarn android.arch.lifecycle.LiveData
+-keep class android.arch.lifecycle.LiveData { *; }
 #BaseQuickAdapter
 -keep class com.chad.library.adapter.** {
 *;

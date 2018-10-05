@@ -10,11 +10,11 @@ import android.view.View;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.base.NiceSwipeFragment;
+import com.zhuzichu.library.comment.livedatabus.LiveDataBus;
 import com.zhuzichu.library.databinding.FragmentSelectCountryBinding;
 import com.zhuzichu.library.dto.DTOCountry;
 import com.zhuzichu.library.ui.country.adapter.CountryAdapter;
 import com.zhuzichu.library.ui.country.model.VMCountry;
-import com.zhuzichu.library.utils.LiveDataEventBus;
 import com.zhuzichu.library.widget.OnClickListener;
 
 import java.util.ArrayList;
@@ -120,7 +120,7 @@ public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCount
                 long currentTime = System.currentTimeMillis();
                 if (currentTime - OnClickListener.lastClickTime > OnClickListener.minTime) {
                     OnClickListener.lastClickTime = currentTime;
-                    LiveDataEventBus.with(SELECT_COUNTRY).setValue(entity);
+                    LiveDataBus.get().with(SELECT_COUNTRY).setValue(entity);
                     pop();
                 }
             }
