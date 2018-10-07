@@ -8,10 +8,51 @@
             type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
     </data>
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@{color.windowBackground}">
+        android:orientation="vertical">
 
-    </android.support.constraint.ConstraintLayout>
+
+        <FrameLayout
+            android:id="@+id/layout_content"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            >
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/list_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@{color.windowBackground}"
+                android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+
+            <com.zhuzichu.library.view.recyclerview.RecyclerFastScroller
+                android:id="@+id/fast_scroller"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                app:handleNormalColor="@{color.colorPrimary}"
+                app:handlePressedColor="@{color.colorPrimaryDark}" />
+        </FrameLayout>
+
+
+        <include
+            android:id="@+id/layout_input"
+            layout="@layout/view_input" />
+
+        <LinearLayout
+            android:id="@+id/layout_panel_warpper"
+            style="@style/Panel"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/layout_panel"
+                layout="@layout/view_emoji_panel" />
+        </LinearLayout>
+
+    </LinearLayout>
+
 </layout>

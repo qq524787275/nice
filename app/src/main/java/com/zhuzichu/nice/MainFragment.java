@@ -1,16 +1,14 @@
 package com.zhuzichu.nice;
 
-import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 
-import com.zhuzichu.library.Nice;
-import com.zhuzichu.library.base.BaseFragment;
+import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
-import com.zhuzichu.library.comment.livedatabus.LiveDataBus;
 import com.zhuzichu.library.view.bottom.BottomBar;
 import com.zhuzichu.library.view.bottom.BottomBarTab;
 import com.zhuzichu.nice.contact.ContactFragment;
@@ -19,7 +17,10 @@ import com.zhuzichu.nice.person.PersonFragment;
 import com.zhuzichu.nice.session.SessionFragment;
 import com.zhuzichu.nice.work.WorkFragment;
 
+import io.reactivex.disposables.Disposable;
+
 public class MainFragment extends NiceFragment<FragmentMainBinding> {
+    private static final String TAG = "MainFragment";
     private FragmentMainBinding mBinding;
     private NiceFragment[] mFragments = new NiceFragment[4];
     public static final int SESSION = 0;
@@ -28,7 +29,6 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     public static final int PERSON = 3;
 
     public static MainFragment newInstance() {
-
         Bundle args = new Bundle();
 
         MainFragment fragment = new MainFragment();
@@ -56,12 +56,14 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     }
 
     private void initObserver() {
-        LiveDataBus.get().with(Nice.Extra.ACTION_START_FRAGMENT, BaseFragment.class).observe(this, new Observer<BaseFragment>() {
-            @Override
-            public void onChanged(@Nullable BaseFragment target) {
-                start(target);
-            }
-        });
+        Disposable disposable = RxBus.getIntance().doSubscribe(ActionMainStartFragmnet.class, target -> start(target.data));
+        RxBus.getIntance().addSubscription(this, disposable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxBus.getIntance().unSubscribe(this);
     }
 
     private void initView() {

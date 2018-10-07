@@ -8,9 +8,9 @@ import android.view.View;
 
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.zhuzichu.library.base.NiceFragment;
-import com.zhuzichu.library.comment.livedatabus.LiveDataBus;
+import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.observer.action.ActionRecentContact;
-import com.zhuzichu.library.model.VMRecentContact;
+import com.zhuzichu.library.model.SessionViewModel;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentSessionListBinding;
 import com.zhuzichu.uikit.session.adapter.SessionListAdapter;
@@ -19,8 +19,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import io.reactivex.disposables.Disposable;
+
 public class SessionListFragment extends NiceFragment<FragmentSessionListBinding> {
-    private VMRecentContact mVMRecentContact;
+    private SessionViewModel mSessionViewModel;
     private FragmentSessionListBinding mBinding;
     private SessionListAdapter mAdapter;
     private OnSessionItemClickListener mOnSessionItemClickListener;
@@ -49,11 +51,11 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
     @Override
     public void init(FragmentSessionListBinding binding) {
         mBinding = binding;
-        mVMRecentContact = ViewModelProviders.of(getActivity()).get(VMRecentContact.class);
+        mSessionViewModel = ViewModelProviders.of(getActivity()).get(SessionViewModel.class);
         initView();
         initListener();
         initObserve();
-        mVMRecentContact.loadRecentContact();
+        mSessionViewModel.loadRecentContact();
     }
 
     private void initListener() {
@@ -76,7 +78,8 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
     }
 
     private void initObserve() {
-        mVMRecentContact.getRecentContact().observe(getActivity(), recentContacts -> {
+        mSessionViewModel.getRecentContact().observe(getActivity(), recentContacts -> {
+            //Todo 此处第一次加载 与 监听变换的数据写在一起。可考虑分开
             if (mAdapter.getData().size() == 0) {
                 mAdapter.addData(recentContacts);
             } else {
@@ -99,10 +102,18 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
             }
         });
 
-        LiveDataBus.get().with(ActionRecentContact.key, ActionRecentContact.class).observe(this, actionRecentContact -> {
-            List<RecentContact> data = actionRecentContact.data;
-            mVMRecentContact.getRecentContact().setValue(data);
+
+        Disposable disposable = RxBus.getIntance().doSubscribe(ActionRecentContact.class, action -> {
+            List<RecentContact> data = action.data;
+            mSessionViewModel.getRecentContact().setValue(data);
         });
+        RxBus.getIntance().addSubscription(this, disposable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxBus.getIntance().unSubscribe(this);
     }
 
     public void setOnSessionItemClickListener(OnSessionItemClickListener listener) {

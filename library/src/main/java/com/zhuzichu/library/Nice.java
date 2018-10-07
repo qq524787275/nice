@@ -5,12 +5,16 @@ import android.content.Context;
 import com.zhuzichu.library.comment.color.ColorManager;
 
 public class Nice {
+
+
     public interface Extra {
         String ACTION_START_FRAGMENT = "action_start_fragment";
     }
 
+    public static String account;
     public static Context context;
     private volatile static Nice mNice;
+
 
     /**
      * 构造方法私有化
@@ -47,5 +51,13 @@ public class Nice {
      */
     public static int getColor(int id) {
         return context.getResources().getColor(id);
+    }
+
+    public static String getAccount() {
+        return account;
+    }
+
+    public static void setAccount(String account) {
+        Nice.account = account;
     }
 }

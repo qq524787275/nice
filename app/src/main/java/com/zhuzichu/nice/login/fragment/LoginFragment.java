@@ -1,7 +1,6 @@
 package com.zhuzichu.nice.login.fragment;
 
 import android.content.DialogInterface;
-import android.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -16,6 +15,7 @@ import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
+import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.enmu.ErrorEnmu;
 import com.zhuzichu.library.utils.MD5;
@@ -105,6 +105,7 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
             public void onSuccess(LoginInfo param) {
                 Log.i(TAG, "onSuccess: ");
                 UserPreferences.saveUserAccountAndToken(param.getAccount(), param.getToken());
+                Nice.setAccount(param.getAccount());
                 mLoading.cancel();
                 MainActivity.start(getActivity());
                 getActivity().finish();

@@ -5,7 +5,6 @@ import com.netease.nimlib.sdk.msg.model.RecentContact;
 import java.util.List;
 
 public class ActionRecentContact {
-    public static String key = ActionRecentContact.class.getSimpleName();
     public List<RecentContact> data;
 
     public ActionRecentContact(List<RecentContact> data) {

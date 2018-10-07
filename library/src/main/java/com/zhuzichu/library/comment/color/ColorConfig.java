@@ -4,6 +4,7 @@ import android.databinding.BaseObservable;
 import android.databinding.Bindable;
 import android.util.Log;
 
+import com.qmuiteam.qmui.util.QMUIColorHelper;
 import com.zhuzichu.library.BR;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.R;
@@ -13,8 +14,10 @@ import com.zhuzichu.library.utils.UserPreferences;
 public class ColorConfig extends BaseObservable {
     private static final String TAG = "ColorConfig";
     public int colorPrimary;
+    public int colorPrimaryDark;
     public int textColorPrimary;
     public int textColorSeconday;
+    public int bottomBackgroud;
     public int windowBackground;
     public int itemBackground;
     public int itemMenuBackground;
@@ -24,10 +27,6 @@ public class ColorConfig extends BaseObservable {
     public ColorConfig() {
     }
 
-    public ColorConfig(int colorPrimary) {
-        this.colorPrimary = colorPrimary;
-    }
-
     @Bindable
     public int getColorPrimary() {
         return colorPrimary;
@@ -35,6 +34,7 @@ public class ColorConfig extends BaseObservable {
 
     public void setColorPrimary(int colorPrimary) {
         this.colorPrimary = colorPrimary;
+        this.colorPrimaryDark = QMUIColorHelper.computeColor(colorPrimary, Nice.getColor(R.color.black), 0.3f);
         notifyPropertyChanged(BR.colorPrimary);
         UserPreferences.saveColorConfig(this);
     }
@@ -90,6 +90,16 @@ public class ColorConfig extends BaseObservable {
         notifyPropertyChanged(BR.itemMenuBackground);
     }
 
+    @Bindable
+    public int getBottomBackgroud() {
+        return bottomBackgroud;
+    }
+
+    public void setBottomBackgroud(int bottomBackgroud) {
+        this.bottomBackgroud = bottomBackgroud;
+        notifyPropertyChanged(BR.bottomBackgroud);
+    }
+
     public void setDark(boolean dark) {
         Log.i(TAG, "setDark: " + dark);
         if (dark) {
@@ -99,6 +109,7 @@ public class ColorConfig extends BaseObservable {
             setWindowBackground(Nice.getColor(R.color.color_black_23242E));
             setItemBackground(Nice.getColor(R.color.color_black_2A2B3A));
             setItemMenuBackground(Nice.getColor(R.color.color_grey_424242));
+            setBottomBackgroud(Nice.getColor(R.color.color_black_313335));
         } else {
             //非夜间模式
             setTextColorPrimary(Nice.getColor(R.color.color_grey_333333));
@@ -106,6 +117,7 @@ public class ColorConfig extends BaseObservable {
             setWindowBackground(Nice.getColor(R.color.qmui_config_color_white));
             setItemBackground(Nice.getColor(R.color.qmui_config_color_white));
             setItemMenuBackground(Nice.getColor(R.color.qmui_config_color_white));
+            setBottomBackgroud(Nice.getColor(R.color.color_white_f8f8f8));
         }
         isDark = dark;
         UserPreferences.saveColorConfig(this);

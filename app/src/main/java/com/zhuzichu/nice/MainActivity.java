@@ -1,6 +1,5 @@
 package com.zhuzichu.nice;
 
-import android.arch.lifecycle.Observer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,15 +11,17 @@ import com.netease.nimlib.sdk.StatusCode;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.base.BaseActivity;
 import com.zhuzichu.library.base.BaseFragment;
+import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
-import com.zhuzichu.library.comment.livedatabus.LiveDataBus;
 import com.zhuzichu.library.comment.observer.ObserverManager;
 import com.zhuzichu.library.comment.observer.action.ActionOnlineStatus;
 import com.zhuzichu.library.utils.UserPreferences;
+import com.zhuzichu.library.widget.AndroidBug5497Workaround;
 import com.zhuzichu.nice.login.LoginActivity;
 
 import javax.annotation.Nullable;
 
+import io.reactivex.disposables.Disposable;
 import me.yokeyword.fragmentation.anim.DefaultHorizontalAnimator;
 import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
@@ -42,33 +43,32 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidBug5497Workaround.assistActivity(this);
         QMUIStatusBarHelper.translucent(this);
         ObserverManager.regist();
         initObserver();
     }
 
     private void initObserver() {
-        LiveDataBus.get().with(ActionOnlineStatus.key, ActionOnlineStatus.class).observe(this, new Observer<ActionOnlineStatus>() {
-            @Override
-            public void onChanged(@Nullable ActionOnlineStatus actionOnlineStatus) {
-                StatusCode code = actionOnlineStatus.getData();
-                if (code.wontAutoLogin()) {
-                    kickOut(code);
+        Disposable disposable = RxBus.getIntance().doSubscribe(ActionOnlineStatus.class, action -> {
+            StatusCode code = action.getData();
+            if (code.wontAutoLogin()) {
+                kickOut(code);
+            } else {
+                if (code == StatusCode.NET_BROKEN) {
+                    Log.i(TAG, "onChanged: NET_BROKEN");
+                } else if (code == StatusCode.UNLOGIN) {
+                    Log.i(TAG, "onChanged: UNLOGIN");
+                } else if (code == StatusCode.CONNECTING) {
+                    Log.i(TAG, "onChanged: CONNECTING");
+                } else if (code == StatusCode.LOGINING) {
+                    Log.i(TAG, "onChanged: LOGINING");
                 } else {
-                    if (code == StatusCode.NET_BROKEN) {
-                        Log.i(TAG, "onChanged: NET_BROKEN");
-                    } else if (code == StatusCode.UNLOGIN) {
-                        Log.i(TAG, "onChanged: UNLOGIN");
-                    } else if (code == StatusCode.CONNECTING) {
-                        Log.i(TAG, "onChanged: CONNECTING");
-                    } else if (code == StatusCode.LOGINING) {
-                        Log.i(TAG, "onChanged: LOGINING");
-                    } else {
 
-                    }
                 }
             }
         });
+        RxBus.getIntance().addSubscription(this, disposable);
     }
 
     /**
@@ -108,6 +108,7 @@ public class MainActivity extends BaseActivity implements ColorChooserDialog.Col
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        RxBus.getIntance().unSubscribe(this);
         ObserverManager.unRegist();
     }
 }

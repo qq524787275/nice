@@ -8,14 +8,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.zhuzichu.library.R;
-import com.zhuzichu.library.dto.DTOCountry;
+import com.zhuzichu.library.bean.CountryBean;
 
 import me.yokeyword.indexablerv.IndexableAdapter;
 
 /**
  * Created by wb.zhuzichu18 on 2018/9/7.
  */
-public class CountryAdapter extends IndexableAdapter<DTOCountry> {
+public class CountryAdapter extends IndexableAdapter<CountryBean> {
     private LayoutInflater mInflater;
 
     public CountryAdapter(Context context) {
@@ -41,7 +41,7 @@ public class CountryAdapter extends IndexableAdapter<DTOCountry> {
     }
 
     @Override
-    public void onBindContentViewHolder(RecyclerView.ViewHolder holder, DTOCountry entity) {
+    public void onBindContentViewHolder(RecyclerView.ViewHolder holder, CountryBean entity) {
         ViewHolderCountry holderLable=(ViewHolderCountry)holder;
         holderLable.mTvTitle.setText(entity.getLabel());
         holderLable.mTvCode.setText("+"+entity.getCode());

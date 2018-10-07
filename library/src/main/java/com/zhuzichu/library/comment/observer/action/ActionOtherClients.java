@@ -5,7 +5,6 @@ import com.netease.nimlib.sdk.auth.OnlineClient;
 import java.util.List;
 
 public class ActionOtherClients {
-    public static String key = ActionOtherClients.class.getSimpleName();
     public List<OnlineClient> data;
 
     public ActionOtherClients(List<OnlineClient> data) {

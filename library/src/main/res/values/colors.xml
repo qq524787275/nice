@@ -43,6 +43,9 @@
     <color name="colorHelper_square_to_ratio_background">@color/app_color_theme_3</color>
 
 
+    <color name="white">#ffffff</color>
+    <color name="color_white_f8f8f8">#FFF8F8F8</color>
+
     <color name="color_grey_eaeaea">#eaeaea</color>
     <color name="color_gray_d9d9d9">#d9d9d9</color>
     <color name="color_grey_999999">#999999</color>
@@ -50,6 +53,8 @@
     <color name="color_grey_424242">#424242</color>
     <color name="color_grey_333333">#333333</color>
 
+    <color name="black">#000000</color>
     <color name="color_black_23242E">#FF23242E</color>
-    <color name="color_black_2A2B3A">#FF2A2B3A</color>
+    <color name="color_black_2A2B3A">#2A2B3A</color>
+    <color name="color_black_313335">#313335</color>
 </resources>

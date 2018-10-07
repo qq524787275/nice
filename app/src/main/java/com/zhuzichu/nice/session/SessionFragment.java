@@ -1,11 +1,9 @@
 package com.zhuzichu.nice.session;
 
 import android.animation.Animator;
-import android.arch.lifecycle.Observer;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -15,12 +13,12 @@ import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.qmuiteam.qmui.util.QMUIDrawableHelper;
-import com.zhuzichu.library.Nice;
+import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.bean.CountryBean;
+import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorConfig;
 import com.zhuzichu.library.comment.color.ColorManager;
-import com.zhuzichu.library.comment.livedatabus.LiveDataBus;
-import com.zhuzichu.library.dto.DTOCountry;
 import com.zhuzichu.library.ui.country.fragment.SelectCountryFragment;
 import com.zhuzichu.library.utils.DialogUtils;
 import com.zhuzichu.library.utils.UserPreferences;
@@ -31,6 +29,8 @@ import com.zhuzichu.nice.databinding.FragmentSessionBinding;
 import com.zhuzichu.nice.login.LoginActivity;
 import com.zhuzichu.uikit.message.fragment.MessageFragment;
 import com.zhuzichu.uikit.session.fragment.SessionListFragment;
+
+import io.reactivex.disposables.Disposable;
 
 public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
     private static final String TAG = "SessionFragment";
@@ -68,8 +68,7 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         mSessListFragment.setOnSessionItemClickListener(new SessionListFragment.OnSessionItemClickListener() {
             @Override
             public void onSessionItemClick(RecentContact recentContact) {
-                Log.i(TAG, "onSessionItemClick: ");
-                LiveDataBus.get().with(Nice.Extra.ACTION_START_FRAGMENT).postValue(MessageFragment.newInstance());
+                RxBus.getIntance().post(new ActionMainStartFragmnet(MessageFragment.newInstance(recentContact.getContactId(), recentContact.getSessionType())));
             }
 
             @Override
@@ -82,13 +81,14 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
 
 
     private void initObserve() {
-        LiveDataBus.get().with(SelectCountryFragment.SELECT_COUNTRY, DTOCountry.class).observe(this, new Observer<DTOCountry>() {
-            @Override
-            public void onChanged(@Nullable DTOCountry country) {
-                Toast.makeText(_mActivity, country.getLabel(), Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "onChanged: " + country.getLabel());
-            }
-        });
+        Disposable disposable = RxBus.getIntance().doSubscribe(CountryBean.class, bean -> Toast.makeText(_mActivity, bean.getLabel(), Toast.LENGTH_SHORT).show());
+        RxBus.getIntance().addSubscription(this, disposable);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        RxBus.getIntance().unSubscribe(this);
     }
 
     private void initMenuPopup() {

@@ -17,7 +17,6 @@
             android:id="@+id/layout_overlay"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/qmui_config_color_red"
             android:orientation="vertical" />
 
         <FrameLayout
@@ -36,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_gravity="bottom"
-                app:bottomBgColor="@{color.itemBackground}"
+                app:bottomBgColor="@{color.bottomBackgroud}"
                 app:bottomSelectColor="@{color.colorPrimary}" />
 
             <ImageView

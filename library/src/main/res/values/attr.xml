@@ -1,10 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="app_primary_color" format="color"/> <!-- topbar -->
-    <attr name="app_content_bg_color" format="color"/> <!-- content-->
+    <attr name="app_primary_color" format="color" /> <!-- topbar -->
+    <attr name="app_content_bg_color" format="color" /> <!-- content-->
 
     <declare-styleable name="BottomBar">
-        <attr name="selectColor" format="color"/>
-        <attr name="unSelectColor" format="color"/>
+        <attr name="selectColor" format="color" />
+        <attr name="unSelectColor" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="StateButton">
+
+        <!--text color-->
+        <attr name="sb_normalTextColor" format="color|reference" />
+        <attr name="sb_pressedTextColor" format="color|reference" />
+        <attr name="sb_unableTextColor" format="color|reference" />
+
+        <!--stroke width and color, dash width, dash gap-->
+        <attr name="sb_strokeDashWidth" format="dimension|reference" />
+        <attr name="sb_strokeDashGap" format="dimension|reference" />
+        <attr name="sb_normalStrokeWidth" format="dimension|reference" />
+        <attr name="sb_pressedStrokeWidth" format="dimension|reference" />
+        <attr name="sb_unableStrokeWidth" format="dimension|reference" />
+        <attr name="sb_normalStrokeColor" format="color|reference" />
+        <attr name="sb_pressedStrokeColor" format="color|reference" />
+        <attr name="sb_unableStrokeColor" format="color|reference" />
+
+        <!--background color-->
+        <attr name="sb_normalBackgroundColor" format="color|reference" />
+        <attr name="sb_pressedBackgroundColor" format="color|reference" />
+        <attr name="sb_unableBackgroundColor" format="color|reference" />
+
+        <!--background radius-->
+        <attr name="sb_radius" format="dimension|reference" />
+        <attr name="sb_round" format="boolean|reference" />
+
+        <!--animation duration-->
+        <attr name="sb_animationDuration" format="integer|reference" />
+
+    </declare-styleable>
+
+
+    <declare-styleable name="StateLayout">
+
+        <!--stroke width and color, dash width, dash gap-->
+        <attr name="sl_strokeDashWidth" format="dimension|reference" />
+        <attr name="sl_strokeDashGap" format="dimension|reference" />
+        <attr name="sl_normalStrokeWidth" format="dimension|reference" />
+        <attr name="sl_pressedStrokeWidth" format="dimension|reference" />
+        <attr name="sl_unableStrokeWidth" format="dimension|reference" />
+        <attr name="sl_normalStrokeColor" format="color|reference" />
+        <attr name="sl_pressedStrokeColor" format="color|reference" />
+        <attr name="sl_unableStrokeColor" format="color|reference" />
+
+        <!--background color-->
+        <attr name="sl_normalBackgroundColor" format="color|reference" />
+        <attr name="sl_pressedBackgroundColor" format="color|reference" />
+        <attr name="sl_unableBackgroundColor" format="color|reference" />
+
+        <!--background radius-->
+        <attr name="sl_radius" format="dimension|reference" />
+        <attr name="sl_round" format="boolean|reference" />
+
+        <!--animation duration-->
+        <attr name="sl_animationDuration" format="integer|reference" />
+
+    </declare-styleable>
+
+    <declare-styleable name="RecyclerFastScroller">
+        <attr name="rfs_barColor" format="color" />
+        <attr name="rfs_handleNormalColor" format="color" />
+        <attr name="rfs_handlePressedColor" format="color" />
+        <attr name="rfs_touchTargetWidth" format="dimension" />
+        <attr name="rfs_hideDelay" format="integer" />
+        <attr name="rfs_hidingEnabled" format="boolean" />
     </declare-styleable>
 </resources>

@@ -108,8 +108,8 @@
   public *;
 }
 #LiveData
--dontwarn android.arch.lifecycle.LiveData
--keep class android.arch.lifecycle.LiveData { *; }
+-dontwarn android.arch.lifecycle.**
+-keep class android.arch.lifecycle.** { *; }
 #BaseQuickAdapter
 -keep class com.chad.library.adapter.** {
 *;
@@ -146,8 +146,8 @@
 -dontwarn okio.**
 -keep class okio.**{*;}
 #dto
--dontwarn com.zhuzichu.library.dto.**
--keep class com.zhuzichu.library.dto.**{*;}
+-dontwarn com.zhuzichu.**
+-keep class com.zhuzichu.**{*;}
 ### glide 3
 -keepnames class com.netease.nim.uikit.support.glide.NIMGlideModule
 

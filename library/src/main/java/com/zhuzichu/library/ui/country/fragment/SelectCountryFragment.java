@@ -10,11 +10,11 @@ import android.view.View;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.base.NiceSwipeFragment;
-import com.zhuzichu.library.comment.livedatabus.LiveDataBus;
+import com.zhuzichu.library.bean.CountryBean;
+import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.databinding.FragmentSelectCountryBinding;
-import com.zhuzichu.library.dto.DTOCountry;
 import com.zhuzichu.library.ui.country.adapter.CountryAdapter;
-import com.zhuzichu.library.ui.country.model.VMCountry;
+import com.zhuzichu.library.ui.country.model.CountryViewModel;
 import com.zhuzichu.library.widget.OnClickListener;
 
 import java.util.ArrayList;
@@ -22,26 +22,26 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import me.yokeyword.indexablerv.IndexableAdapter;
 import me.yokeyword.indexablerv.IndexableLayout;
 import me.yokeyword.indexablerv.SimpleHeaderAdapter;
 
 public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCountryBinding> {
     private static final String TAG = "SelectCountryFragment";
-    public static final String SELECT_COUNTRY="select_country";
+    public static final String SELECT_COUNTRY = "select_country";
     private FragmentSelectCountryBinding mBinding;
     private CountryAdapter mAdapter;
-    private VMCountry mCountryViewModel;
+    private CountryViewModel mCountryViewModel;
     //防止多点触控
 
     public static SelectCountryFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         SelectCountryFragment fragment = new SelectCountryFragment();
         fragment.setArguments(args);
         return fragment;
     }
+
     @Override
     public Object setLayout() {
         return R.layout.fragment_select_country;
@@ -49,7 +49,7 @@ public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCount
 
     @Override
     public void init(FragmentSelectCountryBinding binding) {
-        mBinding=binding;
+        mBinding = binding;
         initTopBar();
         initView();
         initData();
@@ -74,10 +74,10 @@ public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCount
     }
 
     private void initData() {
-        mCountryViewModel = ViewModelProviders.of(this).get(VMCountry.class);
-        mCountryViewModel.getLiveCountrys().observe(this, new Observer<List<DTOCountry>>() {
+        mCountryViewModel = ViewModelProviders.of(this).get(CountryViewModel.class);
+        mCountryViewModel.getLiveCountrys().observe(this, new Observer<List<CountryBean>>() {
             @Override
-            public void onChanged(@Nullable List<DTOCountry> dtoCountries) {
+            public void onChanged(@Nullable List<CountryBean> dtoCountries) {
                 spliteHotCountry(dtoCountries);
             }
 
@@ -92,10 +92,10 @@ public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCount
         mCountryViewModel.loadCountrys();
     }
 
-    private void spliteHotCountry(List<DTOCountry> dtoCountries) {
-        List<DTOCountry> countrys = new ArrayList<>();
-        List<DTOCountry> hotCountrys = new ArrayList<>();
-        for (DTOCountry item : dtoCountries) {
+    private void spliteHotCountry(List<CountryBean> dtoCountries) {
+        List<CountryBean> countrys = new ArrayList<>();
+        List<CountryBean> hotCountrys = new ArrayList<>();
+        for (CountryBean item : dtoCountries) {
             boolean ishot = item.isIshot();
             if (ishot) {
                 hotCountrys.add(item);
@@ -114,15 +114,12 @@ public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCount
         mBinding.layoutIndex.setCompareMode(IndexableLayout.MODE_FAST);
         mAdapter = new CountryAdapter(getContext());
         mBinding.layoutIndex.setAdapter(mAdapter);
-        mAdapter.setOnItemContentClickListener(new IndexableAdapter.OnItemContentClickListener<DTOCountry>() {
-            @Override
-            public void onItemClick(View v, int originalPosition, int currentPosition, DTOCountry entity) {
-                long currentTime = System.currentTimeMillis();
-                if (currentTime - OnClickListener.lastClickTime > OnClickListener.minTime) {
-                    OnClickListener.lastClickTime = currentTime;
-                    LiveDataBus.get().with(SELECT_COUNTRY).setValue(entity);
-                    pop();
-                }
+        mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - OnClickListener.lastClickTime > OnClickListener.minTime) {
+                OnClickListener.lastClickTime = currentTime;
+                RxBus.getIntance().post(entity);
+                pop();
             }
         });
     }
