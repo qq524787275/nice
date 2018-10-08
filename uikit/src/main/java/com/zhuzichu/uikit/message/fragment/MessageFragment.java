@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
 import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.QueryDirectionEnum;
@@ -22,6 +23,7 @@ import com.zhuzichu.library.comment.observer.action.ActionReceiveMessage;
 import com.zhuzichu.library.view.button.StateButton;
 import com.zhuzichu.library.widget.EmojiKeyboard;
 import com.zhuzichu.library.widget.NiceRequestCallback;
+import com.zhuzichu.library.widget.OnClickListener;
 import com.zhuzichu.library.widget.TextWatcherWrapper;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentMessageBinding;
@@ -94,10 +96,14 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(actionReceiveMessage -> filterMessage(actionReceiveMessage.getData()))
                 .subscribe(list -> {
-                    mAdapter.addData(list);
-                    if (isLastMessageVisible())
-                        smoothToBottom(true);
-//                        mBind.listMessage.scrollToPosition(mAdapter.getData().size() - 1);
+                    if(list.size()!=0){
+                        mAdapter.addData(list);
+                        if (isLastMessageVisible()) {
+                            smoothToBottom(true);
+                        } else {
+                            mBind.tvNewMessage.setVisibility(View.VISIBLE);
+                        }
+                    }
                 });
         RxBus.getIntance().addSubscription(this.getClass().getSimpleName() + mSessionId,
                 dispSoftKeyboard,
@@ -123,6 +129,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
      * 初始化监听事件
      */
     private void initListener() {
+        //文本输入框监听事件
         mEtMessage.addTextChangedListener(new TextWatcherWrapper() {
             @Override
             public void afterTextChanged(Editable s) {
@@ -136,7 +143,33 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
             }
         });
 
+        //发送
+        mSbSend.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onNoDoubleClick(View view) {
+                IMMessage textMessage = createTextMessage(mEtMessage.getText().toString());
+                sendMessage(textMessage, false);
+                mAdapter.addData(textMessage);
+                smoothToBottom(true);
+                mEtMessage.setText("");
+            }
+        });
 
+        mBind.tvNewMessage.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onNoDoubleClick(View view) {
+                smoothToBottom(true);
+                mBind.tvNewMessage.setVisibility(View.GONE);
+            }
+        });
+
+        mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            if (view.getId() == R.id.msg_fail) {
+                //重新发消息
+                sendMessage(mAdapter.getItem(position), true);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     private void parseExtras() {
@@ -179,8 +212,8 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         NIMClient.getService(MsgService.class).queryMessageListEx(anchor(), QueryDirectionEnum.QUERY_OLD, 20, true)
                 .setCallback(new NiceRequestCallback<List<IMMessage>>(getActivity()) {
                     @Override
-                    public void onSuccess(List<IMMessage> list) {
-                        mAdapter.addData(list);
+                    public void success(List<IMMessage> param) {
+                        mAdapter.addData(param);
                         scrollToBottom();
                     }
                 });
@@ -226,5 +259,37 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                 return true;
         }
         return false;
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param msg    带发送的消息体，由{@link MessageBuilder}构造
+     * @param resend 如果是发送失败后重发，标记为true，否则填false
+     */
+    public void sendMessage(IMMessage msg, boolean resend) {
+        if (resend)
+            msg.setStatus(MsgStatusEnum.sending);
+        NIMClient.getService(MsgService.class).sendMessage(msg, resend).setCallback(new NiceRequestCallback<Void>(getActivity()) {
+            @Override
+            public void success(Void param) {
+                //Todo 发送成功
+            }
+
+            @Override
+            public void finish() {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    /**
+     * 创建文本消息
+     *
+     * @param text
+     */
+    public IMMessage createTextMessage(String text) {
+        IMMessage textMessage = MessageBuilder.createTextMessage(mSessionId, mSessionType, text);
+        return textMessage;
     }
 }

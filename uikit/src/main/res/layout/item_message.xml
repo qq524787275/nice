@@ -48,13 +48,14 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/msg_time"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="50dp"
-            android:layout_marginRight="50dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
             android:layout_marginBottom="12dp"
             android:layout_toEndOf="@+id/msg_avatar"
             android:layout_toRightOf="@+id/msg_avatar"
             android:clickable="true"
             android:minWidth="40dp"
+            android:minHeight="40dp"
             android:padding="10dp"
             app:sl_normalBackgroundColor="@{isMy?color.colorPrimary:@color/color_grey_eaeaea}"
             app:sl_pressedBackgroundColor="@{isMy?color.colorPrimaryDark:@color/color_grey_999999}"
@@ -72,5 +73,28 @@
                 android:maxWidth="210dp"
                 android:textSize="15sp" />
         </com.zhuzichu.library.view.layout.StateLayout>
+
+        <FrameLayout
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_below="@+id/msg_time"
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/msg_content"
+            android:layout_toRightOf="@+id/msg_content">
+
+            <com.qmuiteam.qmui.widget.QMUILoadingView
+                android:id="@+id/msg_loading"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/msg_fail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/msg_send_fail"
+                android:visibility="gone" />
+        </FrameLayout>
+
     </RelativeLayout>
 </layout>
