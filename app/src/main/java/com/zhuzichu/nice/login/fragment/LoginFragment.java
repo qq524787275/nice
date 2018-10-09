@@ -1,25 +1,20 @@
 package com.zhuzichu.nice.login.fragment;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.netease.nimlib.sdk.AbortableFuture;
 import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.AuthService;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.NiceFragment;
-import com.zhuzichu.library.enmu.ErrorEnmu;
-import com.zhuzichu.library.utils.MD5;
 import com.zhuzichu.library.utils.UserPreferences;
+import com.zhuzichu.library.widget.NiceRequestCallback;
 import com.zhuzichu.nice.MainActivity;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentLoginBinding;
@@ -53,12 +48,7 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
     }
 
     private void initListener() {
-        mBinding.btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                doLogin(mBinding.etAccount.getText().toString(), MD5.getStringMD5(mBinding.tietPassword.getText().toString()));
-            }
-        });
+        mBinding.btnSubmit.setOnClickListener(view -> doLogin(mBinding.etAccount.getText().toString(),mBinding.tietPassword.getText().toString()));
 
 
     }
@@ -75,13 +65,10 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
                 .setIconType(QMUITipDialog.Builder.ICON_TYPE_LOADING)
                 .setTipWord("正在登录")
                 .create();
-        mLoading.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialogInterface) {
-                if (mLoginRequest != null) {
-                    mLoginRequest.abort();
-                    mLoginRequest = null;
-                }
+        mLoading.setOnCancelListener(dialogInterface -> {
+            if (mLoginRequest != null) {
+                mLoginRequest.abort();
+                mLoginRequest = null;
             }
         });
         showSoftInput(mBinding.tietPassword);
@@ -100,29 +87,19 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
             mLoginRequest = null;
         }
         mLoginRequest = NIMClient.getService(AuthService.class).login(info);
-        mLoginRequest.setCallback(new RequestCallback<LoginInfo>() {
+        mLoginRequest.setCallback(new NiceRequestCallback<LoginInfo>(getActivity()) {
             @Override
-            public void onSuccess(LoginInfo param) {
-                Log.i(TAG, "onSuccess: ");
+            public void success(LoginInfo param) {
                 UserPreferences.saveUserAccountAndToken(param.getAccount(), param.getToken());
                 Nice.setAccount(param.getAccount());
                 mLoading.cancel();
                 MainActivity.start(getActivity());
                 getActivity().finish();
-//                startWithPop(MainFragment.newInstance());
             }
 
             @Override
-            public void onFailed(int code) {
-                Toast.makeText(getActivity(), ErrorEnmu.getErrorEnmu(code).getMsg(), Toast.LENGTH_SHORT).show();
-                Log.i(TAG, "onFailed: " + code);
-                mLoading.cancel();
-            }
-
-            @Override
-            public void onException(Throwable exception) {
-                Log.i(TAG, "onException: ");
-                mLoading.cancel();
+            public void finish() {
+                mLoading.dismiss();
             }
         });
     }

@@ -96,13 +96,13 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .map(actionReceiveMessage -> filterMessage(actionReceiveMessage.getData()))
                 .subscribe(list -> {
-                    if(list.size()!=0){
-                        mAdapter.addData(list);
-                        if (isLastMessageVisible()) {
-                            smoothToBottom(true);
-                        } else {
-                            mBind.tvNewMessage.setVisibility(View.VISIBLE);
-                        }
+                    if (list.size() != 0)
+                        return;
+                    mAdapter.addData(list);
+                    if (isLastMessageVisible()) {
+                        smoothToBottom(true);
+                    } else {
+                        mBind.tvNewMessage.setVisibility(View.VISIBLE);
                     }
                 });
         RxBus.getIntance().addSubscription(this.getClass().getSimpleName() + mSessionId,
@@ -237,12 +237,12 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
      */
     public void smoothToBottom(boolean isSlow) {
         int position = mAdapter.getData().size() - 1;
-        if (position >= 0) {
-            if (isSlow) {
-                mBind.listMessage.smoothScrollToPosition(position);
-            } else {
-                mBind.listMessage.scrollToPosition(position);
-            }
+        if (position < 0)
+            return;
+        if (isSlow) {
+            mBind.listMessage.smoothScrollToPosition(position);
+        } else {
+            mBind.listMessage.scrollToPosition(position);
         }
     }
 

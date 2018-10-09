@@ -5,6 +5,7 @@ import android.arch.lifecycle.LifecycleObserver;
 import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.databinding.Observable;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
@@ -19,7 +20,8 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
     private Context mContext;
     private LinearLayout mParentView;
     private View mStatusBar;
-    private boolean mIsAuto=true;
+    private boolean mIsAuto = true;
+
     /**
      * 初始化状态栏
      *
@@ -38,8 +40,9 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
         mStatusBar = new View(mContext);
         mStatusBar.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, QMUIStatusBarHelper.getStatusbarHeight(mContext)));
         mStatusBar.setBackgroundColor(ColorManager.getInstance().color.colorPrimary);
-        mParentView.addView(mStatusBar, 0);
-
+        //android api19 以下不支持沉浸式。
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT)
+            mParentView.addView(mStatusBar, 0);
         fragment.getLifecycle().addObserver(this);
 
         return mParentView;
@@ -59,7 +62,7 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
     }
 
     public void autoColorPrimary(boolean isAuto) {
-        this.mIsAuto=isAuto;
+        this.mIsAuto = isAuto;
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -67,17 +70,17 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
         Log.i(TAG, "onCreate: ");
         ColorManager.getInstance().getColorConfig().addOnPropertyChangedCallback(this);
     }
-    
+
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onDestroy(){
+    public void onDestroy() {
         Log.i(TAG, "onDestroy: ");
         ColorManager.getInstance().getColorConfig().removeOnPropertyChangedCallback(this);
     }
 
     @Override
     public void onPropertyChanged(Observable sender, int propertyId) {
-        if(!mIsAuto)
+        if (!mIsAuto)
             return;
-        mStatusBar.setBackgroundColor(((ColorConfig)sender).colorPrimary);
+        mStatusBar.setBackgroundColor(((ColorConfig) sender).colorPrimary);
     }
 }

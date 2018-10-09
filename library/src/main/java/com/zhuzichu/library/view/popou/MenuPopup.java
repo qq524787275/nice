@@ -1,20 +1,18 @@
 package com.zhuzichu.library.view.popou;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.PopupWindow;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.qmuiteam.qmui.util.QMUIResHelper;
 import com.zhuzichu.library.R;
-import com.zhuzichu.library.comment.animation.Techniques;
-import com.zhuzichu.library.comment.animation.YoYo;
 
 public class MenuPopup extends PopupWindow {
     private Context mContext;
@@ -34,18 +32,18 @@ public class MenuPopup extends PopupWindow {
         setFocusable(true);
         setOutsideTouchable(true);
         setContentView(mRoot);
+        //设置宽和高解决5.0以下版本不显示
+        setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+        setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
 
         RecyclerView rv = mRoot.findViewById(R.id.menu);
         rv.setLayoutManager(new LinearLayoutManager(mContext));
         mAdapter = new MenuAdapter();
         rv.setAdapter(mAdapter);
 
-        mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mAdapter.getData().get(position).listener.onMenuClick();
-                dismiss();
-            }
+        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+            mAdapter.getData().get(position).listener.onMenuClick();
+            dismiss();
         });
     }
 
@@ -68,8 +66,12 @@ public class MenuPopup extends PopupWindow {
     }
 
     public void show(View anchor) {
-        showAsDropDown(anchor, 0, 0, Gravity.TOP | Gravity.END);
-        YoYo.with(Techniques.BounceIn).duration(300).playOn(mRoot);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            showAsDropDown(anchor, 0, 0, Gravity.TOP | Gravity.END);
+        } else {
+            showAtLocation(anchor.getRootView(), Gravity.TOP | Gravity.END, 0,2* QMUIResHelper.getAttrDimen(mContext, R.attr.qmui_topbar_height));
+        }
+//        YoYo.with(Techniques.BounceIn).duration(300).playOn(mRoot);
     }
 }
 
