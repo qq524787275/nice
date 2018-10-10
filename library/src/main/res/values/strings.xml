@@ -1,4 +1,4 @@
-<resources>
-    <string name="app_name">Library</string>
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="press_again_exit">再按一次退出</string>
+    <string name="error_gif">长宽不小于 %1$dpx，且大小不超过 %2$sM。</string>
 </resources>

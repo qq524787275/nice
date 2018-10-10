@@ -10,7 +10,7 @@ import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.BaseDataBindingAdapter;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.comment.glide.GlideAdapter;
-import com.zhuzichu.library.utils.TimeUtil;
+import com.zhuzichu.library.utils.TimeUtils;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
 
@@ -99,7 +99,7 @@ public class MessageAdapter extends BaseDataBindingAdapter<IMMessage, ItemMessag
      * @param item
      */
     private void refreshMsgTime(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
-        binding.msgTime.setText(TimeUtil.getTimeShowString(item.getTime(), false));
+        binding.msgTime.setText(TimeUtils.getTimeShowString(item.getTime(), false));
         if (helper.getAdapterPosition() - 1 >= 0) {
             IMMessage lastMsg = getData().get(helper.getAdapterPosition() - 1);
             if (item.getTime() - lastMsg.getTime() > 60000) {

@@ -25,4 +25,8 @@ public class DialogUtils {
     public static void showInfoDialog(Context context, String info) {
         showInfoDialog(context, null, info, null);
     }
+
+    public static void showInfoDialog(Context context, String info, MaterialDialog.SingleButtonCallback callback) {
+        showInfoDialog(context, null, info, callback);
+    }
 }

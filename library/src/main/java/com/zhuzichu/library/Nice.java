@@ -1,15 +1,11 @@
 package com.zhuzichu.library;
 
+import android.Manifest;
 import android.content.Context;
 
 import com.zhuzichu.library.comment.color.ColorManager;
 
 public class Nice {
-
-
-    public interface Extra {
-        String ACTION_START_FRAGMENT = "action_start_fragment";
-    }
 
     public static String account;
     public static Context context;
@@ -59,5 +55,28 @@ public class Nice {
 
     public static void setAccount(String account) {
         Nice.account = account;
+    }
+
+    public static Context getContext() {
+        return context;
+    }
+
+
+    public interface PermissionCode {
+        //进入app的基本权限 code
+        int BASIC_PERMISSION_REQUEST_CODE = 110;
+        //二维码扫描权限 code
+        int SCANNER_PERMISSION_REQUEST_CODE = 120;
+    }
+
+    public interface Permission {
+        //进入app的基本权限
+        String[] BASIC_PERMISSIONS = new String[]{
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE};
+        //二维码扫描权限
+        String[] SCANNER_PERMISSION = new String[]{
+                Manifest.permission.CAMERA,
+                Manifest.permission.VIBRATE};
     }
 }

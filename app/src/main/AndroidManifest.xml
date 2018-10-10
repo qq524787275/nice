@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <!-- 控制呼吸灯，振动器等，用于新消息提醒 -->
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <!-- 外置存储存取权限 -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -69,7 +68,7 @@
             如果 SDKOptions 中提供了，取 SDKOptions 中的值。 45c6af3c98409b18a84451215d0bdd6e-->
         <meta-data
             android:name="com.netease.nim.appKey"
-            android:value="84983adaf3f2a65ce8420d8214853a88" />
+            android:value="45c6af3c98409b18a84451215d0bdd6e" />
         <!-- 云信后台服务，请使用独立进程。 -->
         <service
             android:name="com.netease.nimlib.service.NimService"

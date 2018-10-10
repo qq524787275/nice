@@ -56,7 +56,19 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     }
 
     private void initObserver() {
-        Disposable disposable = RxBus.getIntance().doSubscribe(ActionMainStartFragmnet.class, target -> start(target.data));
+        Disposable disposable = RxBus.getIntance().doSubscribe(ActionMainStartFragmnet.class, target -> {
+            if (target.animations.isPresent()) {
+                ActionMainStartFragmnet.Animations animations = target.animations.get();
+                extraTransaction().setCustomAnimations(
+                        animations.targetFragmentEnter,
+                        animations.currentFragmentPopExit,
+                        animations.currentFragmentPopEnter,
+                        animations.targetFragmentExit
+                ).startDontHideSelf(target.data);
+            } else {
+                start(target.data);
+            }
+        });
         RxBus.getIntance().addSubscription(this, disposable);
     }
 

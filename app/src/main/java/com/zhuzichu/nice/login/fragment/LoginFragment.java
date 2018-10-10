@@ -13,6 +13,7 @@ import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.utils.MD5;
 import com.zhuzichu.library.utils.UserPreferences;
 import com.zhuzichu.library.widget.NiceRequestCallback;
 import com.zhuzichu.nice.MainActivity;
@@ -48,7 +49,7 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
     }
 
     private void initListener() {
-        mBinding.btnSubmit.setOnClickListener(view -> doLogin(mBinding.etAccount.getText().toString(),mBinding.tietPassword.getText().toString()));
+        mBinding.btnSubmit.setOnClickListener(view -> doLogin(mBinding.etAccount.getText().toString(), MD5.getStringMD5(mBinding.tietPassword.getText().toString())));
 
 
     }

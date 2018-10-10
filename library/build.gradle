@@ -19,6 +19,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res-matisse'] } }
 }
 
 dependencies {
@@ -60,4 +61,8 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
     api "io.reactivex.rxjava2:rxjava:2.2.2"
     api 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    //Zxing核心包
+    api 'com.google.zxing:core:3.3.0'
+
+    api 'it.sephiroth.android.library.imagezoom:library:1.0.4'
 }

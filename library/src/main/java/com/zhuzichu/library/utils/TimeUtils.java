@@ -9,7 +9,7 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class TimeUtil {
+public class TimeUtils {
 
     public static boolean isEarly(int days, long time) {
         return (currentTimeMillis() - time) > (days * 24 * 3600 * 1000);
