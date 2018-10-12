@@ -74,4 +74,10 @@
         <attr name="rfs_hideDelay" format="integer" />
         <attr name="rfs_hidingEnabled" format="boolean" />
     </declare-styleable>
+
+    <declare-styleable name="CollapsibleCard">
+        <attr name="cardTitle" format="string" />
+        <attr name="cardDescription" format="string" />
+    </declare-styleable>
+
 </resources>
