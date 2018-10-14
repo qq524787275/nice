@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="color"
+            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+    </data>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="@{color.itemBackground}"
+        android:foreground="?attr/selectableItemBackground">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/item_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="100dp"
+            android:layout_toRightOf="@+id/item_avatar"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textSize="16sp"
+            app:textColor="@{color.textColorPrimary}" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/qmui_divider_top_bitmap" />
+    </RelativeLayout>
+</layout>

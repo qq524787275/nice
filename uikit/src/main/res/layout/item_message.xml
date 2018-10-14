@@ -61,7 +61,7 @@
             app:sl_pressedBackgroundColor="@{isMy?color.colorPrimaryDark:@color/color_grey_999999}"
             app:sl_radius="20dp">
 
-            <com.zhuzichu.uikit.face.NiceFaceView
+            <com.zhuzichu.library.view.face.NiceFaceView
                 android:id="@+id/msg_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

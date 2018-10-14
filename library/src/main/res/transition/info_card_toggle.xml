@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<transitionSet xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
-
+<transitionSet xmlns:android="http://schemas.android.com/apk/res/android">
     <transition class="com.zhuzichu.library.widget.transition.Rotate">
         <targets>
             <target android:targetId="@id/expand_icon" />

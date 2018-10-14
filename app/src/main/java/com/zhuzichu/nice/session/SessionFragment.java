@@ -4,16 +4,16 @@ import android.animation.Animator;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.Toast;
 
 import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
-import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.qmuiteam.qmui.util.QMUIDrawableHelper;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.bean.CountryBean;
 import com.zhuzichu.library.comment.bus.RxBus;
@@ -21,7 +21,6 @@ import com.zhuzichu.library.comment.color.ColorConfig;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.ui.country.fragment.SelectCountryFragment;
 import com.zhuzichu.library.ui.scaner.ScannerFragment;
-import com.zhuzichu.library.utils.DialogUtils;
 import com.zhuzichu.library.utils.UserPreferences;
 import com.zhuzichu.library.view.popou.MenuPopup;
 import com.zhuzichu.library.view.reveal.animation.ViewAnimationUtils;
@@ -29,6 +28,8 @@ import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentSessionBinding;
 import com.zhuzichu.nice.login.LoginActivity;
 import com.zhuzichu.uikit.message.fragment.MessageFragment;
+import com.zhuzichu.uikit.message.fragment.MessageP2pFragment;
+import com.zhuzichu.uikit.message.fragment.MessageTeamFragment;
 import com.zhuzichu.uikit.session.fragment.SessionListFragment;
 
 import io.reactivex.disposables.Disposable;
@@ -65,18 +66,28 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         initListener();
     }
 
-    private void initListener() {
-        mSessListFragment.setOnSessionItemClickListener(new SessionListFragment.OnSessionItemClickListener() {
-            @Override
-            public void onSessionItemClick(RecentContact recentContact) {
-                RxBus.getIntance().post(new ActionMainStartFragmnet(MessageFragment.newInstance(recentContact.getContactId(), recentContact.getSessionType())));
-            }
+    private boolean isClickEnable = false;
 
-            @Override
-            public void onSessionItemLongClick(RecentContact recentContact) {
-                Log.i(TAG, "onSessionItemLongClick: ");
-                DialogUtils.showInfoDialog(getActivity(), "长点击");
+    private void initListener() {
+        mSessListFragment.setOnSessionItemClickListener(contact -> {
+            if (isClickEnable) return;
+            isClickEnable = true;
+            BaseFragment target;
+            switch (contact.getSessionType()) {
+                case P2P:
+                    target = MessageP2pFragment.newInstance(contact.getContactId(), contact.getSessionType());
+                    break;
+                case Team:
+                    target = MessageTeamFragment.newInstance(contact.getContactId(), contact.getSessionType());
+                    break;
+                default:
+                    target = MessageFragment.newInstance(contact.getContactId(), contact.getSessionType());
+                    break;
             }
+            mBinding.topbar.postDelayed(() -> {
+                RxBus.getIntance().post(new ActionMainStartFragmnet(target));
+                isClickEnable = false;
+            }, 200);
         });
     }
 
@@ -143,6 +154,7 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
 
     private void initTopBar() {
         mBinding.topbar.setTitle(R.string.main_session);
+        mBinding.topbar.setTitleGravity(Gravity.LEFT);
         mBinding.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_session_menu)
                 .setOnClickListener(view -> mMenuPopup.show(mBinding.topbar));
     }

@@ -20,6 +20,7 @@ public class ColorConfig extends BaseObservable {
     public int bottomBackgroud;
     public int windowBackground;
     public int itemBackground;
+    public int itemBackgroundDark;
     public int itemMenuBackground;
     //是否夜间模式
     public boolean isDark;
@@ -77,6 +78,11 @@ public class ColorConfig extends BaseObservable {
 
     public void setItemBackground(int itemBackground) {
         this.itemBackground = itemBackground;
+        if(isDark){
+            this.itemBackgroundDark = QMUIColorHelper.computeColor(itemBackground, Nice.getColor(R.color.white), 0.075f);
+        }else{
+            this.itemBackgroundDark = QMUIColorHelper.computeColor(itemBackground, Nice.getColor(R.color.black), 0.075f);
+        }
         notifyPropertyChanged(BR.itemBackground);
     }
 
@@ -102,6 +108,7 @@ public class ColorConfig extends BaseObservable {
 
     public void setDark(boolean dark) {
         Log.i(TAG, "setDark: " + dark);
+        isDark = dark;
         if (dark) {
             //夜间模式
             setTextColorPrimary(Nice.getColor(R.color.qmui_config_color_white));
@@ -119,7 +126,6 @@ public class ColorConfig extends BaseObservable {
             setItemMenuBackground(Nice.getColor(R.color.qmui_config_color_white));
             setBottomBackgroud(Nice.getColor(R.color.color_white_f8f8f8));
         }
-        isDark = dark;
         UserPreferences.saveColorConfig(this);
     }
 }

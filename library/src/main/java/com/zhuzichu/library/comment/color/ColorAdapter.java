@@ -4,6 +4,7 @@ import android.databinding.BindingAdapter;
 import android.widget.TextView;
 
 import com.qmuiteam.qmui.widget.QMUITopBar;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.zhuzichu.library.view.bottom.BottomBar;
 import com.zhuzichu.library.view.recyclerview.RecyclerFastScroller;
 
@@ -12,11 +13,6 @@ public class ColorAdapter {
     @BindingAdapter({"textColor"})
     public static void textColor(TextView textView, int color) {
         textView.setTextColor(color);
-    }
-
-    @BindingAdapter({"topBgColor"})
-    public static void topBgColor(QMUITopBar qmuiTopBar, int color) {
-        qmuiTopBar.setBackgroundColor(color);
     }
 
     @BindingAdapter({"bottomSelectColor"})
@@ -40,4 +36,8 @@ public class ColorAdapter {
         scroller.setHandlePressedColor(color);
     }
 
+    @BindingAdapter({"srlPrimaryColor"})
+    public static void srlPrimaryColor(SmartRefreshLayout smartRefreshLayout, int color) {
+        smartRefreshLayout.setPrimaryColors(color);
+    }
 }

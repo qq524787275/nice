@@ -1,4 +1,4 @@
-package com.zhuzichu.uikit.face;
+package com.zhuzichu.library.view.face;
 
 import android.graphics.drawable.Drawable;
 import android.support.v4.util.ArrayMap;
@@ -7,7 +7,7 @@ import android.util.SparseIntArray;
 
 import com.qmuiteam.qmui.qqface.IQMUIQQFaceManager;
 import com.qmuiteam.qmui.qqface.QQFace;
-import com.zhuzichu.uikit.R;
+import com.zhuzichu.library.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;

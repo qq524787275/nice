@@ -1,4 +1,4 @@
-package com.zhuzichu.library.comment.observer;
+package com.zhuzichu.uikit.observer;
 
 import android.util.Log;
 
@@ -10,12 +10,15 @@ import com.netease.nimlib.sdk.auth.OnlineClient;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.netease.nimlib.sdk.uinfo.UserServiceObserve;
+import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.zhuzichu.library.comment.bus.RxBus;
-import com.zhuzichu.library.comment.observer.action.ActionMessageStatus;
-import com.zhuzichu.library.comment.observer.action.ActionOnlineStatus;
-import com.zhuzichu.library.comment.observer.action.ActionOtherClients;
-import com.zhuzichu.library.comment.observer.action.ActionReceiveMessage;
-import com.zhuzichu.library.comment.observer.action.ActionRecentContact;
+import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
+import com.zhuzichu.uikit.observer.action.ActionOnlineStatus;
+import com.zhuzichu.uikit.observer.action.ActionOtherClients;
+import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
+import com.zhuzichu.uikit.observer.action.ActionRecentContact;
+import com.zhuzichu.uikit.observer.action.ActionUserInfoUpdate;
 
 import java.util.List;
 
@@ -58,13 +61,18 @@ public class ObserverManager {
         RxBus.getIntance().post(new ActionReceiveMessage(list));
     };
 
+    private final static Observer<List<NimUserInfo>> observerUserInfoUpdate = (Observer<List<NimUserInfo>>) list -> {
+        Log.i(TAG, "zzc : userInfoUpdateObserver");
+        RxBus.getIntance().post(new ActionUserInfoUpdate(list));
+    };
+
     public static void regist() {
         NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(observeReceiveMessage, true);
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, true);
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, true);
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(observeOnlineStatus, true);
         NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, true);
-
+        NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, true);
     }
 
     public static void unRegist() {
@@ -73,5 +81,6 @@ public class ObserverManager {
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, false);
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(observeOnlineStatus, false);
         NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, false);
+        NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, false);
     }
 }

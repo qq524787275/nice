@@ -19,7 +19,8 @@
             android:id="@+id/topbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:topBgColor="@{color.colorPrimary}" />
+            android:background="@{color.colorPrimary}"
+            app:qmui_topbar_title_text_size="20sp" />
 
         <FrameLayout
             android:id="@+id/list_session"

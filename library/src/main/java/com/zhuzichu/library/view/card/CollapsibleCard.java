@@ -1,9 +1,7 @@
 package com.zhuzichu.library.view.card;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -11,8 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.transition.Transition;
 import android.support.transition.TransitionInflater;
 import android.support.transition.TransitionManager;
-import android.support.v4.app.Fragment;
-import android.support.v7.content.res.AppCompatResources;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,9 +61,9 @@ public class CollapsibleCard extends FrameLayout {
         mCardDescriptionView = mRoot.findViewById(R.id.card_description);
         mCardDescriptionView.setText(cardDescription);
         mExpandIcon = mRoot.findViewById(R.id.expand_icon);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mExpandIcon.setImageTintList(AppCompatResources.getColorStateList(mContext, R.color.collapsing_section));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            mExpandIcon.setImageTintList(AppCompatResources.getColorStateList(mContext, R.color.collapsing_section));
+//        }
 
         mToggle = TransitionInflater.from(mContext)
                 .inflateTransition(R.transition.info_card_toggle);
@@ -120,12 +116,12 @@ public class CollapsibleCard extends FrameLayout {
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if(state instanceof SavedState)
-        super.onRestoreInstanceState(state);
+        if (state instanceof SavedState)
+            super.onRestoreInstanceState(state);
 
     }
 
-    public class SavedState extends BaseSavedState {
+    public static class SavedState extends BaseSavedState {
         boolean expanded = false;
 
         public SavedState(Parcelable source) {
@@ -147,5 +143,17 @@ public class CollapsibleCard extends FrameLayout {
                 out.writeByte((byte) 1);
             }
         }
+
+        public static Parcelable.Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @Override
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source);
+            }
+
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

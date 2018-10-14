@@ -9,9 +9,9 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.BaseDataBindingAdapter;
 import com.zhuzichu.library.comment.color.ColorManager;
-import com.zhuzichu.library.comment.glide.GlideAdapter;
 import com.zhuzichu.library.utils.TimeUtils;
 import com.zhuzichu.uikit.R;
+import com.zhuzichu.uikit.adapter.ImageAdapter;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class MessageAdapter extends BaseDataBindingAdapter<IMMessage, ItemMessag
     protected void convert(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
         binding.setColor(ColorManager.getInstance().color);
         //加载头像
-        GlideAdapter.loadAvatar(binding.msgAvatar, item.getFromAccount());
+        ImageAdapter.loadAvatar(binding.msgAvatar, item.getFromAccount());
         //刷新时间
         refreshMsgTime(helper, binding, item);
         //判断消息是否是自己的

@@ -14,6 +14,11 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <com.qmuiteam.qmui.widget.QMUITopBar
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{color.colorPrimary}" />
 
         <FrameLayout
             android:id="@+id/layout_content"
@@ -21,12 +26,25 @@
             android:layout_height="0dp"
             android:layout_weight="1">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/list_message"
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@{color.windowBackground}"
-                android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+                app:srlEnableLoadMore="false"
+                app:srlHeaderMaxDragRate="2.5"
+                app:srlPrimaryColor="@{color.colorPrimary}">
+
+                <com.zhuzichu.library.widget.header.water.WaterDropHeader
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/list_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <com.zhuzichu.library.view.recyclerview.RecyclerFastScroller
                 android:id="@+id/fast_scroller"
@@ -41,12 +59,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
-                android:visibility="gone"
                 android:layout_marginTop="100dp"
                 android:background="#bb999999"
                 android:padding="8dp"
                 android:text="有新消息"
-                android:textColor="@color/white" />
+                android:textColor="@color/white"
+                android:visibility="gone" />
         </FrameLayout>
 
 

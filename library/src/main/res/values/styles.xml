@@ -3,8 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="QMUI.Compat.NoActionBar">
         <!-- 配置Android提供的theme -->
-        <item name="colorPrimary">@color/colorPrimaryDark</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/white</item>
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:listPreferredItemHeight">?attr/qmui_list_item_height_higher</item>
@@ -20,6 +20,8 @@
         <!-- 配置app自己的theme -->
         <item name="app_primary_color">@color/colorPrimary</item>
         <item name="app_content_bg_color">@color/qmui_config_color_white</item>
+
+        <item name="chipViewStyle">@style/Widget.ChipView</item>
     </style>
 
 
@@ -30,5 +32,15 @@
         <item name="qmui_topbar_text_btn_color_state_list">@color/topbar_btn_color</item>
         <item name="qmui_topbar_height">?actionBarSize</item>
         <item name="qmui_topbar_image_btn_height">48dp</item>
+    </style>
+
+    <style name="Widget.ChipView" parent="@android:style/Widget">
+        <item name="android:padding">8dp</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textSize">14sp</item>
+        <item name="outlineWidth">1dp</item>
+        <item name="clearIcon">@drawable/tag_clear</item>
+        <item name="foreground">?selectableItemBackground</item>
+        <item name="showIcons">true</item>
     </style>
 </resources>

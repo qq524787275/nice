@@ -1,4 +1,4 @@
-package com.zhuzichu.library.comment.observer.action;
+package com.zhuzichu.uikit.observer.action;
 
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 
