@@ -21,8 +21,7 @@
             android:id="@+id/topbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@{color.colorPrimary}"
-            app:qmui_topbar_title_text_size="20sp" />
+            android:background="@{color.colorPrimary}" />
 
         <FrameLayout
             android:id="@+id/list_contact"

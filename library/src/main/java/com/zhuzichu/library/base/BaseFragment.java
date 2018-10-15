@@ -21,7 +21,9 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 public abstract class BaseFragment extends Fragment implements ISupportFragment {
     final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
     protected FragmentActivity _mActivity;
+
     public abstract Object setLayout();
+
     public abstract void onBindView(@Nullable Bundle savedInstanceState, View rootView);
 
     @Override
@@ -56,13 +58,13 @@ public abstract class BaseFragment extends Fragment implements ISupportFragment 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = null;
-        if (setLayout() instanceof Integer){
-            rootView = inflater.inflate((Integer) setLayout(),container,false);
-        }else if (setLayout() instanceof View){
+        if (setLayout() instanceof Integer) {
+            rootView = inflater.inflate((Integer) setLayout(), container, false);
+        } else if (setLayout() instanceof View) {
             rootView = (View) setLayout();
         }
-        if (rootView != null){
-            onBindView(savedInstanceState,rootView);
+        if (rootView != null) {
+            onBindView(savedInstanceState, rootView);
         }
         return rootView;
     }
@@ -94,6 +96,7 @@ public abstract class BaseFragment extends Fragment implements ISupportFragment 
     public void onPause() {
         super.onPause();
         mDelegate.onPause();
+        hideSoftInput();
     }
 
     @Override
@@ -288,7 +291,8 @@ public abstract class BaseFragment extends Fragment implements ISupportFragment 
     /**
      * 隐藏软键盘
      */
-    protected void hideSoftInput() {
+    protected void
+    hideSoftInput() {
         mDelegate.hideSoftInput();
     }
 

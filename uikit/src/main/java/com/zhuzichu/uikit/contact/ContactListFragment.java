@@ -1,5 +1,7 @@
 package com.zhuzichu.uikit.contact;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,15 +10,21 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.friend.FriendService;
 import com.netease.nimlib.sdk.uinfo.UserService;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
+import com.zhuzichu.library.action.ActionSoftKeyboard;
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.contact.adapter.ContactAdapter;
 import com.zhuzichu.uikit.contact.bean.FriendBean;
+import com.zhuzichu.uikit.contact.viewmodel.ContactViewModel;
 import com.zhuzichu.uikit.databinding.FragmentContactListBinding;
+import com.zhuzichu.uikit.observer.action.ActionUserInfoUpdate;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -30,8 +38,9 @@ import me.yokeyword.indexablerv.IndexableLayout;
  */
 public class ContactListFragment extends NiceFragment<FragmentContactListBinding> {
     private FragmentContactListBinding mBind;
-    private CompositeDisposable mDisposables;
     private ContactAdapter mAdapter;
+    private ContactViewModel mViewModel;
+    private List<FriendBean> mData;
 
     public static ContactListFragment newInstance() {
 
@@ -51,9 +60,32 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
     public void init(FragmentContactListBinding binding) {
         mBind = binding;
         _status.hide();
-        mDisposables = new CompositeDisposable();
+        mViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         initView();
+        initObserver();
     }
+
+    private void initObserver() {
+        mViewModel.getLiveFriends().observe(this, friendBeans -> {
+            mAdapter.setDatas(friendBeans);
+        });
+
+        Disposable dispUserInfoUpdate = RxBus.getIntance()
+                .toObservable(ActionUserInfoUpdate.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(action->action.getData())
+                .flatMap(data-> Flowable.fromIterable(data))
+                .map(item->{
+                    for (int i = 0; i < mData.size(); i++) {
+
+                    }
+                    item.getAccount(mAdapter.getItems())
+                })
+                .subscribe();
+        RxBus.getIntance().addSubscription(this, dispUserInfoUpdate);
+    }
+
 
     private void initView() {
         mBind.layoutIndex.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -61,38 +93,19 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
         mBind.layoutIndex.setCompareMode(IndexableLayout.MODE_FAST);
         mAdapter = new ContactAdapter(getContext());
         mBind.layoutIndex.setAdapter(mAdapter);
+        mData = mAdapter.getItems();
     }
 
     @Override
     public void onLazyInitView(@Nullable Bundle savedInstanceState) {
         super.onLazyInitView(savedInstanceState);
-        loadFriendList();
+        mViewModel.loadFriendList();
     }
 
-    /**
-     * 加载好友列表
-     */
-    public void loadFriendList() {
-        Disposable subscribe = Observable.create((ObservableOnSubscribe<List<FriendBean>>) emitter -> {
-            List<String> accounts = NIMClient.getService(FriendService.class).getFriendAccounts(); // 获取所有好友帐号
-            List<NimUserInfo> users = NIMClient.getService(UserService.class).getUserInfoList(accounts); // 获取所有好友用户资料
-            List<FriendBean> list = new ArrayList<>();
-            for (NimUserInfo item : users) {
-                list.add(new FriendBean(item));
-            }
-            emitter.onNext(list);
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(list -> {
-                    mAdapter.setDatas(list);
-                });
-        mDisposables.add(subscribe);
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (!mDisposables.isDisposed())
-            mDisposables.dispose();
+        RxBus.getIntance().unSubscribe(this);
     }
 }
