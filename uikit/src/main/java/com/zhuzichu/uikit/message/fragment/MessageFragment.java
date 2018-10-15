@@ -119,8 +119,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                     for (int i = 0; i < data.size(); i++) {
                         IMMessage item = data.get(i);
                         if (item.getUuid().equals(msg.getUuid())) {
-                            data.remove(i);
-                            data.add(i, msg);
+                            data.set(i,msg);
                             mAdapter.refreshNotifyItemChanged(i);
                             break;
                         }

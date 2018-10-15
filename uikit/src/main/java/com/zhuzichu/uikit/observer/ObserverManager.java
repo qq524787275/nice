@@ -1,7 +1,5 @@
 package com.zhuzichu.uikit.observer;
 
-import android.util.Log;
-
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.StatusCode;
@@ -49,7 +47,6 @@ public class ObserverManager {
      * 消息状态监听
      */
     private final static Observer<IMMessage> observeMessageStatus = (Observer<IMMessage>) imMessage -> {
-        Log.i(TAG, "zzc: observeMessageStatus");
         RxBus.getIntance().post(new ActionMessageStatus(imMessage));
     };
 
@@ -57,12 +54,10 @@ public class ObserverManager {
      * 消息接受监听
      */
     private final static Observer<List<IMMessage>> observeReceiveMessage = (Observer<List<IMMessage>>) list -> {
-        Log.i(TAG, "zzc : observeReceiveMessage:size=" + list.size());
         RxBus.getIntance().post(new ActionReceiveMessage(list));
     };
 
     private final static Observer<List<NimUserInfo>> observerUserInfoUpdate = (Observer<List<NimUserInfo>>) list -> {
-        Log.i(TAG, "zzc : userInfoUpdateObserver");
         RxBus.getIntance().post(new ActionUserInfoUpdate(list));
     };
 
