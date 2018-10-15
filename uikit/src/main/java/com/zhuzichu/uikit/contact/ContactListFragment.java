@@ -2,6 +2,7 @@ package com.zhuzichu.uikit.contact;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
@@ -53,20 +54,18 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
     public void init(FragmentContactListBinding binding) {
         mBind = binding;
         _status.hide();
-        mViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         initView();
-        initObserver();
-        mViewModel.loadFriendList();
+        mViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
+        mViewModel.getLiveFriends().observe(this, friendBeans -> {
+            mData.addAll(friendBeans);
+            mAdapter.notifyDataSetChanged();
+            initObserver();
+        });
     }
 
     private static final String TAG = "ContactListFragment";
 
     private void initObserver() {
-        mViewModel.getLiveFriends().observe(this, friendBeans -> {
-            mData.addAll(friendBeans);
-            mAdapter.notifyDataSetChanged();
-        });
-
         /**
          * 监听添加好友关系变换
          */
@@ -138,6 +137,11 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
 //                });
     }
 
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        mViewModel.loadFriendList();
+    }
 
     private void initView() {
         mBind.layoutIndex.setLayoutManager(new LinearLayoutManager(getContext()));
