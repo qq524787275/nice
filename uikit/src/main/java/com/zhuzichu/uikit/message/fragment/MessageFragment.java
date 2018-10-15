@@ -20,8 +20,6 @@ import com.zhuzichu.library.action.ActionSoftKeyboard;
 import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
-import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
-import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
 import com.zhuzichu.library.view.button.StateButton;
 import com.zhuzichu.library.widget.EmojiKeyboard;
 import com.zhuzichu.library.widget.NiceRequestCallback;
@@ -30,6 +28,8 @@ import com.zhuzichu.library.widget.TextWatcherWrapper;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentMessageBinding;
 import com.zhuzichu.uikit.message.adapter.MessageAdapter;
+import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
+import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,13 +82,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         initView();
         initListener();
         initObserver();
-        hideSoftInput();
-    }
-
-    @Override
-    public void pop() {
-        hideSoftInput();
-        super.pop();
     }
 
     private void initObserver() {
@@ -242,6 +235,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                 .setCallback(new NiceRequestCallback<List<IMMessage>>(getActivity()) {
                     @Override
                     public void success(List<IMMessage> list) {
+
                         if (mIsFirstLoad) {
                             mAdapter.addData(list);
                             scrollToBottom();

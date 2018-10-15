@@ -60,9 +60,7 @@
             android:name=".MainActivity"
             android:label="@string/app_name"></activity>
 
-        <activity android:name=".login.LoginActivity">
-            >
-        </activity>
+        <activity android:name=".login.LoginActivity"></activity>
 
         <!-- APP key, 可以在这里设置，也可以在 SDKOptions 中提供。
             如果 SDKOptions 中提供了，取 SDKOptions 中的值。 45c6af3c98409b18a84451215d0bdd6e-->
