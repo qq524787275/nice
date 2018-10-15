@@ -82,8 +82,14 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         initView();
         initListener();
         initObserver();
+        hideSoftInput();
     }
 
+    @Override
+    public void pop() {
+        hideSoftInput();
+        super.pop();
+    }
 
     private void initObserver() {
         //键盘弹出监听
@@ -216,7 +222,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         mBind.listMessage.setAdapter(mAdapter);
         mBind.fastScroller.attachRecyclerView(mBind.listMessage);
     }
-
 
     @Override
     public boolean onBackPressedSupport() {
