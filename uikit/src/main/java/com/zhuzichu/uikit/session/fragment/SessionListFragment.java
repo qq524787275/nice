@@ -183,14 +183,12 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
                     return new TempRecentContact(-1, item);
                 }).subscribe(temp -> {
                     if (temp.index >= 0) {
-                        mData.remove(temp.index);
-                        mData.add(temp.index, temp.contact);
+                        mData.set(temp.index,temp.contact);
                     } else {
                         mData.add(temp.contact);
                     }
                     mAdapter.sortRefresh();
                 });
-
         RxBus.getIntance().addSubscription(this, dispRecentContact);
     }
 
