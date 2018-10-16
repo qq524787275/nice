@@ -146,7 +146,9 @@ public class ChipView extends View implements Checkable {
             setOutlineProvider(new ViewOutlineProvider() {
                 @Override
                 public void getOutline(View view, Outline outline) {
-                    outline.setRoundRect(0, 0, w, h, h / 2f);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        outline.setRoundRect(0, 0, w, h, h / 2f);
+                    }
                 }
             });
         }

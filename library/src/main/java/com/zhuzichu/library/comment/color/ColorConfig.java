@@ -78,11 +78,6 @@ public class ColorConfig extends BaseObservable {
 
     public void setItemBackground(int itemBackground) {
         this.itemBackground = itemBackground;
-        if(isDark){
-            this.itemBackgroundDark = QMUIColorHelper.computeColor(itemBackground, Nice.getColor(R.color.white), 0.075f);
-        }else{
-            this.itemBackgroundDark = QMUIColorHelper.computeColor(itemBackground, Nice.getColor(R.color.black), 0.075f);
-        }
         notifyPropertyChanged(BR.itemBackground);
     }
 
@@ -106,6 +101,20 @@ public class ColorConfig extends BaseObservable {
         notifyPropertyChanged(BR.bottomBackgroud);
     }
 
+    @Bindable
+    public int getItemBackgroundDark() {
+        return itemBackgroundDark;
+    }
+
+    public void setItemBackgroundDark() {
+        if (isDark) {
+            this.itemBackgroundDark = QMUIColorHelper.computeColor(itemBackground, Nice.getColor(R.color.white), 0.075f);
+        } else {
+            this.itemBackgroundDark = QMUIColorHelper.computeColor(itemBackground, Nice.getColor(R.color.black), 0.075f);
+        }
+        notifyPropertyChanged(BR.itemBackgroundDark);
+    }
+
     public void setDark(boolean dark) {
         Log.i(TAG, "setDark: " + dark);
         isDark = dark;
@@ -126,6 +135,7 @@ public class ColorConfig extends BaseObservable {
             setItemMenuBackground(Nice.getColor(R.color.qmui_config_color_white));
             setBottomBackgroud(Nice.getColor(R.color.color_white_f8f8f8));
         }
+        setItemBackgroundDark();
         UserPreferences.saveColorConfig(this);
     }
 }

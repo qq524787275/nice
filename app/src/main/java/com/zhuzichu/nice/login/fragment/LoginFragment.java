@@ -108,7 +108,6 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        hideSoftInput();
         QMUIStatusBarHelper.setStatusBarDarkMode(getActivity());
     }
 }

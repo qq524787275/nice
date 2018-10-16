@@ -12,6 +12,7 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.bean.TempBean;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.widget.NiceRequestCallback;
@@ -178,15 +179,14 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
                 .map(item -> {
                     for (int i = 0; i < mData.size(); i++) {
                         if (mData.get(i).getContactId().equals(item.getContactId()))
-                            return new TempRecentContact(i, item);
+                            return new TempBean<>(i, item);
                     }
-                    return new TempRecentContact(-1, item);
+                    return new TempBean<>(-1, item);
                 }).subscribe(temp -> {
-                    if (temp.index >= 0) {
-                        mData.set(temp.index,temp.contact);
-                    } else {
-                        mData.add(temp.contact);
-                    }
+                    if (temp.index >= 0)
+                        mData.set(temp.index, temp.data);
+                    else
+                        mData.add(temp.data);
                     mAdapter.sortRefresh();
                 });
         RxBus.getIntance().addSubscription(this, dispRecentContact);
@@ -217,15 +217,5 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
                 mAdapter.sortRefresh();
             }
         });
-    }
-}
-
-class TempRecentContact {
-    int index;
-    RecentContact contact;
-
-    TempRecentContact(int index, RecentContact contact) {
-        this.index = index;
-        this.contact = contact;
     }
 }

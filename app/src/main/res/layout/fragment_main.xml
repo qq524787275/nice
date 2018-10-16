@@ -28,12 +28,12 @@
                 android:id="@+id/fl_tab_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="55dp" />
+                android:layout_marginBottom="52dp" />
 
             <com.zhuzichu.library.view.bottom.BottomBar
                 android:id="@+id/bottomBar"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
+                android:layout_height="52dp"
                 android:layout_gravity="bottom"
                 app:bottomBgColor="@{color.bottomBackgroud}"
                 app:bottomSelectColor="@{color.colorPrimary}" />
@@ -42,7 +42,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginBottom="55dp"
+                android:layout_marginBottom="52dp"
                 android:background="@drawable/actionbar_shadow_up" />
         </FrameLayout>
 
