@@ -10,15 +10,13 @@ import android.view.View;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.base.NiceSwipeFragment;
-import com.zhuzichu.library.bean.CountryBean;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.databinding.FragmentSelectCountryBinding;
 import com.zhuzichu.library.ui.country.adapter.CountryAdapter;
 import com.zhuzichu.library.ui.country.model.CountryViewModel;
+import com.zhuzichu.library.ui.country.model.entry.CountryData;
+import com.zhuzichu.library.utils.livedata.LiveDataEventBus;
 import com.zhuzichu.library.widget.OnClickListener;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.annotation.Nullable;
 
@@ -74,38 +72,27 @@ public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCount
     }
 
     private void initData() {
+
         mCountryViewModel = ViewModelProviders.of(this).get(CountryViewModel.class);
-        mCountryViewModel.getLiveCountrys().observe(this, new Observer<List<CountryBean>>() {
+
+        LiveDataEventBus.with(CountryViewModel.TAG,CountryData.class).observe(this, new Observer<CountryData>() {
             @Override
-            public void onChanged(@Nullable List<CountryBean> dtoCountries) {
-                spliteHotCountry(dtoCountries);
+            public void onChanged(@android.support.annotation.Nullable CountryData data) {
+                mAdapter.setDatas(data.getCountrys());
+                mBinding.layoutIndex.addHeaderAdapter(new SimpleHeaderAdapter<>(mAdapter, "热", "常用国家和地区", data.getHotCountrys()));
+                mBinding.layoutEmpty.hide();
             }
-
-
         });
+
+        mCountryViewModel.loadCountrys(getContext());
+
         Log.i(TAG, "initData: ");
     }
 
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
-        mCountryViewModel.loadCountrys();
-    }
-
-    private void spliteHotCountry(List<CountryBean> dtoCountries) {
-        List<CountryBean> countrys = new ArrayList<>();
-        List<CountryBean> hotCountrys = new ArrayList<>();
-        for (CountryBean item : dtoCountries) {
-            boolean ishot = item.isIshot();
-            if (ishot) {
-                hotCountrys.add(item);
-            } else {
-                countrys.add(item);
-            }
-        }
-        mAdapter.setDatas(dtoCountries);
-        mBinding.layoutIndex.addHeaderAdapter(new SimpleHeaderAdapter<>(mAdapter, "热", "常用国家和地区", hotCountrys));
-        mBinding.layoutEmpty.hide();
+        mCountryViewModel.loadCountrys(getContext());
     }
 
     private void initView() {
