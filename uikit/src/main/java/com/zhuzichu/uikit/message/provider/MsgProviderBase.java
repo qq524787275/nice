@@ -1,30 +1,43 @@
-package com.zhuzichu.uikit.message.adapter;
+package com.zhuzichu.uikit.message.provider;
 
+
+import android.databinding.ViewDataBinding;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.provider.BaseItemProvider;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
-import com.zhuzichu.library.base.BaseDataBindingAdapter;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.TimeUtils;
+import com.zhuzichu.uikit.BR;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.adapter.ImageAdapter;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
+import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 
-import java.util.ArrayList;
+/**
+ * Created by wb.zhuzichu18 on 2018/10/16.
+ */
+public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, MessageMultipItemAdapter.DataBindingViewHolder> {
 
-public class MessageAdapter extends BaseDataBindingAdapter<IMMessage, ItemMessageBinding> {
+    abstract int getContainer();
 
-    public MessageAdapter() {
-        super(R.layout.item_message, new ArrayList<>());
-    }
+    abstract void refreshView(View view, IMMessage item, int position);
 
     @Override
-    protected void convert(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
-        binding.setColor(ColorManager.getInstance().color);
+    public int layout() {
+        return R.layout.item_message;
+    }
+
+
+    @Override
+    public void convert(MessageMultipItemAdapter.DataBindingViewHolder helper, IMMessage item, int position) {
+        ItemMessageBinding binding = helper.getBinding();
+        binding.setVariable(BR.color, ColorManager.getInstance().color);
         //加载头像
         ImageAdapter.loadAvatar(binding.msgAvatar, item.getFromAccount());
         //刷新时间
@@ -40,11 +53,8 @@ public class MessageAdapter extends BaseDataBindingAdapter<IMMessage, ItemMessag
         //添加点击事件
         helper.addOnClickListener(R.id.msg_fail);
 
-        switch (item.getMsgType()) {
-            case text:
-                binding.msgText.setText(item.getContent());
-                break;
-        }
+        View container = LayoutInflater.from(mContext).inflate(getContainer(), binding.msgContent,true);
+        refreshView(container, item, position);
     }
 
     /**
@@ -58,7 +68,6 @@ public class MessageAdapter extends BaseDataBindingAdapter<IMMessage, ItemMessag
         binding.msgLoading.setVisibility(View.GONE);
         binding.msgFail.setVisibility(View.GONE);
         binding.msgRoot.setLayoutDirection(RelativeLayout.LAYOUT_DIRECTION_LTR);
-        binding.msgText.setTextColor(Nice.getColor(R.color.color_grey_333333));
         binding.setIsMy(false);
     }
 
@@ -71,7 +80,6 @@ public class MessageAdapter extends BaseDataBindingAdapter<IMMessage, ItemMessag
      */
     private void refreshMineMsg(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
         binding.msgRoot.setLayoutDirection(RelativeLayout.LAYOUT_DIRECTION_RTL);
-        binding.msgText.setTextColor(Nice.getColor(R.color.white));
         binding.setIsMy(true);
         //设置 消息的发送状态
         MsgStatusEnum status = item.getStatus();
@@ -101,7 +109,7 @@ public class MessageAdapter extends BaseDataBindingAdapter<IMMessage, ItemMessag
     private void refreshMsgTime(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
         binding.msgTime.setText(TimeUtils.getTimeShowString(item.getTime(), false));
         if (helper.getAdapterPosition() - 1 >= 0) {
-            IMMessage lastMsg = getData().get(helper.getAdapterPosition() - 1);
+            IMMessage lastMsg = mData.get(helper.getAdapterPosition() - 1);
             if (item.getTime() - lastMsg.getTime() > 60000) {
                 //相差60秒 显示时间
                 binding.msgTime.setVisibility(View.VISIBLE);

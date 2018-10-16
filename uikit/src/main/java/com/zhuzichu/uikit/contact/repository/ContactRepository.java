@@ -9,7 +9,7 @@ import io.reactivex.Observable;
 /**
  * Created by wb.zhuzichu18 on 2018/10/15.
  */
-public interface Repository {
+public interface ContactRepository {
     /**
      * 加载联系人列表数据
      *
