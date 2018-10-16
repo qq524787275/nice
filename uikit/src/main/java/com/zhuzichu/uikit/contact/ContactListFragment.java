@@ -57,6 +57,7 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
         initView();
         mViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         mViewModel.getLiveFriends().observe(this, friendBeans -> {
+            mData.clear();
             mData.addAll(friendBeans);
             mAdapter.notifyDataSetChanged();
             initObserver();
