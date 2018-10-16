@@ -35,7 +35,7 @@ dependencies {
     api "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     api "com.google.guava:guava:$rootProject.guavaVersion"
     api "com.android.support.constraint:constraint-layout:$rootProject.constraintLayoutVersion"
-    api 'com.netease.nimlib:basesdk:5.1.1'
+    api 'com.netease.nimlib:basesdk:5.7.0'
 
     api 'com.lzy.net:okgo:3.0.4'
     api 'com.google.code.gson:gson:2.8.0'
