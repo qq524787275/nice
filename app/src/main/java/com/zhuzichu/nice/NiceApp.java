@@ -13,24 +13,19 @@ import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.utils.UserPreferences;
 
 public class NiceApp extends Application {
-    private static final String TAG = "NiceApp";
-
-    @Override
-    protected void attachBaseContext(Context newBase) {
-        super.attachBaseContext(newBase);
-        MultiDex.install(this);
-    }
 
     @Override
     public void onCreate() {
         super.onCreate();
         Nice.init(this);
-        Log.i(TAG, "onCreate: 初始化nimsdk");
-        NIMClient.init(this, loginInfo(), options());
+        NIMClient.config(this, loginInfo(), options());
+        InitalizeService.start(this);
     }
 
     private SDKOptions options() {
-        return null;
+        SDKOptions Default = SDKOptions.DEFAULT;
+        Default.asyncInitSDK = true;
+        return Default;
     }
 
     private LoginInfo loginInfo() {
