@@ -110,6 +110,7 @@
             android:exported="false"
             android:process=":core" />
 
+        <service android:name=".InitalizeService"></service>
 
     </application>
 
