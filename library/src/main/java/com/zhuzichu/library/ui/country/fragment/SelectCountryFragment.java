@@ -114,14 +114,10 @@ public class SelectCountryFragment extends NiceSwipeFragment<FragmentSelectCount
         mBinding.layoutIndex.setCompareMode(IndexableLayout.MODE_FAST);
         mAdapter = new CountryAdapter(getContext());
         mBinding.layoutIndex.setAdapter(mAdapter);
-        mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> {
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - OnClickListener.lastClickTime > OnClickListener.minTime) {
-                OnClickListener.lastClickTime = currentTime;
-                RxBus.getIntance().post(entity);
-                pop();
-            }
-        });
+        mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> OnClickListener.noDoubleClick(() -> {
+            RxBus.getIntance().post(entity);
+            pop();
+        }));
     }
 
     @Override
