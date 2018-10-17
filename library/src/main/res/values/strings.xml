@@ -27,7 +27,7 @@
     <!-- session -->
     <string name="sticky_on_top">置顶</string>
     <string name="clear_sticky_on_top">取消置顶</string>
-
+    <string name="without_messgae">暂无消息</string>
 
 
 </resources>

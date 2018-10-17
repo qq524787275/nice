@@ -14,7 +14,7 @@ import io.reactivex.Observable;
 /**
  * Created by wb.zhuzichu18 on 2018/10/15.
  */
-public class RepositoryImpl implements Repository {
+public class ContactRepositoryImpl implements ContactRepository {
 
     @Override
     public Observable<List<FriendBean>> loadFriendList() {

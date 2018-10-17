@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
 
+    <data>
+
+        <variable
+            name="color"
+            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+    </data>
+
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -21,5 +28,11 @@
                 android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
+        <com.qmuiteam.qmui.widget.QMUIEmptyView
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@{color.windowBackground}"
+            app:qmui_show_loading="true" />
     </android.support.constraint.ConstraintLayout>
 </layout>

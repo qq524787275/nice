@@ -1,16 +1,17 @@
 package com.zhuzichu.uikit.contact.viewmodel;
 
+import android.app.Application;
 import android.arch.lifecycle.MutableLiveData;
+import android.support.annotation.NonNull;
 
 import com.zhuzichu.library.base.BaseViewModel;
 import com.zhuzichu.uikit.contact.bean.FriendBean;
-import com.zhuzichu.uikit.contact.repository.Repository;
-import com.zhuzichu.uikit.contact.repository.RepositoryImpl;
+import com.zhuzichu.uikit.contact.repository.ContactRepository;
+import com.zhuzichu.uikit.contact.repository.ContactRepositoryImpl;
 
 import java.util.List;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
@@ -18,23 +19,15 @@ import io.reactivex.schedulers.Schedulers;
  * Created by wb.zhuzichu18 on 2018/10/15.
  */
 public class ContactViewModel extends BaseViewModel {
-    private CompositeDisposable mDisposables = new CompositeDisposable();
-    private Repository repository = new RepositoryImpl();
+    private ContactRepository contactRepository = new ContactRepositoryImpl();
     private MutableLiveData<List<FriendBean>> mLiveFriends = new MutableLiveData<>();
 
     public void loadFriendList() {
-        Disposable subscribe = repository.loadFriendList().observeOn(AndroidSchedulers.mainThread())
+        Disposable subscribe = contactRepository.loadFriendList().observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(friendBeans -> mLiveFriends.setValue(friendBeans));
-        mDisposables.add(subscribe);
-    }
 
-
-    @Override
-    protected void onCleared() {
-        super.onCleared();
-        if (!mDisposables.isDisposed())
-            mDisposables.dispose();
+        addDisposable(subscribe);
     }
 
     public MutableLiveData<List<FriendBean>> getLiveFriends() {
