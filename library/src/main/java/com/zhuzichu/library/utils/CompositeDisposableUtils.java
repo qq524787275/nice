@@ -6,7 +6,7 @@ import java.util.Map;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class RxTaskControl {
+public class CompositeDisposableUtils {
 
     private static Map<String,CompositeDisposable> map=new HashMap<>();
 
