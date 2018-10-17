@@ -301,4 +301,9 @@ public class StateButton extends AppCompatTextView {
     public static void setNormalBackgroundColor(StateButton stateButton, int color) {
         stateButton.setNormalBackgroundColor(color);
     }
+
+    @BindingAdapter("sb_pressedBackgroundColor")
+    public static void setPressedBackgroundColor(StateButton stateButton, int color) {
+        stateButton.setPressedBackgroundColor(color);
+    }
 }

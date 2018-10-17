@@ -78,6 +78,7 @@
     <declare-styleable name="CollapsibleCard">
         <attr name="cardTitle" format="string" />
         <attr name="cardDescription" format="string" />
+        <attr name="cardExpanded" format="boolean" />
     </declare-styleable>
 
     <attr name="chipViewStyle" format="reference" />
