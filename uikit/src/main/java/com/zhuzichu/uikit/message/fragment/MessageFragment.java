@@ -20,12 +20,9 @@ import com.zhuzichu.library.action.ActionSoftKeyboard;
 import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
-<<<<<<< HEAD
-=======
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
 import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
->>>>>>> 0615e5a91157d62d3c996c1ead6917c920dace6a
 import com.zhuzichu.library.view.button.StateButton;
 import com.zhuzichu.library.widget.EmojiKeyboard;
 import com.zhuzichu.library.widget.NiceRequestCallback;
@@ -33,12 +30,6 @@ import com.zhuzichu.library.widget.OnClickListener;
 import com.zhuzichu.library.widget.TextWatcherWrapper;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentMessageBinding;
-<<<<<<< HEAD
-import com.zhuzichu.uikit.message.adapter.MessageAdapter;
-import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
-import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
-=======
->>>>>>> 0615e5a91157d62d3c996c1ead6917c920dace6a
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,11 +118,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                     for (int i = 0; i < data.size(); i++) {
                         IMMessage item = data.get(i);
                         if (item.getUuid().equals(msg.getUuid())) {
-<<<<<<< HEAD
                             data.set(i,msg);
-=======
-                            data.set(i, msg);
->>>>>>> 0615e5a91157d62d3c996c1ead6917c920dace6a
                             mAdapter.refreshNotifyItemChanged(i);
                             break;
                         }
