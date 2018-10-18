@@ -16,6 +16,7 @@ import com.zhuzichu.uikit.contact.adapter.ContactAdapter;
 import com.zhuzichu.uikit.contact.bean.FriendBean;
 import com.zhuzichu.uikit.contact.viewmodel.ContactViewModel;
 import com.zhuzichu.uikit.databinding.FragmentContactListBinding;
+import com.zhuzichu.uikit.observer.ObserverManager;
 import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
 import com.zhuzichu.uikit.user.fragment.UserCardFragment;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
@@ -63,7 +65,19 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
             mData.addAll(friendBeans);
             mAdapter.notifyDataSetChanged();
             initObserver();
+            subscribeOnlineEvnent(mData);
         });
+    }
+
+    private void subscribeOnlineEvnent(List<FriendBean> mData) {
+        Observable.fromIterable(mData).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(item -> item.getUserInfo().getAccount())
+                .toList()
+                .subscribe(list -> {
+                    Log.i(TAG, "subscribeOnlineEvnent: "+list.size());
+                    ObserverManager.subscribeOnlineStateEvent(list);
+                });
     }
 
     private static final String TAG = "ContactListFragment";
@@ -113,6 +127,7 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
                         mAdapter.notifyDataSetChanged();
                     }
                 });
+
         RxBus.getIntance().addSubscription(this, dispAddedOrUpdatedFriends, dispDeleteFriends);
 
         /**
