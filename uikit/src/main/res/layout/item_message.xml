@@ -29,6 +29,7 @@
             android:textColor="@color/white"
             android:textSize="11sp"
             app:sb_normalBackgroundColor="@color/color_gray_d9d9d9"
+            app:sb_pressedBackgroundColor="@color/color_gray_d9d9d9"
             app:sb_radius="4dp" />
 
         <android.support.v7.widget.AppCompatImageView

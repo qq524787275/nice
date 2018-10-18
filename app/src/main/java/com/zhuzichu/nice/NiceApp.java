@@ -9,6 +9,7 @@ import android.util.Log;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.auth.LoginInfo;
+import com.netease.nimlib.sdk.util.NIMUtil;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.utils.UserPreferences;
 
@@ -19,7 +20,9 @@ public class NiceApp extends Application {
         super.onCreate();
         Nice.init(this);
         NIMClient.config(this, loginInfo(), options());
-        InitalizeService.start(this);
+        if (NIMUtil.isMainProcess(this)) {
+            InitalizeService.start(this);
+        }
     }
 
     private SDKOptions options() {
