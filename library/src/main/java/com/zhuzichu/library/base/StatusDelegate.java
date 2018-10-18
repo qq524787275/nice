@@ -6,7 +6,6 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.databinding.Observable;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -15,10 +14,12 @@ import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.comment.color.ColorConfig;
 import com.zhuzichu.library.comment.color.ColorManager;
 
+import java.lang.ref.WeakReference;
+
 public class StatusDelegate extends Observable.OnPropertyChangedCallback implements LifecycleObserver {
     private static final String TAG = "StatusDelegate";
     private Context mContext;
-    private LinearLayout mParentView;
+
     private View mStatusBar;
     private boolean mIsAuto = true;
 
@@ -26,15 +27,15 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
      * 初始化状态栏
      *
      * @param root
-     * @param fragment
+     * @param ref
      * @return
      */
-    public View init(View root, Fragment fragment) {
-        mContext = fragment.getContext();
-        mParentView = new LinearLayout(mContext);
-        mParentView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-        mParentView.setOrientation(LinearLayout.VERTICAL);
-        mParentView.addView(root);
+    public View init(View root, WeakReference<BaseFragment> ref) {
+        mContext = ref.get().getContext();
+        LinearLayout parentView = new LinearLayout(mContext);
+        parentView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        parentView.setOrientation(LinearLayout.VERTICAL);
+        parentView.addView(root);
 
         //添加状态栏
         mStatusBar = new View(mContext);
@@ -42,10 +43,10 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
         mStatusBar.setBackgroundColor(ColorManager.getInstance().color.colorPrimary);
         //android api19 以下不支持沉浸式。
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT)
-            mParentView.addView(mStatusBar, 0);
-        fragment.getLifecycle().addObserver(this);
+            parentView.addView(mStatusBar, 0);
+        ref.get().getLifecycle().addObserver(this);
 
-        return mParentView;
+        return parentView;
     }
 
 
