@@ -63,13 +63,13 @@ public class LoginActivity extends BaseActivity {
 
     @OnMPermissionGranted(Nice.PermissionCode.BASIC_PERMISSION_REQUEST_CODE)
     public void onBasicPermissionSuccess() {
-        Toast.makeText(this, "授权成功", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "授权成功", Toast.LENGTH_SHORT).show();
     }
 
     @OnMPermissionDenied(Nice.PermissionCode.BASIC_PERMISSION_REQUEST_CODE)
     @OnMPermissionNeverAskAgain(Nice.PermissionCode.BASIC_PERMISSION_REQUEST_CODE)
     public void onBasicPermissionFailed() {
-        Toast.makeText(this, "授权失败", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getApplicationContext(), "授权失败", Toast.LENGTH_SHORT).show();
     }
 
     private void onParseIntent() {

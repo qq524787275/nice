@@ -10,6 +10,7 @@ import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.util.NIMUtil;
+import com.squareup.leakcanary.LeakCanary;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.utils.UserPreferences;
 
@@ -23,6 +24,7 @@ public class NiceApp extends Application {
         if (NIMUtil.isMainProcess(this)) {
             InitalizeService.start(this);
         }
+        setupLeakCanary();
     }
 
     private SDKOptions options() {
@@ -40,5 +42,14 @@ public class NiceApp extends Application {
         } else {
             return null;
         }
+    }
+
+    protected void setupLeakCanary() {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
 }
