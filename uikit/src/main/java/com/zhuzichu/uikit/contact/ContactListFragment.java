@@ -6,9 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
+import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.bean.TempBean;
 import com.zhuzichu.library.comment.bus.RxBus;
+import com.zhuzichu.library.widget.OnClickListener;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.contact.adapter.ContactAdapter;
 import com.zhuzichu.uikit.contact.bean.FriendBean;
@@ -16,6 +18,7 @@ import com.zhuzichu.uikit.contact.viewmodel.ContactViewModel;
 import com.zhuzichu.uikit.databinding.FragmentContactListBinding;
 import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
+import com.zhuzichu.uikit.user.fragment.UserCardFragment;
 import com.zhuzichu.uikit.utils.UserInfoUtils;
 
 import java.util.ArrayList;
@@ -152,6 +155,10 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
         mData = new ArrayList<>();
         mAdapter.setDatas(mData);
         mBind.layoutIndex.setAdapter(mAdapter);
+
+        mAdapter.setOnItemContentClickListener((v, originalPosition, currentPosition, entity) -> OnClickListener.noDoubleClick(() -> {
+            RxBus.getIntance().post(new ActionMainStartFragmnet(UserCardFragment.newInstance(entity.getUserInfo().getAccount())));
+        }));
     }
 
     @Override

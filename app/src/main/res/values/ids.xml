@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="topbar_right_session_menu" type="id"/>
+
+    <item name="topbar_left_online_status" type="id"/>
 </resources>
