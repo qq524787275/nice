@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -17,6 +16,7 @@ import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.bean.TempBean;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
+import com.zhuzichu.library.widget.OnClickListener;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentSessionListBinding;
 import com.zhuzichu.uikit.observer.action.ActionRecentContact;
@@ -89,10 +89,10 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
 
     private void initListener() {
-        mAdapter.setOnItemClickListener((adapter, view, position) -> {
+        mAdapter.setOnItemClickListener((adapter, view, position) -> OnClickListener.noDoubleClick(() -> {
             if (mOnSessionItemClickListener != null)
                 mOnSessionItemClickListener.onSessionItemClick(mAdapter.getData().get(position));
-        });
+        }));
 
         mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
             boolean isTop = isOnTop(mData.get(position));

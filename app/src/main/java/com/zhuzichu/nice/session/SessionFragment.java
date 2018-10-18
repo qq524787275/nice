@@ -27,6 +27,7 @@ import com.zhuzichu.library.view.reveal.animation.ViewAnimationUtils;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentSessionBinding;
 import com.zhuzichu.nice.login.LoginActivity;
+import com.zhuzichu.nice.view.OnlineStatusView;
 import com.zhuzichu.uikit.message.fragment.MessageFragment;
 import com.zhuzichu.uikit.message.fragment.MessageP2pFragment;
 import com.zhuzichu.uikit.message.fragment.MessageTeamFragment;
@@ -66,12 +67,9 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         initListener();
     }
 
-    private boolean isClickEnable = false;
 
     private void initListener() {
         mSessListFragment.setOnSessionItemClickListener(contact -> {
-            if (isClickEnable) return;
-            isClickEnable = true;
             BaseFragment target;
             switch (contact.getSessionType()) {
                 case P2P:
@@ -86,7 +84,6 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
             }
             mBinding.topbar.postDelayed(() -> {
                 RxBus.getIntance().post(new ActionMainStartFragmnet(target));
-                isClickEnable = false;
             }, 200);
         });
     }
@@ -150,11 +147,18 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         mMenuPopup.addItem("扫一扫", () -> {
             RxBus.getIntance().post(new ActionMainStartFragmnet(ScannerFragment.newInstance(), ActionMainStartFragmnet.getModalAnimations()));
         });
+
+        mMenuPopup.addItem("点击", () -> {
+
+        });
     }
 
     private void initTopBar() {
         mBinding.topbar.setTitle(R.string.main_session);
-        mBinding.topbar.setTitleGravity(Gravity.LEFT);
+        mBinding.topbar.setTitleGravity(Gravity.CENTER);
+        OnlineStatusView statusView = new OnlineStatusView(getActivity());
+        getLifecycle().addObserver(statusView);
+        mBinding.topbar.addLeftView(statusView, R.id.topbar_left_online_status);
         mBinding.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_session_menu)
                 .setOnClickListener(view -> mMenuPopup.show(mBinding.topbar));
     }

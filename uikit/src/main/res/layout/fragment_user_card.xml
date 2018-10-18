@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="color"
+            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+
+        <variable
+            name="viewmodel"
+            type="com.zhuzichu.uikit.user.viewmodel.UserCardViewModel"></variable>
+
+        <variable
+            name="presenter"
+            type="com.zhuzichu.uikit.user.presenter.UserCardPresenter"></variable>
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@{color.windowBackground}"
+        android:divider="@drawable/qmui_divider"
+        android:orientation="vertical"
+        android:showDividers="middle">
+
+        <com.qmuiteam.qmui.widget.QMUITopBar
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{color.colorPrimary}"></com.qmuiteam.qmui.widget.QMUITopBar>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp">
+
+            <android.support.v7.widget.AppCompatImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_margin="15dp"
+                app:avatarUserUrl='@{viewmodel.avatar}' />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="20dp"
+                android:layout_toRightOf="@+id/avatar"
+                android:text="@{viewmodel.name}"
+                android:textColor="@{color.textColorPrimary}" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="20dp"
+                android:layout_toRightOf="@+id/avatar"
+                android:text='@{"账号: "+viewmodel.account}'
+                android:textColor="@{color.textColorSeconday}" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@{color.itemBackground}"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="性 别"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@{viewmodel.gender}"
+                android:textColor="@{color.textColorSeconday}"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@{color.itemBackground}"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="生 日"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@{viewmodel.birthday}"
+                android:textColor="@{color.textColorSeconday}"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@{color.itemBackground}"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="手 机"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@{viewmodel.mobile}"
+                android:textColor="@{color.textColorSeconday}"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@{color.itemBackground}"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="邮 箱"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="@{viewmodel.email}"
+                android:textColor="@{color.textColorSeconday}"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <com.zhuzichu.library.view.card.CollapsibleCard xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardDescription="@{viewmodel.signature}"
+            app:cardTitle="签 名"></com.zhuzichu.library.view.card.CollapsibleCard>
+
+        <com.zhuzichu.library.view.button.StateButton xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="聊 天"
+            android:textSize="15sp"
+            android:onClick="@{(view) -> presenter.toChat(view)}"
+            app:sb_normalBackgroundColor="@{color.colorPrimary}"
+            app:sb_normalTextColor="@android:color/white"
+            app:sb_pressedBackgroundColor="@{color.colorPrimaryDark}"
+            app:sb_pressedTextColor="@android:color/white"
+            app:sb_radius="8dp"
+            app:sb_unableBackgroundColor="@color/color_grey_999999"
+            app:sb_unableTextColor="@android:color/white" />
+    </LinearLayout>
+</layout>

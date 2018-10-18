@@ -2,6 +2,7 @@ package com.zhuzichu.library.view.card;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
@@ -32,7 +33,7 @@ public class CollapsibleCard extends FrameLayout {
     private TextView mCardTitleView;
     private HtmlTextView mCardDescriptionView;
     private ImageView mExpandIcon;
-    private boolean expanded = false;
+    private boolean expanded;
     private Transition mToggle;
 
     public CollapsibleCard(@NonNull Context context) {
@@ -52,6 +53,7 @@ public class CollapsibleCard extends FrameLayout {
     private void init(AttributeSet attrs) {
         TypedArray typedArray = mContext.obtainStyledAttributes(attrs, R.styleable.CollapsibleCard, 0, 0);
         mCardTitle = typedArray.getString(R.styleable.CollapsibleCard_cardTitle);
+        expanded = typedArray.getBoolean(R.styleable.CollapsibleCard_cardExpanded, false);
         String cardDescription = typedArray.getString(R.styleable.CollapsibleCard_cardDescription);
         typedArray.recycle();
         mRoot = LayoutInflater.from(mContext).inflate(R.layout.view_collapsible_card, this, true);
@@ -155,5 +157,14 @@ public class CollapsibleCard extends FrameLayout {
                 return new SavedState[size];
             }
         };
+    }
+
+    @BindingAdapter("cardDescription")
+    public static void setCardDescription(CollapsibleCard collapsibleCard, String text) {
+        collapsibleCard.setCardDescription(text);
+    }
+
+    public void setCardDescription(String text) {
+        mCardDescriptionView.setText(text);
     }
 }
