@@ -23,6 +23,11 @@ import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.uinfo.UserServiceObserve;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.zhuzichu.library.comment.bus.RxBus;
+import com.zhuzichu.uikit.event.EventFilter;
+import com.zhuzichu.uikit.event.online.NetStateCode;
+import com.zhuzichu.uikit.event.online.OnlineState;
+import com.zhuzichu.uikit.event.online.OnlineStateCode;
+import com.zhuzichu.uikit.event.online.OnlineStateEventConfig;
 import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
@@ -110,12 +115,24 @@ public class ObserverManager {
      */
     private final static Observer<List<Event>> observerEvent = (Observer<List<Event>>) events -> {
         Log.i(TAG, "zzc : observerEvent------" + events.size());
+        events = EventFilter.getInstance().filterOlderEvent(events);
         for (int i = 0; i < events.size(); i++) {
             Log.i(TAG, "----------------item -- Type: "+events.get(i).getEventType());
+            Log.i(TAG, "----------------item --Account: "+events.get(i).getPublisherAccount());
             Log.i(TAG, "----------------item --Value: "+events.get(i).getEventValue());
+//            Event event = events.get(i);
+//            // 解析
+//            List<Integer> clients = NimOnlineStateEvent.getOnlineClients(event);
+//            for (int i1 = 0; i1 < clients.size(); i1++) {
+//                int clientType = clients.get(i1);
+//                OnlineState state = OnlineStateEventConfig.parseConfig(event.getConfigByClient(clientType), clientType);
+//                if (state == null) {
+//                    state = new OnlineState(clientType, NetStateCode.Unkown, OnlineStateCode.Online);
+//                }
+//                Log.i(TAG, ":----------------item----------- " + state.getNetState().name());
+//            }
         }
     };
-
 
 
     public static void regist() {

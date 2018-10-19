@@ -23,6 +23,15 @@
     <string name="kickout_notify">下线通知</string>
     <string name="kickout_content">你的帐号被%1$s踢出下线，请确定帐号信息安全</string>
 
+    <!-- 多端在线类型 -->
+    <string name="on_line">在线</string>
+    <string name="on_line_pc">PC在线</string>
+    <string name="on_line_mac">Mac在线</string>
+    <string name="on_line_web">web在线</string>
+    <string name="client_aos">Android</string>
+    <string name="client_ios">iOS</string>
+    <string name="on_line_busy">忙碌</string>
+    <string name="off_line">离线</string>
 
     <!-- session -->
     <string name="sticky_on_top">置顶</string>
