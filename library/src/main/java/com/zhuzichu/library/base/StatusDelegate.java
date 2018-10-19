@@ -14,24 +14,26 @@ import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.comment.color.ColorConfig;
 import com.zhuzichu.library.comment.color.ColorManager;
 
-import java.lang.ref.WeakReference;
-
 public class StatusDelegate extends Observable.OnPropertyChangedCallback implements LifecycleObserver {
     private static final String TAG = "StatusDelegate";
     private Context mContext;
-
+    private BaseFragment mFragment;
     private View mStatusBar;
     private boolean mIsAuto = true;
+
+    public StatusDelegate(BaseFragment fragment) {
+        mFragment = fragment;
+    }
+
 
     /**
      * 初始化状态栏
      *
      * @param root
-     * @param ref
      * @return
      */
-    public View init(View root, WeakReference<BaseFragment> ref) {
-        mContext = ref.get().getContext();
+    public View bind(View root) {
+        mContext = mFragment.getContext();
         LinearLayout parentView = new LinearLayout(mContext);
         parentView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
         parentView.setOrientation(LinearLayout.VERTICAL);
@@ -44,7 +46,7 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
         //android api19 以下不支持沉浸式。
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT)
             parentView.addView(mStatusBar, 0);
-        ref.get().getLifecycle().addObserver(this);
+        mFragment.getLifecycle().addObserver(this);
 
         return parentView;
     }

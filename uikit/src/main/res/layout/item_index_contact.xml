@@ -10,6 +10,7 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:background="@{color.itemBackground}"
@@ -26,14 +27,28 @@
             android:id="@+id/item_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginTop="8dp"
             android:layout_marginRight="100dp"
             android:layout_toRightOf="@+id/item_avatar"
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="16sp"
-            app:textColor="@{color.textColorPrimary}" />
+            app:textColor="@{color.textColorPrimary}"
+            tools:text="一剑凌云山海情" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/item_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="8dp"
+            android:layout_toRightOf="@+id/item_avatar"
+            app:textColor="@{color.textColorSeconday}"
+            android:textSize="12sp"
+            tools:text="[在线]" />
 
         <View
             android:layout_width="match_parent"

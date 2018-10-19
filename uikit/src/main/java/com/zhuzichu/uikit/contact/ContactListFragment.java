@@ -16,9 +16,10 @@ import com.zhuzichu.uikit.contact.adapter.ContactAdapter;
 import com.zhuzichu.uikit.contact.bean.FriendBean;
 import com.zhuzichu.uikit.contact.viewmodel.ContactViewModel;
 import com.zhuzichu.uikit.databinding.FragmentContactListBinding;
-import com.zhuzichu.uikit.observer.ObserverManager;
+import com.zhuzichu.uikit.event.online.OnlineStateEventManager;
 import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
+import com.zhuzichu.uikit.observer.action.ActionOnlineStateChange;
 import com.zhuzichu.uikit.user.fragment.UserCardFragment;
 import com.zhuzichu.uikit.utils.UserInfoUtils;
 
@@ -75,8 +76,8 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
                 .map(item -> item.getUserInfo().getAccount())
                 .toList()
                 .subscribe(list -> {
-                    Log.i(TAG, "subscribeOnlineEvnent: "+list.size());
-                    ObserverManager.subscribeOnlineStateEvent(list);
+                    Log.i(TAG, "subscribeOnlineEvnent: " + list.size());
+                    OnlineStateEventManager.subscribeOnlineStateEvent(list);
                 });
     }
 
@@ -128,7 +129,16 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
                     }
                 });
 
-        RxBus.getIntance().addSubscription(this, dispAddedOrUpdatedFriends, dispDeleteFriends);
+        Disposable dispOnlineStatuChange = RxBus.getIntance().toObservable(ActionOnlineStateChange.class)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(action -> action.data)
+                .flatMap(data -> Flowable.fromIterable(data))
+                .subscribe(item -> {
+                    mAdapter.notifyDataSetChanged();
+                });
+
+        RxBus.getIntance().addSubscription(this, dispAddedOrUpdatedFriends, dispDeleteFriends, dispOnlineStatuChange);
 
         /**
          * Todo 监听用户资料随时更新 sdk 限制不能随时更新

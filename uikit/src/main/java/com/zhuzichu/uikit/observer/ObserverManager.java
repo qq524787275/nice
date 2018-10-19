@@ -4,15 +4,11 @@ import android.util.Log;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
-import com.netease.nimlib.sdk.RequestCallbackWrapper;
-import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.OnlineClient;
-import com.netease.nimlib.sdk.event.EventSubscribeService;
 import com.netease.nimlib.sdk.event.EventSubscribeServiceObserver;
 import com.netease.nimlib.sdk.event.model.Event;
-import com.netease.nimlib.sdk.event.model.EventSubscribeRequest;
 import com.netease.nimlib.sdk.event.model.NimOnlineStateEvent;
 import com.netease.nimlib.sdk.friend.FriendServiceObserve;
 import com.netease.nimlib.sdk.friend.model.Friend;
@@ -24,10 +20,7 @@ import com.netease.nimlib.sdk.uinfo.UserServiceObserve;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.uikit.event.EventFilter;
-import com.zhuzichu.uikit.event.online.NetStateCode;
-import com.zhuzichu.uikit.event.online.OnlineState;
-import com.zhuzichu.uikit.event.online.OnlineStateCode;
-import com.zhuzichu.uikit.event.online.OnlineStateEventConfig;
+import com.zhuzichu.uikit.event.online.OnlineStateEventManager;
 import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
@@ -37,13 +30,13 @@ import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
 import com.zhuzichu.uikit.observer.action.ActionRecentContact;
 import com.zhuzichu.uikit.observer.action.ActionUserInfoUpdate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  *
  */
 public class ObserverManager {
-    public static final long SUBSCRIBE_EXPIRY = 60 * 60 * 24;
     private static final String TAG = "ObserverManager";
     /**
      * 联系人监听
@@ -114,24 +107,20 @@ public class ObserverManager {
      * 自定义消息事件监听
      */
     private final static Observer<List<Event>> observerEvent = (Observer<List<Event>>) events -> {
-        Log.i(TAG, "zzc : observerEvent------" + events.size());
+        //Todo 目前是在主线程筛选事件
+        // 过滤掉旧的事件
         events = EventFilter.getInstance().filterOlderEvent(events);
+        if (events == null) return;
+        // 筛选出在线状态事件
+        List<Event> onlineStateEvents = new ArrayList<>();
         for (int i = 0; i < events.size(); i++) {
-            Log.i(TAG, "----------------item -- Type: "+events.get(i).getEventType());
-            Log.i(TAG, "----------------item --Account: "+events.get(i).getPublisherAccount());
-            Log.i(TAG, "----------------item --Value: "+events.get(i).getEventValue());
-//            Event event = events.get(i);
-//            // 解析
-//            List<Integer> clients = NimOnlineStateEvent.getOnlineClients(event);
-//            for (int i1 = 0; i1 < clients.size(); i1++) {
-//                int clientType = clients.get(i1);
-//                OnlineState state = OnlineStateEventConfig.parseConfig(event.getConfigByClient(clientType), clientType);
-//                if (state == null) {
-//                    state = new OnlineState(clientType, NetStateCode.Unkown, OnlineStateCode.Online);
-//                }
-//                Log.i(TAG, ":----------------item----------- " + state.getNetState().name());
-//            }
+            Event e = events.get(i);
+            if (NimOnlineStateEvent.isOnlineStateEvent(e)) {
+                onlineStateEvents.add(e);
+            }
         }
+        // 处理在线状态事件
+        OnlineStateEventManager.receivedOnlineStateEvents(onlineStateEvents);
     };
 
 
@@ -157,28 +146,5 @@ public class ObserverManager {
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(observerFriendChangedNotify, false);
 
         NIMClient.getService(EventSubscribeServiceObserver.class).observeEventChanged(observerEvent, false);
-    }
-
-
-    private static EventSubscribeRequest getOnlineStateEvent(List<String> accounts) {
-        EventSubscribeRequest eventSubscribeRequest = new EventSubscribeRequest();
-        eventSubscribeRequest.setEventType(NimOnlineStateEvent.EVENT_TYPE);
-        eventSubscribeRequest.setPublishers(accounts);
-        eventSubscribeRequest.setExpiry(SUBSCRIBE_EXPIRY);
-        eventSubscribeRequest.setSyncCurrentValue(true);
-        return eventSubscribeRequest;
-    }
-
-    public static void subscribeOnlineStateEvent(List<String> accounts) {
-        NIMClient.getService(EventSubscribeService.class).subscribeEvent(getOnlineStateEvent(accounts)).setCallback(new RequestCallbackWrapper<List<String>>() {
-            @Override
-            public void onResult(int code, List<String> result, Throwable exception) {
-                if (code == ResponseCode.RES_SUCCESS) {
-                    Log.i(TAG, "onResult: 成功------：出发了");
-                } else {
-                    Log.i(TAG, "onResult:  失败");
-                }
-            }
-        });
     }
 }

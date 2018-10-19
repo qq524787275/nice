@@ -41,5 +41,4 @@ public class ContactFragment extends NiceFragment<FragmentContactBinding> {
         mBind.topbar.setTitle(R.string.main_contact);
         mBind.topbar.setTitleGravity(Gravity.LEFT);
     }
-
 }
