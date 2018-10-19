@@ -4,9 +4,16 @@ import android.util.Log;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.Observer;
+import com.netease.nimlib.sdk.RequestCallbackWrapper;
+import com.netease.nimlib.sdk.ResponseCode;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.OnlineClient;
+import com.netease.nimlib.sdk.event.EventSubscribeService;
+import com.netease.nimlib.sdk.event.EventSubscribeServiceObserver;
+import com.netease.nimlib.sdk.event.model.Event;
+import com.netease.nimlib.sdk.event.model.EventSubscribeRequest;
+import com.netease.nimlib.sdk.event.model.NimOnlineStateEvent;
 import com.netease.nimlib.sdk.friend.FriendServiceObserve;
 import com.netease.nimlib.sdk.friend.model.Friend;
 import com.netease.nimlib.sdk.friend.model.FriendChangedNotify;
@@ -31,6 +38,7 @@ import java.util.List;
  *
  */
 public class ObserverManager {
+    public static final long SUBSCRIBE_EXPIRY = 60 * 60 * 24;
     private static final String TAG = "ObserverManager";
     /**
      * 联系人监听
@@ -97,6 +105,19 @@ public class ObserverManager {
         }
     };
 
+    /**
+     * 自定义消息事件监听
+     */
+    private final static Observer<List<Event>> observerEvent = (Observer<List<Event>>) events -> {
+        Log.i(TAG, "zzc : observerEvent------" + events.size());
+        for (int i = 0; i < events.size(); i++) {
+            Log.i(TAG, "----------------item -- Type: "+events.get(i).getEventType());
+            Log.i(TAG, "----------------item --Value: "+events.get(i).getEventValue());
+        }
+    };
+
+
+
     public static void regist() {
         NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(observeReceiveMessage, true);
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, true);
@@ -105,6 +126,8 @@ public class ObserverManager {
         NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, true);
         NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, true);
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(observerFriendChangedNotify, true);
+
+        NIMClient.getService(EventSubscribeServiceObserver.class).observeEventChanged(observerEvent, true);
     }
 
     public static void unRegist() {
@@ -115,5 +138,30 @@ public class ObserverManager {
         NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, false);
         NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, false);
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(observerFriendChangedNotify, false);
+
+        NIMClient.getService(EventSubscribeServiceObserver.class).observeEventChanged(observerEvent, false);
+    }
+
+
+    private static EventSubscribeRequest getOnlineStateEvent(List<String> accounts) {
+        EventSubscribeRequest eventSubscribeRequest = new EventSubscribeRequest();
+        eventSubscribeRequest.setEventType(NimOnlineStateEvent.EVENT_TYPE);
+        eventSubscribeRequest.setPublishers(accounts);
+        eventSubscribeRequest.setExpiry(SUBSCRIBE_EXPIRY);
+        eventSubscribeRequest.setSyncCurrentValue(true);
+        return eventSubscribeRequest;
+    }
+
+    public static void subscribeOnlineStateEvent(List<String> accounts) {
+        NIMClient.getService(EventSubscribeService.class).subscribeEvent(getOnlineStateEvent(accounts)).setCallback(new RequestCallbackWrapper<List<String>>() {
+            @Override
+            public void onResult(int code, List<String> result, Throwable exception) {
+                if (code == ResponseCode.RES_SUCCESS) {
+                    Log.i(TAG, "onResult: 成功------：出发了");
+                } else {
+                    Log.i(TAG, "onResult:  失败");
+                }
+            }
+        });
     }
 }
