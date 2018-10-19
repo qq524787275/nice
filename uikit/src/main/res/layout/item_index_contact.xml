@@ -46,7 +46,7 @@
             android:layout_marginRight="25dp"
             android:layout_marginBottom="8dp"
             android:layout_toRightOf="@+id/item_avatar"
-            app:textColor="@{color.textColorSeconday}"
+            android:textColor="@color/color_grey_999999"
             android:textSize="12sp"
             tools:text="[在线]" />
 
