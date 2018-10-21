@@ -36,6 +36,8 @@ public class NiceApp extends Application {
     private SDKOptions options() {
         SDKOptions Default = SDKOptions.DEFAULT;
         Default.asyncInitSDK = true;
+        // 在线多端同步未读数
+        Default.sessionReadAck = true;
         return Default;
     }
 
