@@ -48,7 +48,7 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
     private FragmentSessionListBinding mBinding;
     private SessionListAdapter mAdapter;
-    private OnSessionItemClickListener mOnSessionItemClickListener;
+    private RecentContactCallBack mCallBack;
     private static final String TAG = "SessionListFragment";
     private List<RecentContact> mData;
 
@@ -90,8 +90,8 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
     private void initListener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> OnClickListener.noDoubleClick(() -> {
-            if (mOnSessionItemClickListener != null)
-                mOnSessionItemClickListener.onSessionItemClick(mAdapter.getData().get(position));
+            if (mCallBack != null)
+                mCallBack.onSessionItemClick(mAdapter.getData().get(position));
         }));
 
         mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
@@ -175,7 +175,7 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
     private void initView() {
         mData = new ArrayList<>();
-        mAdapter = new SessionListAdapter(mData);
+        mAdapter = new SessionListAdapter(mData, mCallBack);
         mBinding.rvList.setLayoutManager(new LinearLayoutManager(getContext()));
         mBinding.rvList.setAdapter(mAdapter);
         EmptyView emptyView = new EmptyView(getActivity());
@@ -216,11 +216,13 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
         RxBus.getIntance().unSubscribe(this);
     }
 
-    public void setOnSessionItemClickListener(OnSessionItemClickListener listener) {
-        this.mOnSessionItemClickListener = listener;
+    public void setRecentContactCallBack(RecentContactCallBack callBack) {
+        this.mCallBack = callBack;
     }
 
-    public interface OnSessionItemClickListener {
+    public interface RecentContactCallBack {
         void onSessionItemClick(RecentContact recentContact);
+
+        void onUnreadCountChange(int unreadNum);
     }
 }

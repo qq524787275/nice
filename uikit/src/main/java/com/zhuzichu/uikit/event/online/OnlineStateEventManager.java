@@ -33,13 +33,17 @@ public class OnlineStateEventManager {
     private static final String UNKNOWN = "未知";
 
     public static void subscribeOnlineStateEvent(List<String> accounts) {
+        OnlineStateEventCache.addSubsAccounts(accounts);
         NIMClient.getService(EventSubscribeService.class).subscribeEvent(getOnlineStateEvent(accounts)).setCallback(new RequestCallbackWrapper<List<String>>() {
             @Override
             public void onResult(int code, List<String> result, Throwable exception) {
                 if (code == ResponseCode.RES_SUCCESS) {
-                    Log.i(TAG, "onResult: 订阅成功");
+                    if (result != null) {
+                        //部分订阅失败的账号
+                        OnlineStateEventCache.removeSubsAccounts(result);
+                    }
                 } else {
-                    Log.i(TAG, "onResult: 订阅失败");
+                    OnlineStateEventCache.removeSubsAccounts(accounts);
                 }
             }
         });
@@ -217,6 +221,6 @@ public class OnlineStateEventManager {
             return "";
         }
         OnlineState onlineState = OnlineStateEventCache.getOnlineState(account);
-        return OnlineStateEventManager.getOnlineClientContent(Nice.getContext(), onlineState, simple);
+        return getOnlineClientContent(Nice.getContext(), onlineState, simple);
     }
 }

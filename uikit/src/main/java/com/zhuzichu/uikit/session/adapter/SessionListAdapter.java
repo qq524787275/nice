@@ -1,6 +1,8 @@
 package com.zhuzichu.uikit.session.adapter;
 
 
+import android.view.View;
+
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.common.base.Optional;
 import com.google.common.collect.Ordering;
@@ -9,6 +11,8 @@ import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.zhuzichu.library.base.BaseDataBindingAdapter;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.TimeUtils;
+import com.zhuzichu.library.view.drop.DropFake;
+import com.zhuzichu.library.view.drop.DropManager;
 import com.zhuzichu.uikit.BR;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.adapter.ImageAdapter;
@@ -21,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 public class SessionListAdapter extends BaseDataBindingAdapter<RecentContact, ItemRecentSessionBinding> {
+    private SessionListFragment.RecentContactCallBack mCallBack;
     //最近联系人排序
     private Ordering<RecentContact> mOrder = new Ordering<RecentContact>() {
         @Override
@@ -40,8 +45,9 @@ public class SessionListAdapter extends BaseDataBindingAdapter<RecentContact, It
         }
     };
 
-    public SessionListAdapter(List<RecentContact> data) {
+    public SessionListAdapter(List<RecentContact> data, SessionListFragment.RecentContactCallBack callBack) {
         super(R.layout.item_recent_session, data);
+        mCallBack = callBack;
     }
 
 
@@ -57,11 +63,48 @@ public class SessionListAdapter extends BaseDataBindingAdapter<RecentContact, It
         helper.setText(R.id.item_content, item.getContent())
                 .setText(R.id.item_time, TimeUtils.getTimeShowString(item.getTime(), false));
         ImageAdapter.loadAvatar(binding.itemAvatar, binding.itemName, item.getContactId(), item.getSessionType());
+
+        helper.addOnClickListener(R.id.item_unread);
+        int unreadNum = item.getUnreadCount();
+        binding.itemUnread.setVisibility(unreadNum > 0 ? View.VISIBLE : View.GONE);
+        binding.itemUnread.setText(unreadCountShowRule(unreadNum));
+        binding.itemUnread.setTouchListener(new DropFake.ITouchListener() {
+            @Override
+            public void onDown() {
+                DropManager.getInstance().setCurrentId(item);
+                DropManager.getInstance().down(binding.itemUnread, binding.itemUnread.getText());
+            }
+
+            @Override
+            public void onMove(float curX, float curY) {
+                DropManager.getInstance().move(curX, curY);
+            }
+
+            @Override
+            public void onUp() {
+                DropManager.getInstance().up();
+            }
+        });
     }
 
 
     public void sortRefresh() {
         Collections.sort(mData, mOrder);
         notifyDataSetChanged();
+        if (mCallBack != null) {
+            // 方式一：累加每个最近联系人的未读（快）
+            int unreadNum = 0;
+            for (RecentContact r : getData()) {
+                unreadNum += r.getUnreadCount();
+            }
+            mCallBack.onUnreadCountChange(unreadNum);
+            // 方式二：直接从SDK读取（相对慢）
+//            mCallBack.onUnreadCountChange(NIMClient.getService(MsgService.class).getTotalUnreadCount());
+        }
+    }
+
+    protected String unreadCountShowRule(int unread) {
+        unread = Math.min(unread, 99);
+        return String.valueOf(unread);
     }
 }

@@ -84,6 +84,19 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         initObserver();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        NIMClient.getService(MsgService.class).setChattingAccount(mSessionId, mSessionType);
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        NIMClient.getService(MsgService.class).setChattingAccount(MsgService.MSG_CHATTING_ACCOUNT_NONE,
+                SessionTypeEnum.None);
+    }
 
     private void initObserver() {
         //键盘弹出监听
@@ -101,6 +114,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                     if (list.size() == 0)
                         return;
                     mAdapter.addData(list);
+                    Log.i(TAG, "第一回合: ");
                     if (isLastMessageVisible()) {
                         smoothToBottom();
                     } else {
@@ -121,6 +135,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                         if (item.getUuid().equals(msg.getUuid())) {
                             data.set(i, msg);
                             mAdapter.refreshNotifyItemChanged(i);
+                            Log.i(TAG, "第二回合: ");
                             break;
                         }
                     }
@@ -310,5 +325,9 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
     public IMMessage createTextMessage(String text) {
         IMMessage textMessage = MessageBuilder.createTextMessage(mSessionId, mSessionType, text);
         return textMessage;
+    }
+
+    public void clearUnreadCount() {
+        NIMClient.getService(MsgService.class).clearUnreadCount(mSessionId, mSessionType);
     }
 }

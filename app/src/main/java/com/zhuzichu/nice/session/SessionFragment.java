@@ -11,8 +11,12 @@ import android.widget.Toast;
 
 import com.afollestad.materialdialogs.Theme;
 import com.afollestad.materialdialogs.color.ColorChooserDialog;
+import com.netease.nimlib.sdk.NIMClient;
+import com.netease.nimlib.sdk.msg.MsgService;
+import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.qmuiteam.qmui.util.QMUIDrawableHelper;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
+import com.zhuzichu.library.action.ActionUnreadCountChange;
 import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.bean.CountryBean;
@@ -24,6 +28,7 @@ import com.zhuzichu.library.ui.scaner.ScannerFragment;
 import com.zhuzichu.library.utils.UserPreferences;
 import com.zhuzichu.library.view.popou.MenuPopup;
 import com.zhuzichu.library.view.reveal.animation.ViewAnimationUtils;
+import com.zhuzichu.nice.MainFragment;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentSessionBinding;
 import com.zhuzichu.nice.login.LoginActivity;
@@ -69,28 +74,38 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
 
 
     private void initListener() {
-        mSessListFragment.setOnSessionItemClickListener(contact -> {
-            BaseFragment target;
-            switch (contact.getSessionType()) {
-                case P2P:
-                    target = MessageP2pFragment.newInstance(contact.getContactId(), contact.getSessionType());
-                    break;
-                case Team:
-                    target = MessageTeamFragment.newInstance(contact.getContactId(), contact.getSessionType());
-                    break;
-                default:
-                    target = MessageFragment.newInstance(contact.getContactId(), contact.getSessionType());
-                    break;
+        mSessListFragment.setRecentContactCallBack(new SessionListFragment.RecentContactCallBack() {
+            @Override
+            public void onSessionItemClick(RecentContact contact) {
+                BaseFragment target;
+                switch (contact.getSessionType()) {
+                    case P2P:
+                        target = MessageP2pFragment.newInstance(contact.getContactId(), contact.getSessionType());
+                        break;
+                    case Team:
+                        target = MessageTeamFragment.newInstance(contact.getContactId(), contact.getSessionType());
+                        break;
+                    default:
+                        target = MessageFragment.newInstance(contact.getContactId(), contact.getSessionType());
+                        break;
+                }
+                mBinding.topbar.postDelayed(() -> {
+                    RxBus.getIntance().post(new ActionMainStartFragmnet(target));
+                }, 200);
             }
-            mBinding.topbar.postDelayed(() -> {
-                RxBus.getIntance().post(new ActionMainStartFragmnet(target));
-            }, 200);
+
+            @Override
+            public void onUnreadCountChange(int unreadNum) {
+                RxBus.getIntance().post(new ActionUnreadCountChange(MainFragment.SESSION, unreadNum));
+            }
         });
     }
 
 
     private void initObserve() {
         Disposable disposable = RxBus.getIntance().doSubscribe(CountryBean.class, bean -> Toast.makeText(_mActivity, bean.getLabel(), Toast.LENGTH_SHORT).show());
+
+
         RxBus.getIntance().addSubscription(this, disposable);
     }
 
@@ -149,7 +164,7 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         });
 
         mMenuPopup.addItem("点击", () -> {
-
+            Toast.makeText(_mActivity, "" + (NIMClient.getService(MsgService.class).getTotalUnreadCount()), Toast.LENGTH_SHORT).show();
         });
     }
 

@@ -16,6 +16,7 @@
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="68dp"
         android:background="@{onTop?color.itemBackgroundDark:color.itemBackground}"
@@ -40,7 +41,8 @@
             android:maxEms="16"
             android:maxLines="1"
             android:textSize="16sp"
-            app:textColor="@{color.textColorPrimary}" />
+            app:textColor="@{color.textColorPrimary}"
+            tools:text="姓名" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_content"
@@ -55,7 +57,8 @@
             android:maxEms="16"
             android:maxLines="1"
             android:textSize="12sp"
-            app:textColor="@{color.textColorSeconday}" />
+            app:textColor="@{color.textColorSeconday}"
+            tools:text="内容内容内容内容内容" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/item_time"
@@ -66,7 +69,21 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textSize="12sp"
-            app:textColor="@{color.textColorSeconday}" />
+            app:textColor="@{color.textColorSeconday}"
+            tools:text="1993/05/06" />
+
+        <com.zhuzichu.library.view.drop.DropFake
+            android:id="@+id/item_unread"
+            android:layout_width="28dip"
+            android:layout_height="28dip"
+            android:layout_below="@id/item_time"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="6dip"
+            android:gravity="center"
+            android:singleLine="true"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <View
             android:layout_width="match_parent"

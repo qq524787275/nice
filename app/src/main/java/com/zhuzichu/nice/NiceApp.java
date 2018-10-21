@@ -4,7 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.SDKOptions;
@@ -15,6 +14,13 @@ import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.utils.UserPreferences;
 
 public class NiceApp extends Application {
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        MultiDex.install(this);
+    }
+
 
     @Override
     public void onCreate() {
