@@ -41,6 +41,7 @@ public class OnlineStateEventManager {
                     if (result != null) {
                         //部分订阅失败的账号
                         OnlineStateEventCache.removeSubsAccounts(result);
+                        Log.i(TAG, "onResult:---------订阅失败的账号有--------------: " + result.size());
                     }
                 } else {
                     OnlineStateEventCache.removeSubsAccounts(accounts);
