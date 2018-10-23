@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.zhuzichu.library.view.layout.StateLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="5dp"
+        android:padding="5dp"
+        app:sl_normalBackgroundColor="@color/color_grey_eaeaea"
+        app:sl_pressedBackgroundColor="@color/color_grey_eaeaea"
+        app:sl_radius="5dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:orientation="horizontal">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:src="@mipmap/search_grey" />
+
+            <android.support.v7.widget.AppCompatEditText
+                android:id="@+id/edit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="3dp"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="搜索"
+                android:textColor="@color/color_grey_999999"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp" />
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/clear"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="center_vertical"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:src="@mipmap/delete_grey" />
+        </LinearLayout>
+
+    </com.zhuzichu.library.view.layout.StateLayout>
+</FrameLayout>
