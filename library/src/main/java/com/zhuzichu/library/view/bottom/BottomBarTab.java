@@ -140,7 +140,7 @@ public class BottomBarTab extends FrameLayout {
         } else {
             mDropFake.setVisibility(VISIBLE);
             if (num > 99) {
-                mDropFake.setText("99+");
+                mDropFake.setText("...");
             } else {
                 mDropFake.setText(String.valueOf(num));
             }
@@ -155,7 +155,7 @@ public class BottomBarTab extends FrameLayout {
         if (TextUtils.isEmpty(mDropFake.getText())) {
             return count;
         }
-        if (mDropFake.getText().equals("99+")) {
+        if (mDropFake.getText().equals("...")) {
             return 99;
         }
         try {

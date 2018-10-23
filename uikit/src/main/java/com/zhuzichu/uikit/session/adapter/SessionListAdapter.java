@@ -103,8 +103,15 @@ public class SessionListAdapter extends BaseDataBindingAdapter<RecentContact, It
         }
     }
 
-    protected String unreadCountShowRule(int unread) {
-        unread = Math.min(unread, 99);
-        return String.valueOf(unread);
+    protected String unreadCountShowRule(int num) {
+        if (num <= 0) {
+            return String.valueOf(0);
+        } else {
+            if (num > 99) {
+                return "...";
+            } else {
+                return String.valueOf(num);
+            }
+        }
     }
 }
