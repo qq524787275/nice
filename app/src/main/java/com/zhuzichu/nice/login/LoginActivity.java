@@ -23,7 +23,9 @@ import com.zhuzichu.nice.login.fragment.LoginFragment;
 import javax.annotation.Nullable;
 
 public class LoginActivity extends BaseActivity {
-    private static final String KICK_OUT = "KICK_OUT";
+    public interface Extra{
+        String EXTRA_KICK_OUT="kick_out";
+    }
 
     public static void start(Context context) {
         start(context, false);
@@ -31,7 +33,7 @@ public class LoginActivity extends BaseActivity {
 
     public static void start(Context context, boolean kickOut) {
         Intent intent = new Intent();
-        intent.putExtra(KICK_OUT, kickOut);
+        intent.putExtra(Extra.EXTRA_KICK_OUT, kickOut);
         intent.setClass(context, LoginActivity.class);
         context.startActivity(intent);
     }
@@ -73,7 +75,7 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void onParseIntent() {
-        if (getIntent().getBooleanExtra(KICK_OUT, false)) {
+        if (getIntent().getBooleanExtra(Extra.EXTRA_KICK_OUT, false)) {
             int type = NIMClient.getService(AuthService.class).getKickedClientType();
             String client;
             switch (type) {

@@ -1,6 +1,5 @@
 package com.zhuzichu.nice.login.adapter;
 
-import android.support.annotation.Nullable;
 
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.netease.nimlib.sdk.auth.ClientType;

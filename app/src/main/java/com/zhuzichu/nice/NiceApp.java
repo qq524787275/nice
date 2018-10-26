@@ -30,7 +30,7 @@ public class NiceApp extends Application {
         if (NIMUtil.isMainProcess(this)) {
             InitalizeService.start(this);
         }
-//        setupLeakCanary();
+        setupLeakCanary();
     }
 
     private SDKOptions options() {

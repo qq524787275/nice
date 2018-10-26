@@ -81,31 +81,12 @@ public class RxBus {
         return mSubject.hasObservers();
     }
 
-    /**
-     * 保存订阅后的disposable
-     *
-     * @param key
-     * @param disposable
-     */
-    public void addSubscription(String key, Disposable... disposable) {
-        if (mSubscriptionMap == null) {
-            mSubscriptionMap = new HashMap<>();
-        }
-        if (mSubscriptionMap.get(key) != null) {
-            mSubscriptionMap.get(key).addAll(disposable);
-        } else {
-            //一次性容器,可以持有多个并提供 添加和移除。
-            CompositeDisposable disposables = new CompositeDisposable();
-            disposables.addAll(disposable);
-            mSubscriptionMap.put(key, disposables);
-        }
-    }
 
     public void addSubscription(Object o, Disposable... disposable) {
         if (mSubscriptionMap == null) {
             mSubscriptionMap = new HashMap<>();
         }
-        String key = o.getClass().getSimpleName();
+        String key = getKey(o);
         if (mSubscriptionMap.get(key) != null) {
             mSubscriptionMap.get(key).addAll(disposable);
         } else {
@@ -125,8 +106,7 @@ public class RxBus {
         if (mSubscriptionMap == null) {
             return;
         }
-
-        String key = o.getClass().getName();
+        String key = getKey(o);
         if (!mSubscriptionMap.containsKey(key)) {
             return;
         }
@@ -137,23 +117,13 @@ public class RxBus {
         mSubscriptionMap.remove(key);
     }
 
-    /**
-     * 取消订阅
-     *
-     * @param
-     */
-    public void unSubscribe(String key) {
-        if (mSubscriptionMap == null) {
-            return;
+    private String getKey(Object o) {
+        String key;
+        if (o instanceof String) {
+            key = (String) o;
+        } else {
+            key = o.getClass().getSimpleName();
         }
-
-        if (!mSubscriptionMap.containsKey(key)) {
-            return;
-        }
-        if (mSubscriptionMap.get(key) != null) {
-            mSubscriptionMap.get(key).dispose();
-        }
-
-        mSubscriptionMap.remove(key);
+        return key;
     }
 }

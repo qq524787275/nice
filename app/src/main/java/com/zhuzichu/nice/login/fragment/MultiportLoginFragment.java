@@ -2,15 +2,10 @@ package com.zhuzichu.nice.login.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.view.View;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.RequestCallback;
 import com.netease.nimlib.sdk.auth.AuthService;
-import com.netease.nimlib.sdk.auth.ClientType;
 import com.netease.nimlib.sdk.auth.OnlineClient;
-import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
@@ -18,7 +13,6 @@ import com.zhuzichu.library.widget.NiceRequestCallback;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentMultiportLoginBinding;
 import com.zhuzichu.nice.login.adapter.MultiportAdapter;
-import com.zhuzichu.uikit.event.online.OnlineStateEventManager;
 import com.zhuzichu.uikit.observer.action.ActionOnlienClient;
 
 import java.io.Serializable;
