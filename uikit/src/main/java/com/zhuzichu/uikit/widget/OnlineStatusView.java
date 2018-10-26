@@ -1,4 +1,4 @@
-package com.zhuzichu.nice.view;
+package com.zhuzichu.uikit.widget;
 
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;
@@ -14,7 +14,7 @@ import com.netease.nimlib.sdk.StatusCode;
 import com.qmuiteam.qmui.widget.QMUILoadingView;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.comment.bus.RxBus;
-import com.zhuzichu.nice.R;
+import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.observer.action.ActionOnlineStatus;
 
 import io.reactivex.disposables.Disposable;

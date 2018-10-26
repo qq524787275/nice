@@ -32,7 +32,8 @@ import com.zhuzichu.nice.MainFragment;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentSessionBinding;
 import com.zhuzichu.nice.login.LoginActivity;
-import com.zhuzichu.nice.view.OnlineStatusView;
+import com.zhuzichu.nice.login.fragment.MultiportLoginFragment;
+import com.zhuzichu.uikit.widget.OnlineStatusView;
 import com.zhuzichu.uikit.message.fragment.MessageFragment;
 import com.zhuzichu.uikit.message.fragment.MessageP2pFragment;
 import com.zhuzichu.uikit.message.fragment.MessageTeamFragment;
@@ -42,7 +43,7 @@ import io.reactivex.disposables.Disposable;
 
 public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
     private static final String TAG = "SessionFragment";
-    private FragmentSessionBinding mBinding;
+    private FragmentSessionBinding mBind;
     private MenuPopup mMenuPopup;
     private SessionListFragment mSessListFragment;
 
@@ -62,8 +63,9 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
 
     @Override
     public void init(FragmentSessionBinding binding) {
-        mBinding = binding;
-        mBinding.setColor(ColorManager.getInstance().color);
+        mBind = binding;
+        mBind.setColor(ColorManager.getInstance().color);
+        getLifecycle().addObserver(mBind.multiport);
         mSessListFragment = SessionListFragment.newInstance();
         loadRootFragment(R.id.list_session, mSessListFragment);
         initTopBar();
@@ -89,7 +91,7 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
                         target = MessageFragment.newInstance(contact.getContactId(), contact.getSessionType());
                         break;
                 }
-                mBinding.topbar.postDelayed(() -> {
+                mBind.topbar.postDelayed(() -> {
                     RxBus.getIntance().post(new ActionMainStartFragmnet(target));
                 }, 200);
             }
@@ -99,6 +101,8 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
                 RxBus.getIntance().post(new ActionUnreadCountChange(MainFragment.SESSION, unreadNum));
             }
         });
+
+        mBind.multiport.setOnClickListener(view -> RxBus.getIntance().post(new ActionMainStartFragmnet(MultiportLoginFragment.newInstance(mBind.multiport.getData()), ActionMainStartFragmnet.getModalAnimations())));
     }
 
 
@@ -169,13 +173,13 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
     }
 
     private void initTopBar() {
-        mBinding.topbar.setTitle(R.string.main_session);
-        mBinding.topbar.setTitleGravity(Gravity.CENTER);
+        mBind.topbar.setTitle(R.string.main_session);
+        mBind.topbar.setTitleGravity(Gravity.CENTER);
         OnlineStatusView statusView = new OnlineStatusView(getActivity());
         getLifecycle().addObserver(statusView);
-        mBinding.topbar.addLeftView(statusView, R.id.topbar_left_online_status);
-        mBinding.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_session_menu)
-                .setOnClickListener(view -> mMenuPopup.show(mBinding.topbar));
+        mBind.topbar.addLeftView(statusView, R.id.topbar_left_online_status);
+        mBind.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_session_menu)
+                .setOnClickListener(view -> mMenuPopup.show(mBind.topbar));
     }
 
 }

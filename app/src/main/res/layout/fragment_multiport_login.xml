@@ -20,15 +20,20 @@
             android:layout_height="wrap_content"
             android:background="@{color.colorPrimary}" />
 
-        <com.zhuzichu.uikit.widget.MultiportView
-            android:id="@+id/multiport"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.zhuzichu.uikit.widget.MultiportView>
+        <android.support.v7.widget.AppCompatImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="70dp"
+            android:layout_marginBottom="25dp"
+            android:background="@mipmap/ic_multiport_detail" />
 
-        <FrameLayout
-            android:id="@+id/list_session"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"></FrameLayout>
+            android:layout_weight="1"
+            android:overScrollMode="never" />
+
     </LinearLayout>
 </layout>

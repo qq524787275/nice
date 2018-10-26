@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="color"
+            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@{color.itemBackground}"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/version_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="25dp"
+            android:paddingTop="10dp"
+            android:paddingRight="15dp"
+            android:paddingBottom="10dp">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="17sp"
+                tools:text="Windows Nice在线" />
+
+            <com.zhuzichu.library.view.button.StateButton
+                android:id="@+id/item_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:clickable="true"
+                android:padding="5dp"
+                android:text="下线"
+                android:textSize="15sp"
+                app:sb_normalBackgroundColor="@{color.colorPrimary}"
+                app:sb_normalTextColor="@android:color/white"
+                app:sb_pressedBackgroundColor="@color/color_grey_999999"
+                app:sb_pressedTextColor="@android:color/white"
+                app:sb_radius="5dp"
+                app:sb_unableBackgroundColor="@color/color_grey_999999"
+                app:sb_unableTextColor="@android:color/white" />
+
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@drawable/qmui_divider_top_bitmap" />
+    </LinearLayout>
+</layout>

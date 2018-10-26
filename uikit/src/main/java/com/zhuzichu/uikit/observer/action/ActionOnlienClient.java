@@ -4,10 +4,10 @@ import com.netease.nimlib.sdk.auth.OnlineClient;
 
 import java.util.List;
 
-public class ActionOtherClients {
+public class ActionOnlienClient {
     public List<OnlineClient> data;
 
-    public ActionOtherClients(List<OnlineClient> data) {
+    public ActionOnlienClient(List<OnlineClient> data) {
         this.data = data;
     }
 

@@ -25,7 +25,7 @@ import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
 import com.zhuzichu.uikit.observer.action.ActionOnlineStatus;
-import com.zhuzichu.uikit.observer.action.ActionOtherClients;
+import com.zhuzichu.uikit.observer.action.ActionOnlienClient;
 import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
 import com.zhuzichu.uikit.observer.action.ActionRecentContact;
 import com.zhuzichu.uikit.observer.action.ActionUserInfoUpdate;
@@ -55,8 +55,8 @@ public class ObserverManager {
     /**
      * 多端登录监听
      */
-    private final static Observer<List<OnlineClient>> observeOtherClients = (Observer<List<OnlineClient>>) onlineClients -> {
-        RxBus.getIntance().post(new ActionOtherClients(onlineClients));
+    private final static Observer<List<OnlineClient>> observeOnlineClient = (Observer<List<OnlineClient>>) onlineClients -> {
+        RxBus.getIntance().post(new ActionOnlienClient(onlineClients));
     };
 
     /**
@@ -129,7 +129,7 @@ public class ObserverManager {
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, true);
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, true);
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(observeOnlineStatus, true);
-        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, true);
+        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOnlineClient, true);
         NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, true);
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(observerFriendChangedNotify, true);
 
@@ -141,7 +141,7 @@ public class ObserverManager {
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, false);
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, false);
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(observeOnlineStatus, false);
-        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, false);
+        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOnlineClient, false);
         NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, false);
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(observerFriendChangedNotify, false);
 
