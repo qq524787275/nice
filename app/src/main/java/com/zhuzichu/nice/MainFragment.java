@@ -29,7 +29,7 @@ import com.zhuzichu.nice.work.WorkFragment;
 import io.reactivex.disposables.Disposable;
 
 public class MainFragment extends NiceFragment<FragmentMainBinding> {
-    private FragmentMainBinding mBinding;
+    private FragmentMainBinding mBind;
     private NiceFragment[] mFragments = new NiceFragment[4];
     public static final int SESSION = 0;
     public static final int WORK = 1;
@@ -51,8 +51,9 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
 
     @Override
     public void init(FragmentMainBinding binding) {
-        mBinding = binding;
-        mBinding.setColor(ColorManager.getInstance().color);
+        mBind = binding;
+        mBind.setColor(ColorManager.getInstance().color);
+        getLifecycle().addObserver(mBind.fish);
         initView();
     }
 
@@ -69,19 +70,19 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
      */
     private void initUnreadCover() {
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
-            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mBinding.unreadCover.getLayoutParams();
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) mBind.unreadCover.getLayoutParams();
             layoutParams.topMargin = DensityUtils.getStatuBarH(getContext());
         }
-        DropManager.getInstance().init(getContext(), mBinding.unreadCover, (id, explosive) -> {
+        DropManager.getInstance().init(getContext(), mBind.unreadCover, (id, explosive) -> {
             if (id == null || !explosive) {
                 return;
             }
             if (id instanceof RecentContact) {
                 RecentContact r = (RecentContact) id;
                 NIMClient.getService(MsgService.class).clearUnreadCount(r.getContactId(), r.getSessionType());
-            }else if (id instanceof Integer){
-                Integer position= (Integer) id;
-                if(position==SESSION){
+            } else if (id instanceof Integer) {
+                Integer position = (Integer) id;
+                if (position == SESSION) {
                     NIMClient.getService(MsgService.class).clearAllUnreadCount();
                 }
             }
@@ -105,7 +106,7 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
         });
 
         Disposable dispUnredCount = RxBus.getIntance().doSubscribe(ActionUnreadCountChange.class, action -> {
-            mBinding.bottomBar.getItem(action.position).setUnreadCount(action.count);
+            mBind.bottomBar.getItem(action.position).setUnreadCount(action.count);
         });
 
         RxBus.getIntance().addSubscription(this, dispMainStart, dispUnredCount);
@@ -119,13 +120,13 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
 
     private void initView() {
 
-        mBinding.bottomBar
+        mBind.bottomBar
                 .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon0, getString(R.string.main_session)))
                 .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon1, getString(R.string.main_work)))
                 .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon2, getString(R.string.main_contact)))
                 .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon3, getString(R.string.main_person)));
 
-        mBinding.bottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
+        mBind.bottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
             @Override
             public void onTabSelected(int position, int prePosition) {
                 showHideFragment(mFragments[position], mFragments[prePosition]);
@@ -187,7 +188,7 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     }
 
     private void enableMsgNotification(boolean enable) {
-        boolean msg = (mBinding.bottomBar.getCurrentItemPosition() != SESSION);
+        boolean msg = (mBind.bottomBar.getCurrentItemPosition() != SESSION);
         if (enable | msg) {
             /**
              * 设置最近联系人的消息为已读
