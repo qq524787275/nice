@@ -21,7 +21,6 @@ import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
-    private static final String TAG = "LoginFragment";
     private FragmentLoginBinding mBind;
     private QMUITipDialog mLoading;
     private AbortableFuture<LoginInfo> mLoginRequest;
@@ -107,5 +106,14 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
     public void onDestroyView() {
         super.onDestroyView();
         QMUIStatusBarHelper.setStatusBarDarkMode(getActivity());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mLoginRequest != null) {
+            mLoginRequest.abort();
+            mLoginRequest = null;
+        }
     }
 }

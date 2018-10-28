@@ -3,7 +3,7 @@ package com.zhuzichu.library.comment.color;
 import android.databinding.BindingAdapter;
 import android.widget.TextView;
 
-import com.qmuiteam.qmui.widget.QMUITopBar;
+import com.afollestad.materialdialogs.color.CircleView;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.zhuzichu.library.view.bottom.BottomBar;
 import com.zhuzichu.library.view.recyclerview.RecyclerFastScroller;
@@ -39,5 +39,10 @@ public class ColorAdapter {
     @BindingAdapter({"srlPrimaryColor"})
     public static void srlPrimaryColor(SmartRefreshLayout smartRefreshLayout, int color) {
         smartRefreshLayout.setPrimaryColors(color);
+    }
+
+    @BindingAdapter({"circleViewColor"})
+    public static void circleViewColor(CircleView circleView, int color) {
+        circleView.setBackgroundColor(color);
     }
 }

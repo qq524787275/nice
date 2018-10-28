@@ -53,12 +53,12 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             android:layout_toEndOf="@+id/msg_avatar"
             android:layout_toRightOf="@+id/msg_avatar"
             android:clickable="true"
             android:minHeight="40dp"
             android:minWidth="40dp"
-            android:padding="10dp"
             app:sl_normalBackgroundColor="@{isMy?color.colorPrimary:@color/color_grey_eaeaea}"
             app:sl_pressedBackgroundColor="@{isMy?color.colorPrimaryDark:@color/color_grey_999999}"
             app:sl_radius="20dp">

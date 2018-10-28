@@ -1,7 +1,6 @@
 package com.zhuzichu.uikit.message.provider;
 
 
-import android.databinding.ViewDataBinding;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;

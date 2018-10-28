@@ -23,6 +23,4 @@ public class GlideAdapter {
                 .load(url)
                 .into(imageView);
     }
-
-
 }

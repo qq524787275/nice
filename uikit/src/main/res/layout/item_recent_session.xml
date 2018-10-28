@@ -89,6 +89,6 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_alignParentBottom="true"
-            android:background="@drawable/qmui_divider_top_bitmap" />
+            android:background="@drawable/qmui_divider" />
     </RelativeLayout>
 </layout>

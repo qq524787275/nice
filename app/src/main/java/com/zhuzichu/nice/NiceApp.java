@@ -12,6 +12,7 @@ import com.netease.nimlib.sdk.util.NIMUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.utils.UserPreferences;
+import com.zhuzichu.uikit.message.provider.MsgProviderImage;
 
 public class NiceApp extends Application {
 
@@ -38,6 +39,16 @@ public class NiceApp extends Application {
         Default.asyncInitSDK = true;
         // 在线多端同步未读数
         Default.sessionReadAck = true;
+        // 配置是否需要预下载附件缩略图
+        Default.preloadAttach = true;
+        // 配置附件缩略图的尺寸大小
+        Default.thumbnailSize = MsgProviderImage.getImageMaxEdge();
+        // 动图的缩略图直接下载原图
+        Default.animatedImageThumbnailEnabled = true;
+        // 是否是弱IM场景
+        Default.reducedIM = false;
+        // 配置数据库加密秘钥
+        Default.databaseEncryptKey = "NETEASE";
         return Default;
     }
 

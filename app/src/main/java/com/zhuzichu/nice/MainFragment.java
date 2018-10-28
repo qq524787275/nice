@@ -22,7 +22,7 @@ import com.zhuzichu.library.view.bottom.BottomBarTab;
 import com.zhuzichu.library.view.drop.DropManager;
 import com.zhuzichu.nice.contact.ContactFragment;
 import com.zhuzichu.nice.databinding.FragmentMainBinding;
-import com.zhuzichu.nice.person.PersonFragment;
+import com.zhuzichu.nice.person.fragment.PersonFragment;
 import com.zhuzichu.nice.session.SessionFragment;
 import com.zhuzichu.nice.work.WorkFragment;
 

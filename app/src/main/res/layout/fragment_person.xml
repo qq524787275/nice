@@ -6,26 +6,177 @@
         <variable
             name="color"
             type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+
+        <variable
+            name="viewmodel"
+            type="com.zhuzichu.nice.person.viewmodel.PersonViewModel"></variable>
+
+        <variable
+            name="presenter"
+            type="com.zhuzichu.nice.person.presenter.PersonPresenter"></variable>
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@{color.windowBackground}"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:divider="@drawable/qmui_divider"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        tools:background="@color/white">
 
-        <android.support.v7.widget.AppCompatImageView
-            android:layout_width="wrap_content"
+        <com.qmuiteam.qmui.widget.QMUITopBar
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:src="@mipmap/nice_empty" />
+            android:background="@{color.colorPrimary}" />
 
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:onClick="@{view->presenter.goDetail(view)}">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:id="@+id/avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="15dp"
+                app:avatarUserUrl='@{viewmodel.avatar}' />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="15dp"
+                android:layout_toStartOf="@+id/avatar"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@{viewmodel.name}"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="16sp"
+                tools:text="姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="20dp"
+                android:layout_toStartOf="@+id/avatar"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text='@{"账号: "+viewmodel.account}'
+                android:textColor="@{color.textColorSeconday}"
+                tools:text="姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名姓名" />
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@{color.itemBackground}"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:onClick="@{view->presenter.goSetting(view)}">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:text="设置"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:src="@drawable/fragmentation_ic_right" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@{color.itemBackground}"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:onClick="@{view->presenter.switchColor(view)}">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:text="主题颜色"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="14sp" />
+
+            <com.afollestad.materialdialogs.color.CircleView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                app:circleViewColor="@{color.colorPrimary}" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@{color.itemBackground}"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:onClick="@{view->presenter.switchDark(view)}">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:text="夜间模式"
+                android:textColor="@{color.textColorPrimary}"
+                android:textSize="14sp" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cb_dark"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="15dp"
+                android:buttonTint="@{color.colorPrimary}"
+                android:checked="@{color.isDark}"
+                android:onCheckedChanged="@{(view,isChecked)->presenter.switchDarkChanged(view,isChecked)}" />
+        </RelativeLayout>
+
+        <com.zhuzichu.library.view.button.StateButton
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="暂未开发"
-            app:textColor="@{color.textColorPrimary}" />
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:clickable="true"
+            android:gravity="center"
+            android:onClick="@{(view) -> presenter.logout(view)}"
+            android:padding="10dp"
+            android:text="退出登录"
+            android:textSize="15sp"
+            app:sb_normalBackgroundColor="@{color.colorPrimary}"
+            app:sb_normalTextColor="@android:color/white"
+            app:sb_pressedBackgroundColor="@{color.colorPrimaryDark}"
+            app:sb_pressedTextColor="@android:color/white"
+            app:sb_radius="8dp"
+            app:sb_unableBackgroundColor="@color/color_grey_999999"
+            app:sb_unableTextColor="@android:color/white" />
+
     </LinearLayout>
 </layout>

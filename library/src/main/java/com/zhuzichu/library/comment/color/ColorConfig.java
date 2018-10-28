@@ -35,9 +35,19 @@ public class ColorConfig extends BaseObservable {
 
     public void setColorPrimary(int colorPrimary) {
         this.colorPrimary = colorPrimary;
-        this.colorPrimaryDark = QMUIColorHelper.computeColor(colorPrimary, Nice.getColor(R.color.black), 0.3f);
+        setColorPrimaryDark(QMUIColorHelper.computeColor(colorPrimary, Nice.getColor(R.color.black), 0.3f));
         notifyPropertyChanged(BR.colorPrimary);
         UserPreferences.saveColorConfig(this);
+    }
+
+    @Bindable
+    public int getColorPrimaryDark() {
+        return colorPrimaryDark;
+    }
+
+    public void setColorPrimaryDark(int colorPrimaryDark) {
+        this.colorPrimaryDark = colorPrimaryDark;
+        notifyPropertyChanged(BR.colorPrimaryDark);
     }
 
     @Bindable
@@ -114,6 +124,7 @@ public class ColorConfig extends BaseObservable {
         }
         notifyPropertyChanged(BR.itemBackgroundDark);
     }
+
 
     public void setDark(boolean dark) {
         Log.i(TAG, "setDark: " + dark);

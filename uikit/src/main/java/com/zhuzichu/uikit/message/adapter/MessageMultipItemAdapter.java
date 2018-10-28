@@ -2,7 +2,6 @@ package com.zhuzichu.uikit.message.adapter;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,7 @@ import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
+import com.zhuzichu.uikit.message.provider.MsgProviderImage;
 import com.zhuzichu.uikit.message.provider.MsgProviderNotification;
 import com.zhuzichu.uikit.message.provider.MsgProviderText;
 import com.zhuzichu.uikit.message.provider.MsgProviderTip;
@@ -66,9 +66,9 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
             case text:
                 type = MSG_TEXT;
                 break;
-//            case image:
-//                type = MSG_IMAGE;
-//                break;
+            case image:
+                type = MSG_IMAGE;
+                break;
 //            case robot:
 //                type = MSG_ROBOT;
 //                break;
@@ -100,6 +100,7 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
         mProviderDelegate.registerProvider(new MsgProviderText());
         mProviderDelegate.registerProvider(new MsgProviderNotification());
         mProviderDelegate.registerProvider(new MsgProviderTip());
+        mProviderDelegate.registerProvider(new MsgProviderImage());
     }
 
     @Override
