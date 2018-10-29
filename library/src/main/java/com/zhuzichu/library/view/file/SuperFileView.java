@@ -3,7 +3,6 @@ package com.zhuzichu.library.view.file;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
@@ -11,8 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.tencent.smtt.sdk.TbsReaderView;
-import com.zhuzichu.library.Nice;
-import com.zhuzichu.library.R;
 
 import java.io.File;
 

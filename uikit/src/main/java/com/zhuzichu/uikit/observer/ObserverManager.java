@@ -77,7 +77,7 @@ public class ObserverManager {
         RxBus.getIntance().post(new ActionReceiveMessage(list));
     };
 
-    private final static Observer<AttachmentProgress> observerAttachmentProgress= (Observer<AttachmentProgress>) attachmentProgress -> {
+    private final static Observer<AttachmentProgress> observerAttachmentProgress = (Observer<AttachmentProgress>) attachmentProgress -> {
         Log.i(TAG, "zzc : observeReceiveMessage:size=" + attachmentProgress.getUuid());
         RxBus.getIntance().post(new ActionAttachmentProgress(attachmentProgress));
     };
@@ -132,6 +132,7 @@ public class ObserverManager {
 
 
     public static void regist() {
+        NIMClient.getService(MsgServiceObserve.class).observeAttachmentProgress(observerAttachmentProgress, true);
         NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(observeReceiveMessage, true);
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, true);
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, true);
@@ -144,6 +145,7 @@ public class ObserverManager {
     }
 
     public static void unRegist() {
+        NIMClient.getService(MsgServiceObserve.class).observeAttachmentProgress(observerAttachmentProgress, false);
         NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(observeReceiveMessage, false);
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, false);
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, false);
