@@ -14,6 +14,7 @@ import com.netease.nimlib.sdk.friend.FriendServiceObserve;
 import com.netease.nimlib.sdk.friend.model.Friend;
 import com.netease.nimlib.sdk.friend.model.FriendChangedNotify;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.model.AttachmentProgress;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.uinfo.UserServiceObserve;
@@ -22,6 +23,7 @@ import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.uikit.event.EventFilter;
 import com.zhuzichu.uikit.event.online.OnlineStateEventManager;
 import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
+import com.zhuzichu.uikit.observer.action.ActionAttachmentProgress;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
 import com.zhuzichu.uikit.observer.action.ActionOnlineStatus;
@@ -73,6 +75,11 @@ public class ObserverManager {
     private final static Observer<List<IMMessage>> observeReceiveMessage = (Observer<List<IMMessage>>) list -> {
         Log.i(TAG, "zzc : observeReceiveMessage:size=" + list.size());
         RxBus.getIntance().post(new ActionReceiveMessage(list));
+    };
+
+    private final static Observer<AttachmentProgress> observerAttachmentProgress= (Observer<AttachmentProgress>) attachmentProgress -> {
+        Log.i(TAG, "zzc : observeReceiveMessage:size=" + attachmentProgress.getUuid());
+        RxBus.getIntance().post(new ActionAttachmentProgress(attachmentProgress));
     };
 
     /**

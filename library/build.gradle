@@ -19,11 +19,16 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    sourceSets { main { res.srcDirs = ['src/main/res', 'src/main/res-matisse'] } }
+    sourceSets {
+        main {
+            res.srcDirs = ['src/main/res', 'src/main/res-matisse']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    api fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
@@ -48,7 +53,7 @@ dependencies {
     api 'com.afollestad.material-dialogs:core:0.9.6.0'
     api 'com.afollestad.material-dialogs:commons:0.9.6.0'
     //glide
-    api('com.github.bumptech.glide:glide:4.5.0') {
+    api('com.github.bumptech.glide:glide:4.8.0') {
         exclude group: "com.android.support"
     }
     api 'com.github.bumptech.glide:okhttp3-integration:4.8.0'

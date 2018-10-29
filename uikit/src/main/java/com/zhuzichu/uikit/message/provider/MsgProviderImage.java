@@ -3,6 +3,7 @@ package com.zhuzichu.uikit.message.provider;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -23,37 +24,54 @@ import com.zhuzichu.uikit.widget.MsgThumbImageView;
 import java.io.File;
 
 public class MsgProviderImage extends MsgProviderBase {
+    MsgThumbImageView thumbnail;
+
     @Override
-    int getContainer() {
+    public int viewType() {
+        return MessageMultipItemAdapter.MSG_IMAGE;
+    }
+
+
+    @Override
+    int getContentResId() {
         return R.layout.item_message_image;
     }
 
     @Override
-    void refreshView(View view, IMMessage message, int position) {
-        MsgThumbImageView imageView = view.findViewById(R.id.msg_image);
+    void inflateContentView() {
+        thumbnail = view.findViewById(R.id.msg_image);
+    }
+
+    @Override
+    void onItemClick() {
+        Toast.makeText(mContext, "点击了图片", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    void refreshView() {
         ImageAttachment msgAttachment = (ImageAttachment) message.getAttachment();
         String path = msgAttachment.getPath();
         String thumbPath = msgAttachment.getThumbPath();
         if (!TextUtils.isEmpty(thumbPath)) {
-            loadThumbnailImage(message, imageView, thumbPath, msgAttachment.getExtension());
+            loadThumbnailImage(thumbPath, msgAttachment.getExtension());
         } else if (!TextUtils.isEmpty(path)) {
-            loadThumbnailImage(message, imageView, path, msgAttachment.getExtension());
+            loadThumbnailImage(path, msgAttachment.getExtension());
         } else {
-            loadThumbnailImage(message, imageView, null, msgAttachment.getExtension());
+            loadThumbnailImage(null, msgAttachment.getExtension());
             if (message.getAttachStatus() == AttachStatusEnum.transferred
                     || message.getAttachStatus() == AttachStatusEnum.def) {
-                downloadAttachment(message);
+                downloadAttachment();
             }
         }
     }
 
-    private void downloadAttachment(IMMessage message) {
+    private void downloadAttachment() {
         if (message.getAttachment() != null && message.getAttachment() instanceof FileAttachment)
             NIMClient.getService(MsgService.class).downloadAttachment(message, true);
     }
 
-    private void loadThumbnailImage(IMMessage msg, MsgThumbImageView thumbnail, String path, String ext) {
-        setImageSize(msg, thumbnail, path);
+    private void loadThumbnailImage(String path, String ext) {
+        setImageSize(path);
         if (path != null) {
             thumbnail.loadAsPath(path, getImageMaxEdge(), getImageMaxEdge(), maskBg(), ext);
         } else {
@@ -61,12 +79,8 @@ public class MsgProviderImage extends MsgProviderBase {
         }
     }
 
-    @Override
-    public int viewType() {
-        return MessageMultipItemAdapter.MSG_IMAGE;
-    }
 
-    private void setImageSize(IMMessage message, MsgThumbImageView thumbnail, String thumbPath) {
+    private void setImageSize(String thumbPath) {
         int[] bounds = null;
         if (thumbPath != null) {
             bounds = BitmapDecoder.decodeBound(new File(thumbPath));

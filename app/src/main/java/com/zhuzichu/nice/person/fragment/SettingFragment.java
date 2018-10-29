@@ -33,5 +33,6 @@ public class SettingFragment extends NiceSwipeFragment<FragmentSettingBinding> {
 
     private void initTopBar() {
         mBind.topbar.setTitle("设置");
+        mBind.topbar.addLeftBackImageButton().setOnClickListener(view -> pop());
     }
 }

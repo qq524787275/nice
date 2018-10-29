@@ -22,10 +22,17 @@ import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
  * Created by wb.zhuzichu18 on 2018/10/16.
  */
 public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, MessageMultipItemAdapter.DataBindingViewHolder> {
+    protected IMMessage message;
+    protected View view;
 
-    abstract int getContainer();
+    abstract int getContentResId();
 
-    abstract void refreshView(View view, IMMessage item, int position);
+    abstract void inflateContentView();
+
+    abstract void onItemClick();
+
+    abstract void refreshView();
+
 
     @Override
     public int layout() {
@@ -36,6 +43,8 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
     @Override
     public void convert(MessageMultipItemAdapter.DataBindingViewHolder helper, IMMessage item, int position) {
         ItemMessageBinding binding = helper.getBinding();
+        message = item;
+        view = helper.itemView;
         binding.setVariable(BR.color, ColorManager.getInstance().color);
         //加载头像
         ImageAdapter.loadAvatar(binding.msgAvatar, item.getFromAccount());
@@ -52,8 +61,16 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
         //添加点击事件
         helper.addOnClickListener(R.id.msg_fail);
 
-        View container = LayoutInflater.from(mContext).inflate(getContainer(), binding.msgContent,true);
-        refreshView(container, item, position);
+        if (binding.msgContent.getChildCount() == 0) {
+            View.inflate(mContext, getContentResId(), binding.msgContent);
+        }
+        inflateContentView();
+        refreshView();
+        setListener(binding.msgContent);
+    }
+
+    protected void setListener(View view) {
+        view.setOnClickListener(v -> onItemClick());
     }
 
     /**

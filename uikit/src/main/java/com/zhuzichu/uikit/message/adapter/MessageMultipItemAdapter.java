@@ -12,6 +12,7 @@ import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
+import com.zhuzichu.uikit.message.provider.MsgProviderFile;
 import com.zhuzichu.uikit.message.provider.MsgProviderImage;
 import com.zhuzichu.uikit.message.provider.MsgProviderNotification;
 import com.zhuzichu.uikit.message.provider.MsgProviderText;
@@ -60,9 +61,9 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
             case tip:
                 type = MSG_TIP;
                 break;
-//            case file:
-//                type = MSG_FILE;
-//                break;
+            case file:
+                type = MSG_FILE;
+                break;
             case text:
                 type = MSG_TEXT;
                 break;
@@ -101,6 +102,7 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
         mProviderDelegate.registerProvider(new MsgProviderNotification());
         mProviderDelegate.registerProvider(new MsgProviderTip());
         mProviderDelegate.registerProvider(new MsgProviderImage());
+        mProviderDelegate.registerProvider(new MsgProviderFile());
     }
 
     @Override
