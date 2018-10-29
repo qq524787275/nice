@@ -3,15 +3,15 @@ package com.zhuzichu.uikit.message.provider;
 import android.text.format.Formatter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.comment.bus.RxBus;
-import com.zhuzichu.uikit.file.fragment.FileDisplayFragment;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.file.FileIcons;
+import com.zhuzichu.uikit.file.fragment.FileDisplayFragment;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 
 
@@ -42,8 +42,8 @@ public class MsgProviderFile extends MsgProviderBase {
     }
 
     @Override
-    void onItemClick() {
-        RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(message)));
+    protected void onItemClick(IMMessage msg) {
+        RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
     }
 
     @Override

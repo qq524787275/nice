@@ -43,7 +43,7 @@ public class MsgProviderImage extends MsgProviderBase {
     }
 
     @Override
-    void onItemClick() {
+    protected void onItemClick(IMMessage msg) {
         Toast.makeText(mContext, "点击了图片", Toast.LENGTH_SHORT).show();
     }
 

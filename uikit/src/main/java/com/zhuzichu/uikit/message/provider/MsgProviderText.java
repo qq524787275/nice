@@ -1,11 +1,8 @@
 package com.zhuzichu.uikit.message.provider;
 
-import android.view.View;
 import android.widget.Toast;
 
-import com.lzy.okgo.OkGo;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
-import com.qmuiteam.qmui.util.QMUIColorHelper;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.view.face.NiceFaceView;
 import com.zhuzichu.uikit.R;
@@ -28,7 +25,7 @@ public class MsgProviderText extends MsgProviderBase {
     }
 
     @Override
-    void onItemClick() {
+    protected void onItemClick(IMMessage msg) {
         Toast.makeText(mContext, "点击了文本", Toast.LENGTH_SHORT).show();
     }
 

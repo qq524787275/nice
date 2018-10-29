@@ -1,11 +1,9 @@
 package com.zhuzichu.uikit.message.provider;
 
 
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.provider.BaseItemProvider;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
@@ -24,12 +22,15 @@ import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, MessageMultipItemAdapter.DataBindingViewHolder> {
     protected IMMessage message;
     protected View view;
+    protected ItemMessageBinding bind;
+    protected MessageMultipItemAdapter.DataBindingViewHolder helper;
 
     abstract int getContentResId();
 
     abstract void inflateContentView();
 
-    abstract void onItemClick();
+    protected void onItemClick(IMMessage msg) {
+    }
 
     abstract void refreshView();
 
@@ -42,95 +43,85 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
 
     @Override
     public void convert(MessageMultipItemAdapter.DataBindingViewHolder helper, IMMessage item, int position) {
-        ItemMessageBinding binding = helper.getBinding();
-        message = item;
-        view = helper.itemView;
-        binding.setVariable(BR.color, ColorManager.getInstance().color);
+        this.helper = helper;
+        this.bind = helper.getBinding();
+        this.message = item;
+        this.view = helper.itemView;
+        bind.setVariable(BR.color, ColorManager.getInstance().color);
         //加载头像
-        ImageAdapter.loadAvatar(binding.msgAvatar, item.getFromAccount());
+        ImageAdapter.loadAvatar(bind.msgAvatar, message.getFromAccount());
         //刷新时间
-        refreshMsgTime(helper, binding, item);
+        refreshMsgTime();
         //判断消息是否是自己的
         if (item.getFromAccount().equals(Nice.getAccount())) {
             //刷新自己的消息
-            refreshMineMsg(helper, binding, item);
+            refreshMineMsg();
         } else {
             //刷新他人的消息
-            refreshOtherMsg(helper, binding, item);
+            refreshOtherMsg();
         }
         //添加点击事件
         helper.addOnClickListener(R.id.msg_fail);
 
-        if (binding.msgContent.getChildCount() == 0) {
-            View.inflate(mContext, getContentResId(), binding.msgContent);
+        if (bind.msgContent.getChildCount() == 0) {
+            View.inflate(mContext, getContentResId(), bind.msgContent);
         }
         inflateContentView();
         refreshView();
-        setListener(binding.msgContent);
+        setListener(item);
     }
 
-    protected void setListener(View view) {
-        view.setOnClickListener(v -> onItemClick());
+    private void setListener(IMMessage item) {
+        bind.msgContent.setOnClickListener(view->onItemClick(item));
     }
+
 
     /**
      * 刷新别人发的消息
-     *
-     * @param helper
-     * @param binding
-     * @param item
      */
-    private void refreshOtherMsg(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
-        binding.msgLoading.setVisibility(View.GONE);
-        binding.msgFail.setVisibility(View.GONE);
-        binding.msgRoot.setLayoutDirection(RelativeLayout.LAYOUT_DIRECTION_LTR);
-        binding.setIsMy(false);
+    private void refreshOtherMsg() {
+        bind.msgLoading.setVisibility(View.GONE);
+        bind.msgFail.setVisibility(View.GONE);
+        bind.msgRoot.setLayoutDirection(RelativeLayout.LAYOUT_DIRECTION_LTR);
+        bind.setIsMy(false);
     }
 
     /**
      * 刷新自己发的的消息
-     *
-     * @param helper
-     * @param binding
-     * @param item
      */
-    private void refreshMineMsg(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
-        binding.msgRoot.setLayoutDirection(RelativeLayout.LAYOUT_DIRECTION_RTL);
-        binding.setIsMy(true);
+    private void refreshMineMsg() {
+        bind.msgRoot.setLayoutDirection(RelativeLayout.LAYOUT_DIRECTION_RTL);
+        bind.setIsMy(true);
         //设置 消息的发送状态
-        MsgStatusEnum status = item.getStatus();
+        MsgStatusEnum status = message.getStatus();
         switch (status) {
             case fail:
-                binding.msgLoading.setVisibility(View.GONE);
-                binding.msgFail.setVisibility(View.VISIBLE);
+                bind.msgLoading.setVisibility(View.GONE);
+                bind.msgFail.setVisibility(View.VISIBLE);
                 break;
             case sending:
-                binding.msgLoading.setVisibility(View.VISIBLE);
-                binding.msgFail.setVisibility(View.GONE);
+                bind.msgLoading.setVisibility(View.VISIBLE);
+                bind.msgFail.setVisibility(View.GONE);
                 break;
             default:
-                binding.msgLoading.setVisibility(View.GONE);
-                binding.msgFail.setVisibility(View.GONE);
+                bind.msgLoading.setVisibility(View.GONE);
+                bind.msgFail.setVisibility(View.GONE);
                 break;
         }
     }
 
     /**
      * 刷新时间
-     *
-     * @param helper
-     * @param binding
-     * @param item
      */
-    private void refreshMsgTime(BaseViewHolder helper, ItemMessageBinding binding, IMMessage item) {
-        binding.msgTime.setText(TimeUtils.getTimeShowString(item.getTime(), false));
+    private void refreshMsgTime() {
+        bind.msgTime.setText(TimeUtils.getTimeShowString(message.getTime(), false));
         if (helper.getAdapterPosition() - 1 >= 0) {
             IMMessage lastMsg = mData.get(helper.getAdapterPosition() - 1);
-            if (item.getTime() - lastMsg.getTime() > 60000) {
+            if (message.getTime() - lastMsg.getTime() > 60000) {
                 //相差60秒 显示时间
-                binding.msgTime.setVisibility(View.VISIBLE);
+                bind.msgTime.setVisibility(View.VISIBLE);
             } else {
-                binding.msgTime.setVisibility(View.GONE);
+                bind.msgTime.setVisibility(View.GONE);
             }
         }
     }

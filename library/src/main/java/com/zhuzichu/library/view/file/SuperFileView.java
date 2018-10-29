@@ -2,12 +2,12 @@ package com.zhuzichu.library.view.file;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.tencent.smtt.sdk.TbsReaderView;
 
@@ -42,17 +42,35 @@ public class SuperFileView extends FrameLayout implements TbsReaderView.ReaderCa
     }
 
     private static final String TAG = "SuperFileView";
-    public void displayFile(File file,String fileTyle) {
+
+    public void displayFile(File file, String fileTyle) {
+        //增加下面一句解决没有TbsReaderTemp文件夹存在导致加载文件失败
+        String bsReaderTemp = "/storage/emulated/0/TbsReaderTemp";
+        File bsReaderTempFile = new File(bsReaderTemp);
+
+        if (!bsReaderTempFile.exists()) {
+            boolean mkdir = bsReaderTempFile.mkdir();
+            if (!mkdir) {
+            }
+        }
+
         Bundle bundle = new Bundle();
         String path = file.toString();
-        bundle.putString(TbsReaderView.KEY_FILE_PATH, path);
-        bundle.putString(TbsReaderView.KEY_TEMP_PATH, path);
-        Toast.makeText(mContext, ""+fileTyle, Toast.LENGTH_SHORT).show();
-        Log.i(TAG, "displayFile: "+file.toString());
-        boolean bool = this.mTbsReaderView.preOpen(fileTyle, false);
+//        path="/storage/emulated/0/zzc/zzc1";
+        bundle.putString(TbsReaderView.KEY_FILE_PATH, path+"."+fileTyle.toLowerCase());
+        bundle.putString(TbsReaderView.KEY_TEMP_PATH, Environment.getExternalStorageDirectory() + "/" + "TbsReaderTemp");
+        Log.i(TAG, "displayFile: " +  path);
+        Log.i(TAG, "fileTyle: " + fileTyle);
+        boolean bool = this.mTbsReaderView.preOpen(fileTyle.toLowerCase(), true);
         if (bool) {
             Log.i(TAG, "displayFile: 执行了");
             this.mTbsReaderView.openFile(bundle);
+        }
+    }
+
+    public void onStopDisplay() {
+        if (mTbsReaderView != null) {
+            mTbsReaderView.onStop();
         }
     }
 }

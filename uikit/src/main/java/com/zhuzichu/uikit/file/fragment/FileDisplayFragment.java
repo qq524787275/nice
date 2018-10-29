@@ -8,12 +8,12 @@ import android.view.View;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
-import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
+import com.zhuzichu.library.utils.FileUtils;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentFileDisplayBinding;
 import com.zhuzichu.uikit.file.FileIcons;
@@ -87,6 +87,8 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                             Log.i(TAG, "initObserver: transferring");
                             break;
                         case transferred:
+                            FileAttachment attachment = (FileAttachment) messgae.getAttachment();
+                            FileUtils.copyFile(attachment.getPath(), attachment.getPath() + "." + FileIcons.getExtensionName(attachment.getDisplayName().toLowerCase()));
                             Log.i(TAG, "initObserver: transferred");
                             break;
                         case fail:
@@ -96,6 +98,12 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                 });
 
         RxBus.getIntance().addSubscription(this.getClass().getSimpleName() + msg.getUuid(), dispMessageStatus, dispProgress);
+    }
+
+    @Override
+    public void onDestroyView() {
+        mBind.sfv.onStopDisplay();
+        super.onDestroyView();
     }
 
     @Override
@@ -110,7 +118,7 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
         if (!TextUtils.isEmpty(mAttachment.getPath())) {
             mBind.layoutLoad.setVisibility(View.GONE);
             mBind.sfv.setVisibility(View.VISIBLE);
-            mBind.sfv.displayFile(new File(mAttachment.getPath()),getExtensionName(mAttachment.getDisplayName()));
+            mBind.sfv.displayFile(new File(mAttachment.getPath()), getExtensionName(mAttachment.getDisplayName()));
         } else {
             mBind.load.setText("未下载");
             mBind.load.setEnabled(true);
