@@ -149,6 +149,9 @@
 #dto
 -dontwarn com.zhuzichu.**
 -keep class com.zhuzichu.**{*;}
+#x5webview
+-dontwarn com.tencent.smtt.**
+-keep class com.tencent.smtt.**{*;}
 ### glide 3
 -keepnames class com.netease.nim.uikit.support.glide.NIMGlideModule
 

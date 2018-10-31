@@ -61,7 +61,7 @@ public class SuperFileView extends FrameLayout implements TbsReaderView.ReaderCa
         bundle.putString(TbsReaderView.KEY_TEMP_PATH, Environment.getExternalStorageDirectory() + "/" + "TbsReaderTemp");
         Log.i(TAG, "displayFile: " +  path);
         Log.i(TAG, "fileTyle: " + fileTyle);
-        boolean bool = this.mTbsReaderView.preOpen(fileTyle.toLowerCase(), true);
+        boolean bool = this.mTbsReaderView.preOpen(fileTyle.toLowerCase(), false);
         if (bool) {
             Log.i(TAG, "displayFile: 执行了");
             this.mTbsReaderView.openFile(bundle);

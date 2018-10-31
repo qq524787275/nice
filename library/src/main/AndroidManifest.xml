@@ -1,9 +1,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.zhuzichu.library">
+
     <uses-permission android:name="android.permission.VIBRATE" />
     <application>
         <activity android:name=".ui.matisse.ui.MatisseActivity" />
         <activity android:name="com.zhuzichu.library.ui.matisse.internal.ui.AlbumPreviewActivity" />
         <activity android:name="com.zhuzichu.library.ui.matisse.internal.ui.SelectedPreviewActivity" />
+        <activity
+            android:name=".ui.webview.activity.BrowserActivity"
+            android:theme="@style/AppTransparentTheme" />
     </application>
 </manifest>

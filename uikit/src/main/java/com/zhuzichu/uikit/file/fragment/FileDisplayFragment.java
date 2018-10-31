@@ -78,6 +78,8 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                 .map(action -> action.data)
                 .filter(messgae -> messgae.getUuid().equals(msg.getUuid()))
                 .subscribe(messgae -> {
+                    msg=messgae;
+                    mAttachment= (FileAttachment) messgae.getAttachment();
                     AttachStatusEnum status = messgae.getAttachStatus();
                     switch (status) {
                         case def:
@@ -87,8 +89,8 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                             Log.i(TAG, "initObserver: transferring");
                             break;
                         case transferred:
-                            FileAttachment attachment = (FileAttachment) messgae.getAttachment();
-                            FileUtils.copyFile(attachment.getPath(), attachment.getPath() + "." + FileIcons.getExtensionName(attachment.getDisplayName().toLowerCase()));
+                            FileUtils.copyFile(mAttachment.getPath(), mAttachment.getPath() + "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
+                            initView();
                             Log.i(TAG, "initObserver: transferred");
                             break;
                         case fail:

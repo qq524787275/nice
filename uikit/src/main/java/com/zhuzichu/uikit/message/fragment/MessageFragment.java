@@ -39,7 +39,6 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
-    private static final String TAG = "MessageFragment";
 
     public interface Extras {
         String EXTRA_SESSION_ID = "extra_session_id";
@@ -114,7 +113,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                     if (list.size() == 0)
                         return;
                     mAdapter.addData(list);
-                    Log.i(TAG, "第一回合: ");
                     if (isLastMessageVisible()) {
                         smoothToBottom();
                     } else {
@@ -135,7 +133,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                         if (item.getUuid().equals(msg.getUuid())) {
                             data.set(i, msg);
                             mAdapter.refreshNotifyItemChanged(i);
-                            Log.i(TAG, "第二回合: ");
                             break;
                         }
                     }
@@ -280,7 +277,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
      * 滑动到底
      */
     public void smoothToBottom() {
-        Log.i(TAG, "smoothToBottom: 当前线程:" + Thread.currentThread().getName());
         int position = mAdapter.getData().size() - 1;
         if (position < 0)
             return;

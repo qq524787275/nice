@@ -1,10 +1,15 @@
 package com.zhuzichu.nice.session;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.tencent.smtt.sdk.QbSdk;
+import com.tencent.smtt.sdk.TbsDownloadConfig;
+import com.tencent.smtt.sdk.TbsDownloader;
+import com.tencent.smtt.sdk.TbsListener;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.action.ActionUnreadCountChange;
 import com.zhuzichu.library.base.BaseFragment;
@@ -13,6 +18,7 @@ import com.zhuzichu.library.bean.CountryBean;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.ui.scaner.ScannerFragment;
+import com.zhuzichu.library.ui.webview.activity.BrowserActivity;
 import com.zhuzichu.library.view.popou.MenuPopup;
 import com.zhuzichu.nice.MainFragment;
 import com.zhuzichu.nice.R;
@@ -103,11 +109,26 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         RxBus.getIntance().unSubscribe(this);
     }
 
+    private static final String TAG = "SessionFragment";
+
     private void initMenuPopup() {
         mMenuPopup = new MenuPopup(getActivity());
 
         mMenuPopup.addItem("扫一扫", () -> {
             RxBus.getIntance().post(new ActionMainStartFragmnet(ScannerFragment.newInstance(), ActionMainStartFragmnet.getModalAnimations()));
+        });
+
+        mMenuPopup.addItem("安装X5内核", () -> {
+            if (QbSdk.getTbsVersion(getActivity()) == 0) {
+                Toast.makeText(_mActivity, "还没有安装内核", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(_mActivity, "已经安装了内核", Toast.LENGTH_SHORT).show();
+            }
+            BrowserActivity.startActivity(getActivity(), BrowserActivity.URL_DEBUGTBS);
+        });
+
+        mMenuPopup.addItem("打开百度", () -> {
+            BrowserActivity.startActivity(getActivity(), "https://www.baidu.com/");
         });
     }
 
@@ -119,6 +140,7 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         mBind.topbar.addLeftView(statusView, R.id.topbar_left_online_status);
         mBind.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_session_menu)
                 .setOnClickListener(view -> mMenuPopup.show(mBind.topbar));
+
     }
 
 }

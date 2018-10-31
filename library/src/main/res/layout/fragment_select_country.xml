@@ -13,7 +13,7 @@
             android:layout_height="wrap_content"
             app:qmui_topbar_bg_color="@color/qmui_config_color_white"
             app:qmui_topbar_title_color="@color/color_grey_333333"
-            app:qmui_topbar_left_back_drawable_id="@mipmap/icon_cancel"
+            app:qmui_topbar_left_back_drawable_id="@mipmap/icon_tobar_cancel"
             />
 
         <android.support.constraint.ConstraintLayout

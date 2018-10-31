@@ -55,6 +55,7 @@
         <com.zhuzichu.library.view.layout.FishDrawableView
             android:id="@+id/fish"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></com.zhuzichu.library.view.layout.FishDrawableView>
+            android:layout_height="match_parent"
+            android:visibility="gone"></com.zhuzichu.library.view.layout.FishDrawableView>
     </com.zhuzichu.library.view.reveal.widget.RevealFrameLayout>
 </layout>
