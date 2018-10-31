@@ -14,6 +14,7 @@ import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
 import com.zhuzichu.uikit.message.provider.MsgProviderFile;
 import com.zhuzichu.uikit.message.provider.MsgProviderImage;
+import com.zhuzichu.uikit.message.provider.MsgProviderLocation;
 import com.zhuzichu.uikit.message.provider.MsgProviderNotification;
 import com.zhuzichu.uikit.message.provider.MsgProviderText;
 import com.zhuzichu.uikit.message.provider.MsgProviderTip;
@@ -79,9 +80,9 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
 //            case custom:
 //                type = MSG_CUSTOM;
 //                break;
-//            case location:
-//                type = MSG_LOCATION;
-//                break;
+            case location:
+                type = MSG_LOCATION;
+                break;
             case notification:
                 type = MSG_NOTIFICATION;
                 break;
@@ -103,6 +104,7 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
         mProviderDelegate.registerProvider(new MsgProviderTip());
         mProviderDelegate.registerProvider(new MsgProviderImage());
         mProviderDelegate.registerProvider(new MsgProviderFile());
+        mProviderDelegate.registerProvider(new MsgProviderLocation());
     }
 
     @Override

@@ -45,6 +45,7 @@ public class StateLayout extends FrameLayout {
     private int[][] states;
 
     StateListDrawable mStateBackground;
+    StateListDrawable mStateForeground;
 
     public StateLayout(Context context) {
         this(context, null);
@@ -68,6 +69,13 @@ public class StateLayout extends FrameLayout {
             mStateBackground = (StateListDrawable) drawable;
         } else {
             mStateBackground = new StateListDrawable();
+        }
+
+        Drawable foreground = getForeground();
+        if (foreground != null && foreground instanceof StateListDrawable) {
+            mStateForeground = (StateListDrawable) foreground;
+        } else {
+            mStateForeground = new StateListDrawable();
         }
 
         mNormalBackground = new GradientDrawable();
@@ -114,11 +122,13 @@ public class StateLayout extends FrameLayout {
         setStroke();
 
         //set background
-        mStateBackground.addState(states[0], mPressedBackground);
-        mStateBackground.addState(states[1], mPressedBackground);
+        mStateForeground.addState(states[0], mPressedBackground);
+        mStateForeground.addState(states[1], mPressedBackground);
         mStateBackground.addState(states[3], mUnableBackground);
         mStateBackground.addState(states[2], mNormalBackground);
+
         setBackgroundDrawable(mStateBackground);
+        setForeground(mStateForeground);
         a.recycle();
     }
 

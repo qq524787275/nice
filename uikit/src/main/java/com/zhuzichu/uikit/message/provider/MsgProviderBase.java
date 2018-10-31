@@ -2,6 +2,7 @@ package com.zhuzichu.uikit.message.provider;
 
 
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.chad.library.adapter.base.provider.BaseItemProvider;
@@ -123,6 +124,16 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
             } else {
                 bind.msgTime.setVisibility(View.GONE);
             }
+        }
+    }
+
+    // 设置控件的长宽
+    protected void setLayoutParams(int width, int height, View... views) {
+        for (View view : views) {
+            ViewGroup.LayoutParams maskParams = view.getLayoutParams();
+            maskParams.width = width;
+            maskParams.height = height;
+            view.setLayoutParams(maskParams);
         }
     }
 }

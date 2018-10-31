@@ -1,15 +1,11 @@
 package com.zhuzichu.nice.session;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.smtt.sdk.TbsDownloadConfig;
-import com.tencent.smtt.sdk.TbsDownloader;
-import com.tencent.smtt.sdk.TbsListener;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.action.ActionUnreadCountChange;
 import com.zhuzichu.library.base.BaseFragment;

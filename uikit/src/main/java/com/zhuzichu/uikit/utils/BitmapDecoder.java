@@ -1,6 +1,7 @@
 package com.zhuzichu.uikit.utils;
 
 
+import android.content.res.Resources;
 import android.graphics.BitmapFactory;
 
 import java.io.File;
@@ -36,6 +37,22 @@ public class BitmapDecoder {
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(is, null, options);
+
+        return new int[]{options.outWidth, options.outHeight};
+    }
+
+    public static int[] decodeBound(Resources res, int resId) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        return new int[]{options.outWidth, options.outHeight};
+    }
+
+    public static int[] decodeBound(String pathName) {
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(pathName, options);
 
         return new int[]{options.outWidth, options.outHeight};
     }

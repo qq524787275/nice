@@ -36,32 +36,32 @@
             android:id="@+id/msg_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/msg_time"
-            android:layout_marginBottom="12dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="12dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="12dp"
-            android:layout_marginTop="5dp" />
+            android:layout_marginBottom="12dp" />
 
         <com.zhuzichu.library.view.layout.StateLayout
             android:id="@+id/msg_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/msg_time"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
+            android:layout_marginBottom="12dp"
             android:layout_toEndOf="@+id/msg_avatar"
             android:layout_toRightOf="@+id/msg_avatar"
             android:clickable="true"
-            android:minHeight="40dp"
+            android:gravity="center"
             android:minWidth="40dp"
+            android:minHeight="40dp"
             app:sl_normalBackgroundColor="@{isMy?color.colorPrimary:@color/color_grey_eaeaea}"
-            app:sl_pressedBackgroundColor="@{isMy?color.colorPrimaryDark:@color/color_grey_999999}"
-            app:sl_radius="20dp">
+            app:sl_pressedBackgroundColor="#22000000"
+            app:sl_radius="8dp">
 
         </com.zhuzichu.library.view.layout.StateLayout>
 

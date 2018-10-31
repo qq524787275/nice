@@ -78,8 +78,8 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                 .map(action -> action.data)
                 .filter(messgae -> messgae.getUuid().equals(msg.getUuid()))
                 .subscribe(messgae -> {
-                    msg=messgae;
-                    mAttachment= (FileAttachment) messgae.getAttachment();
+                    msg = messgae;
+                    mAttachment = (FileAttachment) messgae.getAttachment();
                     AttachStatusEnum status = messgae.getAttachStatus();
                     switch (status) {
                         case def:
@@ -120,7 +120,7 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
         if (!TextUtils.isEmpty(mAttachment.getPath())) {
             mBind.layoutLoad.setVisibility(View.GONE);
             mBind.sfv.setVisibility(View.VISIBLE);
-            mBind.sfv.displayFile(new File(mAttachment.getPath()), getExtensionName(mAttachment.getDisplayName()));
+            mBind.sfv.displayFile(new File(mAttachment.getPath()), FileIcons.getExtensionName(mAttachment.getDisplayName()));
         } else {
             mBind.load.setText("未下载");
             mBind.load.setEnabled(true);
@@ -134,18 +134,6 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
 
-    }
-
-
-    // 获取文件扩展名
-    public static String getExtensionName(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length() - 1))) {
-                return filename.substring(dot + 1);
-            }
-        }
-        return "";
     }
 
     @Override

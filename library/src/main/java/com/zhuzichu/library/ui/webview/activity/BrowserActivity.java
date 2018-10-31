@@ -3,6 +3,7 @@ package com.zhuzichu.library.ui.webview.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -72,17 +73,66 @@ public class BrowserActivity extends SwipeBackActivity {
 
     private void initWebListener() {
         mWebView.setWebViewClient(new WebViewClient() {
-            @Override
-            public void onPageFinished(WebView webView, String s) {
-                super.onPageFinished(webView, s);
-                Log.i(TAG, "onPageFinished: ");
+            boolean loadingFinished = true;
+            boolean redirect = false;
+
+            long last_page_start;
+            long now;
+
+            private void showSplash() {
+                if (mWebView.getVisibility() == View.VISIBLE) {
+                    mWebView.setVisibility(View.GONE);
+                    mBind.splash.setVisibility(View.VISIBLE);
+                }
+            }
+
+            private void removeSplash() {
+                if (last_page_start < now) {
+                    mWebView.setVisibility(View.VISIBLE);
+                    mBind.splash.setVisibility(View.GONE);
+                }
             }
 
             @Override
-            public boolean shouldOverrideUrlLoading(WebView webView, String s) {
-                Log.i(TAG, "shouldOverrideUrlLoading: ");
-                return super.shouldOverrideUrlLoading(webView, s);
+            public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
+                Log.i(TAG, "onPageStarted: ");
+                loadingFinished = false;
+                last_page_start = System.nanoTime();
+                showSplash();
             }
+
+            @Override
+            public void onPageFinished(WebView webView, String s) {
+                if (!redirect) {
+                    loadingFinished = true;
+                }
+                //call remove_splash in 500 miSec
+                if (loadingFinished && !redirect) {
+                    now = System.nanoTime();
+                    new android.os.Handler().postDelayed(
+                            new Runnable() {
+                                public void run() {
+                                    removeSplash();
+                                }
+                            },
+                            500);
+                } else {
+                    redirect = false;
+                }
+            }
+
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.i(TAG, "shouldOverrideUrlLoading: ");
+                if (!loadingFinished) {
+                    redirect = true;
+                }
+
+                loadingFinished = false;
+                view.loadUrl(url);
+                return false;
+            }
+
         });
 
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -115,15 +165,15 @@ public class BrowserActivity extends SwipeBackActivity {
 
             @Override
             public void onProgressChanged(WebView webView, int newProgress) {
+                Log.i(TAG, "onProgressChanged: " + newProgress);
                 if (newProgress == 100) {
                     mBind.progress.setVisibility(View.GONE);
+                    mBind.progress.setProgress(0);
                 } else {
                     if (mBind.progress.getVisibility() == View.GONE) {
-                        mBind.progress.setProgress(0);
                         mBind.progress.setVisibility(View.VISIBLE);
                     }
                     mBind.progress.setProgress(newProgress);
-                    Log.i(TAG, "onProgressChanged: " + newProgress);
                 }
                 super.onProgressChanged(webView, newProgress);
             }
@@ -136,6 +186,7 @@ public class BrowserActivity extends SwipeBackActivity {
             }
         });
     }
+
 
     private void initWebSettings() {
         WebSettings webSetting = mWebView.getSettings();
