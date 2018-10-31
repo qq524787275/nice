@@ -29,6 +29,7 @@
             android:textColor="@color/white"
             android:textSize="11sp"
             app:sb_normalBackgroundColor="@color/color_gray_d9d9d9"
+            app:sb_pressedBackgroundColor="@color/color_gray_d9d9d9"
             app:sb_radius="4dp" />
 
         <android.support.v7.widget.AppCompatImageView
@@ -52,12 +53,12 @@
             android:layout_marginEnd="5dp"
             android:layout_marginRight="5dp"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             android:layout_toEndOf="@+id/msg_avatar"
             android:layout_toRightOf="@+id/msg_avatar"
             android:clickable="true"
             android:minHeight="40dp"
             android:minWidth="40dp"
-            android:padding="10dp"
             app:sl_normalBackgroundColor="@{isMy?color.colorPrimary:@color/color_grey_eaeaea}"
             app:sl_pressedBackgroundColor="@{isMy?color.colorPrimaryDark:@color/color_grey_999999}"
             app:sl_radius="20dp">

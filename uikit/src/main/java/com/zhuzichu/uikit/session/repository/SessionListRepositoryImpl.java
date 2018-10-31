@@ -15,13 +15,18 @@ public class SessionListRepositoryImpl implements SessionListRepository {
 
     /**
      * 查询最近联系人列表数据
+     *
      * @return
      */
     @Override
     public Observable<List<RecentContact>> loadRecentContact() {
         return Observable.create(emitter -> {
-            List<RecentContact> data = NIMClient.getService(MsgService.class).queryRecentContactsBlock();
-            emitter.onNext(data);
+            try {
+                List<RecentContact> data = NIMClient.getService(MsgService.class).queryRecentContactsBlock();
+                emitter.onNext(data);
+            } catch (Exception e) {
+
+            }
         });
     }
 }

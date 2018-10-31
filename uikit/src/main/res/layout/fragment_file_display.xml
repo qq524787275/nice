@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="color"
+            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@{color.windowBackground}"
+        android:orientation="vertical">
+
+        <com.qmuiteam.qmui.widget.QMUITopBar
+            android:id="@+id/topbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@{color.colorPrimary}" />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <com.zhuzichu.library.view.file.SuperFileView
+                android:id="@+id/sfv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"></com.zhuzichu.library.view.file.SuperFileView>
+
+            <LinearLayout
+                android:id="@+id/layout_load"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.AppCompatImageView
+                    android:id="@+id/file_icon"
+                    android:layout_width="97dp"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="30dp" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/file_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textColor="@{color.textColorPrimary}"
+                    android:textSize="16sp" />
+
+                <com.zhuzichu.library.view.button.StateButton
+                    android:id="@+id/load"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_margin="15dp"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="下载"
+                    android:textSize="15sp"
+                    app:sb_normalBackgroundColor="@{color.colorPrimary}"
+                    app:sb_normalTextColor="@android:color/white"
+                    app:sb_pressedBackgroundColor="@{color.colorPrimaryDark}"
+                    app:sb_pressedTextColor="@android:color/white"
+                    app:sb_radius="5dp"
+                    app:sb_unableBackgroundColor="@color/color_grey_999999"
+                    app:sb_unableTextColor="@android:color/white" />
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+    </LinearLayout>
+</layout>

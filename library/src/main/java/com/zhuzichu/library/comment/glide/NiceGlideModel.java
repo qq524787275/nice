@@ -35,11 +35,14 @@ import okio.Source;
 
 @GlideModule
 public class NiceGlideModel extends AppGlideModule {
+    private static final int M = 1024 * 1024;
+    private static final int MAX_DISK_CACHE_SIZE = 256 * M;
+
     @Override
     public void applyOptions(Context context, GlideBuilder builder) {
-        int diskCacheSizeBytes = 1024 * 1024 * 250;
-        builder.setDiskCache(new DiskLruCacheFactory(NiceCacheUtils.getGlideDiskCacheDir(context).getAbsolutePath(), diskCacheSizeBytes));
+        builder.setDiskCache(new DiskLruCacheFactory(NiceCacheUtils.getGlideDiskCacheDir(context).getAbsolutePath(), MAX_DISK_CACHE_SIZE));
     }
+
     public static void forget(String url) {
         NiceGlideModel.DispatchingProgressListener.forget(url);
     }
@@ -70,8 +73,9 @@ public class NiceGlideModel extends AppGlideModule {
     private interface ResponseProgressListener {
         /**
          * progress update
-         * @param url  image url
-         * @param bytesRead  recent
+         *
+         * @param url           image url
+         * @param bytesRead     recent
          * @param contentLength total
          */
         void update(HttpUrl url, long bytesRead, long contentLength);
@@ -80,7 +84,8 @@ public class NiceGlideModel extends AppGlideModule {
     public interface UiOnProgressListener {
         /**
          * progress
-         * @param bytesRead recent
+         *
+         * @param bytesRead      recent
          * @param expectedLength total
          */
         void onProgress(long bytesRead, long expectedLength);

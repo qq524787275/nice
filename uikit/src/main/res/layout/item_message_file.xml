@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="80dp"
+    android:padding="10dp">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/file_icon"
+        android:layout_width="48dp"
+        android:layout_height="60dp" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/file_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_toEndOf="@+id/file_icon"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="16sp"
+        android:textColor="@color/color_grey_333333"
+        tools:text="演员的自我修养" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toEndOf="@+id/file_icon"
+        android:textColor="@color/color_grey_999999"
+        android:textSize="14sp"
+        tools:text="812Kb" />
+
+</RelativeLayout>

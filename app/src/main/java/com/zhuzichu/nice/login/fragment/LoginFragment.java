@@ -21,8 +21,7 @@ import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
-    private static final String TAG = "LoginFragment";
-    private FragmentLoginBinding mBinding;
+    private FragmentLoginBinding mBind;
     private QMUITipDialog mLoading;
     private AbortableFuture<LoginInfo> mLoginRequest;
 
@@ -42,16 +41,14 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
 
     @Override
     public void init(FragmentLoginBinding binding) {
-        mBinding = binding;
+        mBind = binding;
         initTopBar();
         initView();
         initListener();
     }
 
     private void initListener() {
-        mBinding.btnSubmit.setOnClickListener(view -> doLogin(mBinding.etAccount.getText().toString(), MD5.getStringMD5(mBinding.tietPassword.getText().toString())));
-
-
+        mBind.btnSubmit.setOnClickListener(view -> doLogin(mBind.etAccount.getText().toString(), MD5.getStringMD5(mBind.tietPassword.getText().toString())));
     }
 
     @Override
@@ -72,12 +69,12 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
                 mLoginRequest = null;
             }
         });
-        showSoftInput(mBinding.tietPassword);
+        showSoftInput(mBind.tietPassword);
     }
 
 
     private void initTopBar() {
-        mBinding.topbar.setTitle("登录");
+        mBind.topbar.setTitle("登录");
     }
 
     public void doLogin(String account, String token) {
@@ -109,5 +106,14 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
     public void onDestroyView() {
         super.onDestroyView();
         QMUIStatusBarHelper.setStatusBarDarkMode(getActivity());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mLoginRequest != null) {
+            mLoginRequest.abort();
+            mLoginRequest = null;
+        }
     }
 }

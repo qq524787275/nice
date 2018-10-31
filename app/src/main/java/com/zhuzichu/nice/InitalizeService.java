@@ -5,14 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.multidex.MultiDex;
-import android.text.TextUtils;
 import android.util.Log;
-
-import com.netease.nimlib.sdk.NIMClient;
-import com.netease.nimlib.sdk.SDKOptions;
-import com.netease.nimlib.sdk.auth.LoginInfo;
-import com.zhuzichu.library.Nice;
-import com.zhuzichu.library.utils.UserPreferences;
 
 /**
  * Created by wb.zhuzichu18 on 2018/10/16.

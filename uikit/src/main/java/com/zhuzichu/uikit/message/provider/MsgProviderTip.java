@@ -22,6 +22,6 @@ public class MsgProviderTip extends BaseItemProvider<IMMessage, BaseViewHolder> 
 
     @Override
     public void convert(BaseViewHolder helper, IMMessage data, int position) {
-        helper.setText(R.id.item_tip_label, "tip消息");
+        helper.setText(R.id.item_tip_label, data.getContent());
     }
 }

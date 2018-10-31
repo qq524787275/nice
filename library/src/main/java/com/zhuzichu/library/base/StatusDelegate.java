@@ -6,7 +6,6 @@ import android.arch.lifecycle.OnLifecycleEvent;
 import android.content.Context;
 import android.databinding.Observable;
 import android.os.Build;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -18,23 +17,27 @@ import com.zhuzichu.library.comment.color.ColorManager;
 public class StatusDelegate extends Observable.OnPropertyChangedCallback implements LifecycleObserver {
     private static final String TAG = "StatusDelegate";
     private Context mContext;
-    private LinearLayout mParentView;
+    private BaseFragment mFragment;
     private View mStatusBar;
     private boolean mIsAuto = true;
+
+    public StatusDelegate(BaseFragment fragment) {
+        mFragment = fragment;
+    }
+
 
     /**
      * 初始化状态栏
      *
      * @param root
-     * @param fragment
      * @return
      */
-    public View init(View root, Fragment fragment) {
-        mContext = fragment.getContext();
-        mParentView = new LinearLayout(mContext);
-        mParentView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-        mParentView.setOrientation(LinearLayout.VERTICAL);
-        mParentView.addView(root);
+    public View bind(View root) {
+        mContext = mFragment.getContext();
+        LinearLayout parentView = new LinearLayout(mContext);
+        parentView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        parentView.setOrientation(LinearLayout.VERTICAL);
+        parentView.addView(root);
 
         //添加状态栏
         mStatusBar = new View(mContext);
@@ -42,10 +45,10 @@ public class StatusDelegate extends Observable.OnPropertyChangedCallback impleme
         mStatusBar.setBackgroundColor(ColorManager.getInstance().color.colorPrimary);
         //android api19 以下不支持沉浸式。
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT)
-            mParentView.addView(mStatusBar, 0);
-        fragment.getLifecycle().addObserver(this);
+            parentView.addView(mStatusBar, 0);
+        mFragment.getLifecycle().addObserver(this);
 
-        return mParentView;
+        return parentView;
     }
 
 

@@ -22,6 +22,13 @@
         <item name="app_content_bg_color">@color/qmui_config_color_white</item>
 
         <item name="chipViewStyle">@style/Widget.ChipView</item>
+
+    </style>
+
+    <style name="AppTransparentTheme" parent="AppTheme">
+        <item name="android:windowBackground">@color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
     </style>
 
 

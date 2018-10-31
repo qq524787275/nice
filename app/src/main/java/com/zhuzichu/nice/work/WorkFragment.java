@@ -4,14 +4,15 @@ import android.os.Bundle;
 
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.comment.color.ColorManager;
+import com.zhuzichu.library.view.layout.FishDrawable;
 import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentWorkBinding;
 
 public class WorkFragment extends NiceFragment<FragmentWorkBinding> {
     public static WorkFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         WorkFragment fragment = new WorkFragment();
         fragment.setArguments(args);
         return fragment;

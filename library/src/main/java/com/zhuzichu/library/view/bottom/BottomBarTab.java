@@ -2,7 +2,6 @@ package com.zhuzichu.library.view.bottom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +16,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.zhuzichu.library.R;
+import com.zhuzichu.library.view.drop.DropFake;
+import com.zhuzichu.library.view.drop.DropManager;
 
 
 public class BottomBarTab extends FrameLayout {
@@ -24,7 +25,7 @@ public class BottomBarTab extends FrameLayout {
     private TextView mTvTitle;
     private int mTabPosition = -1;
     private BottomBar mBottomBar;
-    private TextView mTvUnreadCount;
+    private DropFake mDropFake;
 
     public BottomBarTab(Context context, @DrawableRes int icon, CharSequence title) {
         this(context, null, icon, title);
@@ -40,8 +41,9 @@ public class BottomBarTab extends FrameLayout {
     }
 
     public void attachView(BottomBar bottomBar) {
-        this.mBottomBar=bottomBar;
+        this.mBottomBar = bottomBar;
     }
+
     private void init(Context context, int icon, CharSequence title) {
         TypedArray typedArray = context.obtainStyledAttributes(new int[]{R.attr.selectableItemBackgroundBorderless});
         Drawable drawable = typedArray.getDrawable(0);
@@ -75,21 +77,34 @@ public class BottomBarTab extends FrameLayout {
         addView(lLContainer);
 
         int min = dip2px(context, 20);
-        int padding = dip2px(context, 5);
-        mTvUnreadCount = new TextView(context);
-        mTvUnreadCount.setBackgroundResource(R.drawable.bg_msg_bubble);
-        mTvUnreadCount.setMinWidth(min);
-        mTvUnreadCount.setTextColor(Color.WHITE);
-        mTvUnreadCount.setPadding(padding, 0, padding, 0);
-        mTvUnreadCount.setGravity(Gravity.CENTER);
+        mDropFake = new DropFake(context);
+
         FrameLayout.LayoutParams tvUnReadParams = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, min);
         tvUnReadParams.gravity = Gravity.CENTER;
         tvUnReadParams.leftMargin = dip2px(context, 17);
         tvUnReadParams.bottomMargin = dip2px(context, 14);
-        mTvUnreadCount.setLayoutParams(tvUnReadParams);
-        mTvUnreadCount.setVisibility(GONE);
 
-        addView(mTvUnreadCount);
+        mDropFake.setLayoutParams(tvUnReadParams);
+        mDropFake.setVisibility(GONE);
+        addView(mDropFake);
+        //设置红点拖拽
+        this.mDropFake.setTouchListener(new DropFake.ITouchListener() {
+            @Override
+            public void onDown() {
+                DropManager.getInstance().setCurrentId(Integer.valueOf(mTabPosition));
+                DropManager.getInstance().down(mDropFake, mDropFake.getText());
+            }
+
+            @Override
+            public void onMove(float curX, float curY) {
+                DropManager.getInstance().move(curX, curY);
+            }
+
+            @Override
+            public void onUp() {
+                DropManager.getInstance().up();
+            }
+        });
     }
 
     @Override
@@ -120,14 +135,14 @@ public class BottomBarTab extends FrameLayout {
      */
     public void setUnreadCount(int num) {
         if (num <= 0) {
-            mTvUnreadCount.setText(String.valueOf(0));
-            mTvUnreadCount.setVisibility(GONE);
+            mDropFake.setText(String.valueOf(0));
+            mDropFake.setVisibility(GONE);
         } else {
-            mTvUnreadCount.setVisibility(VISIBLE);
+            mDropFake.setVisibility(VISIBLE);
             if (num > 99) {
-                mTvUnreadCount.setText("99+");
+                mDropFake.setText("...");
             } else {
-                mTvUnreadCount.setText(String.valueOf(num));
+                mDropFake.setText(String.valueOf(num));
             }
         }
     }
@@ -137,14 +152,14 @@ public class BottomBarTab extends FrameLayout {
      */
     public int getUnreadCount() {
         int count = 0;
-        if (TextUtils.isEmpty(mTvUnreadCount.getText())) {
+        if (TextUtils.isEmpty(mDropFake.getText())) {
             return count;
         }
-        if (mTvUnreadCount.getText().toString().equals("99+")) {
+        if (mDropFake.getText().equals("...")) {
             return 99;
         }
         try {
-            count = Integer.valueOf(mTvUnreadCount.getText().toString());
+            count = Integer.valueOf(mDropFake.getText());
         } catch (Exception ignored) {
         }
         return count;

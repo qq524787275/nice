@@ -2,6 +2,7 @@ package com.zhuzichu.uikit.contact.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +10,11 @@ import android.view.ViewGroup;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.databinding.ItemIndexLableBinding;
-import com.zhuzichu.uikit.BR;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.adapter.ImageAdapter;
 import com.zhuzichu.uikit.contact.bean.FriendBean;
 import com.zhuzichu.uikit.databinding.ItemIndexContactBinding;
+import com.zhuzichu.uikit.event.online.OnlineStateEventManager;
 
 import me.yokeyword.indexablerv.IndexableAdapter;
 
@@ -43,7 +44,7 @@ public class ContactAdapter extends IndexableAdapter<FriendBean> {
     public void onBindTitleViewHolder(RecyclerView.ViewHolder holder, String indexTitle) {
         ViewHolderLable holderLable = (ViewHolderLable) holder;
         ItemIndexLableBinding bind = holderLable.getBind();
-        bind.setVariable(BR.color, ColorManager.getInstance().color);
+        bind.setColor(ColorManager.getInstance().color);
         bind.itemTitle.setText(indexTitle);
     }
 
@@ -51,10 +52,17 @@ public class ContactAdapter extends IndexableAdapter<FriendBean> {
     public void onBindContentViewHolder(RecyclerView.ViewHolder holder, FriendBean entity) {
         ViewHolderContact holderContact = (ViewHolderContact) holder;
         ItemIndexContactBinding bind = holderContact.getBind();
+        bind.setColor(ColorManager.getInstance().color);
         NimUserInfo item = entity.getUserInfo();
         ImageAdapter.loadUserAvatar(bind.itemAvatar, item.getAvatar());
         bind.itemName.setText(item.getName());
-        bind.setVariable(BR.color, ColorManager.getInstance().color);
+        String onlineStateContent = OnlineStateEventManager.getSimpleDisplay(item.getAccount());
+        if (TextUtils.isEmpty(onlineStateContent)) {
+            bind.itemStatus.setVisibility(View.GONE);
+        } else {
+            bind.itemStatus.setVisibility(View.VISIBLE);
+            bind.itemStatus.setText(onlineStateContent);
+        }
     }
 
     private class ViewHolderLable extends RecyclerView.ViewHolder {

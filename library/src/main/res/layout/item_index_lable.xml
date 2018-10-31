@@ -29,7 +29,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@drawable/qmui_divider_top_bitmap"
+            android:background="@drawable/qmui_divider"
             app:layout_constraintBottom_toBottomOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>

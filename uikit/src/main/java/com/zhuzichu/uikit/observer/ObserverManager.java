@@ -5,24 +5,32 @@ import com.netease.nimlib.sdk.Observer;
 import com.netease.nimlib.sdk.StatusCode;
 import com.netease.nimlib.sdk.auth.AuthServiceObserver;
 import com.netease.nimlib.sdk.auth.OnlineClient;
+import com.netease.nimlib.sdk.event.EventSubscribeServiceObserver;
+import com.netease.nimlib.sdk.event.model.Event;
+import com.netease.nimlib.sdk.event.model.NimOnlineStateEvent;
 import com.netease.nimlib.sdk.friend.FriendServiceObserve;
 import com.netease.nimlib.sdk.friend.model.Friend;
 import com.netease.nimlib.sdk.friend.model.FriendChangedNotify;
 import com.netease.nimlib.sdk.msg.MsgServiceObserve;
+import com.netease.nimlib.sdk.msg.model.AttachmentProgress;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.netease.nimlib.sdk.uinfo.UserServiceObserve;
 import com.netease.nimlib.sdk.uinfo.model.NimUserInfo;
 import com.zhuzichu.library.comment.bus.RxBus;
+import com.zhuzichu.uikit.event.EventFilter;
+import com.zhuzichu.uikit.event.online.OnlineStateEventManager;
 import com.zhuzichu.uikit.observer.action.ActionAddedOrUpdatedFriends;
+import com.zhuzichu.uikit.observer.action.ActionAttachmentProgress;
 import com.zhuzichu.uikit.observer.action.ActionDeletedFriends;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
 import com.zhuzichu.uikit.observer.action.ActionOnlineStatus;
-import com.zhuzichu.uikit.observer.action.ActionOtherClients;
+import com.zhuzichu.uikit.observer.action.ActionOnlienClient;
 import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
 import com.zhuzichu.uikit.observer.action.ActionRecentContact;
 import com.zhuzichu.uikit.observer.action.ActionUserInfoUpdate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,8 +55,8 @@ public class ObserverManager {
     /**
      * 多端登录监听
      */
-    private final static Observer<List<OnlineClient>> observeOtherClients = (Observer<List<OnlineClient>>) onlineClients -> {
-        RxBus.getIntance().post(new ActionOtherClients(onlineClients));
+    private final static Observer<List<OnlineClient>> observeOnlineClient = (Observer<List<OnlineClient>>) onlineClients -> {
+        RxBus.getIntance().post(new ActionOnlienClient(onlineClients));
     };
 
     /**
@@ -63,6 +71,11 @@ public class ObserverManager {
      */
     private final static Observer<List<IMMessage>> observeReceiveMessage = (Observer<List<IMMessage>>) list -> {
         RxBus.getIntance().post(new ActionReceiveMessage(list));
+    };
+
+    private final static Observer<AttachmentProgress> observerAttachmentProgress = (Observer<AttachmentProgress>) attachmentProgress -> {
+        Log.i(TAG, "zzc : observeReceiveMessage:size=" + attachmentProgress.getUuid());
+        RxBus.getIntance().post(new ActionAttachmentProgress(attachmentProgress));
     };
 
     /**
@@ -91,23 +104,50 @@ public class ObserverManager {
         }
     };
 
+    /**
+     * 自定义消息事件监听
+     */
+    private final static Observer<List<Event>> observerEvent = (Observer<List<Event>>) events -> {
+        //Todo 目前是在主线程筛选事件
+        // 过滤掉旧的事件
+        events = EventFilter.getInstance().filterOlderEvent(events);
+        if (events == null) return;
+        // 筛选出在线状态事件
+        List<Event> onlineStateEvents = new ArrayList<>();
+        for (int i = 0; i < events.size(); i++) {
+            Event e = events.get(i);
+            if (NimOnlineStateEvent.isOnlineStateEvent(e)) {
+                onlineStateEvents.add(e);
+            }
+        }
+        // 处理在线状态事件
+        OnlineStateEventManager.receivedOnlineStateEvents(onlineStateEvents);
+    };
+
+
     public static void regist() {
+        NIMClient.getService(MsgServiceObserve.class).observeAttachmentProgress(observerAttachmentProgress, true);
         NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(observeReceiveMessage, true);
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, true);
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, true);
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(observeOnlineStatus, true);
-        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, true);
+        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOnlineClient, true);
         NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, true);
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(observerFriendChangedNotify, true);
+
+        NIMClient.getService(EventSubscribeServiceObserver.class).observeEventChanged(observerEvent, true);
     }
 
     public static void unRegist() {
+        NIMClient.getService(MsgServiceObserve.class).observeAttachmentProgress(observerAttachmentProgress, false);
         NIMClient.getService(MsgServiceObserve.class).observeReceiveMessage(observeReceiveMessage, false);
         NIMClient.getService(MsgServiceObserve.class).observeMsgStatus(observeMessageStatus, false);
         NIMClient.getService(MsgServiceObserve.class).observeRecentContact(observerRecentContact, false);
         NIMClient.getService(AuthServiceObserver.class).observeOnlineStatus(observeOnlineStatus, false);
-        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOtherClients, false);
+        NIMClient.getService(AuthServiceObserver.class).observeOtherClients(observeOnlineClient, false);
         NIMClient.getService(UserServiceObserve.class).observeUserInfoUpdate(observerUserInfoUpdate, false);
         NIMClient.getService(FriendServiceObserve.class).observeFriendChangedNotify(observerFriendChangedNotify, false);
+
+        NIMClient.getService(EventSubscribeServiceObserver.class).observeEventChanged(observerEvent, false);
     }
 }

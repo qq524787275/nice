@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.zhuzichu.uikit.search.presenter.SearchPresenter"></variable>
+
+        <variable
+            name="color"
+            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@{color.windowBackground}"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.zhuzichu.library.view.edit.ClearableEditTextWithIcon
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="55dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:onClick="@{(view)->presenter.cancel(view)}"
+                android:padding="10dp"
+                android:text="取消"
+                android:textColor="@{color.colorPrimary}" />
+        </LinearLayout>
+    </LinearLayout>
+</layout>

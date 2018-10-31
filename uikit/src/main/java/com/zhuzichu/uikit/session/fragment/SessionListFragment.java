@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.LayoutInflater;
 import android.view.View;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -12,6 +13,7 @@ import com.google.common.base.Optional;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
+import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.bean.TempBean;
 import com.zhuzichu.library.comment.bus.RxBus;
@@ -20,6 +22,7 @@ import com.zhuzichu.library.widget.OnClickListener;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentSessionListBinding;
 import com.zhuzichu.uikit.observer.action.ActionRecentContact;
+import com.zhuzichu.uikit.search.fragment.SearchFragment;
 import com.zhuzichu.uikit.session.adapter.SessionListAdapter;
 import com.zhuzichu.uikit.session.viewmodel.SessionListViewModel;
 import com.zhuzichu.uikit.widget.EmptyView;
@@ -48,7 +51,7 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
     private FragmentSessionListBinding mBinding;
     private SessionListAdapter mAdapter;
-    private OnSessionItemClickListener mOnSessionItemClickListener;
+    private RecentContactCallBack mCallBack;
     private static final String TAG = "SessionListFragment";
     private List<RecentContact> mData;
 
@@ -90,8 +93,8 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
     private void initListener() {
         mAdapter.setOnItemClickListener((adapter, view, position) -> OnClickListener.noDoubleClick(() -> {
-            if (mOnSessionItemClickListener != null)
-                mOnSessionItemClickListener.onSessionItemClick(mAdapter.getData().get(position));
+            if (mCallBack != null)
+                mCallBack.onSessionItemClick(mAdapter.getData().get(position));
         }));
 
         mAdapter.setOnItemLongClickListener((adapter, view, position) -> {
@@ -175,12 +178,16 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
     private void initView() {
         mData = new ArrayList<>();
-        mAdapter = new SessionListAdapter(mData);
+        mAdapter = new SessionListAdapter(mData, mCallBack);
         mBinding.rvList.setLayoutManager(new LinearLayoutManager(getContext()));
         mBinding.rvList.setAdapter(mAdapter);
         EmptyView emptyView = new EmptyView(getActivity());
         emptyView.setTitle(R.string.without_messgae);
         mAdapter.setEmptyView(emptyView);
+
+        View headView = LayoutInflater.from(getContext()).inflate(R.layout.layout_search, null);
+        headView.setOnClickListener(view -> RxBus.getIntance().post(new ActionMainStartFragmnet(SearchFragment.newInstance(), ActionMainStartFragmnet.getModalAnimations())));
+        mAdapter.addHeaderView(headView);
     }
 
     private void initObserve() {
@@ -215,11 +222,13 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
         RxBus.getIntance().unSubscribe(this);
     }
 
-    public void setOnSessionItemClickListener(OnSessionItemClickListener listener) {
-        this.mOnSessionItemClickListener = listener;
+    public void setRecentContactCallBack(RecentContactCallBack callBack) {
+        this.mCallBack = callBack;
     }
 
-    public interface OnSessionItemClickListener {
+    public interface RecentContactCallBack {
         void onSessionItemClick(RecentContact recentContact);
+
+        void onUnreadCountChange(int unreadNum);
     }
 }

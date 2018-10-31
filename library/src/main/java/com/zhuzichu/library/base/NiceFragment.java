@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public abstract class NiceFragment<T> extends BaseFragment {
-    public final StatusDelegate _status = new StatusDelegate();
+    public final StatusDelegate _status = new StatusDelegate(this);
 
     public abstract void init(T binding);
 
@@ -24,8 +24,8 @@ public abstract class NiceFragment<T> extends BaseFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
         ViewDataBinding binding = DataBindingUtil.bind(rootView);
-        rootView = _status.init(binding.getRoot(), this);
-        init((T)binding);
+        rootView = _status.bind(binding.getRoot());
+        init((T) binding);
         return rootView;
     }
 }
