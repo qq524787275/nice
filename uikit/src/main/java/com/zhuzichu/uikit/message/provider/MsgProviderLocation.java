@@ -3,8 +3,12 @@ package com.zhuzichu.uikit.message.provider;
 import android.widget.TextView;
 
 import com.netease.nimlib.sdk.msg.attachment.LocationAttachment;
+import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.zhuzichu.library.action.ActionMainStartFragmnet;
+import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.utils.DensityUtils;
 import com.zhuzichu.uikit.R;
+import com.zhuzichu.uikit.location.LocationInfoFragment;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 import com.zhuzichu.uikit.utils.ImageUtil;
 import com.zhuzichu.uikit.widget.MsgThumbImageView;
@@ -47,5 +51,9 @@ public class MsgProviderLocation extends MsgProviderBase {
         return MessageMultipItemAdapter.MSG_LOCATION;
     }
 
-
+    @Override
+    protected void onItemClick(IMMessage msg) {
+        LocationAttachment location = (LocationAttachment) msg.getAttachment();
+        RxBus.getIntance().post(new ActionMainStartFragmnet(LocationInfoFragment.newInstance(location.getLongitude(), location.getLatitude(), location.getAddress(), msg.getFromAccount())));
+    }
 }

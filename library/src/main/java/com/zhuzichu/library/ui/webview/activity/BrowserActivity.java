@@ -4,11 +4,8 @@ package com.zhuzichu.library.ui.webview.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,11 +28,11 @@ import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
-import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.databinding.ActivityBrowserBinding;
 import com.zhuzichu.library.ui.webview.X5WebView;
+import com.zhuzichu.library.utils.DrawableUtils;
 import com.zhuzichu.library.utils.NiceCacheUtils;
 
 import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
@@ -278,9 +275,7 @@ public class BrowserActivity extends SwipeBackActivity {
         mBind.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_browser_more)
                 .setOnClickListener(view -> Toast.makeText(this, "更多", Toast.LENGTH_SHORT).show());
         ImageButton ib = findViewById(R.id.topbar_right_browser_more);
-        Drawable mutate = ib.getDrawable().mutate();
-        mutate.setColorFilter(Nice.getColor(R.color.color_grey_333333), PorterDuff.Mode.SRC_IN);
-        ib.setImageDrawable(mutate);
+        ib.setImageDrawable(DrawableUtils.transformColor(ib.getDrawable(), R.color.color_grey_333333));
     }
 
     @Override

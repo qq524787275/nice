@@ -2,4 +2,5 @@
 <resources>
     <item name="topbar_right_message_user" type="id"></item>
     <item name="topbar_right_message_team" type="id"></item>
+    <item name="topbar_right_location_info" type="id" />
 </resources>

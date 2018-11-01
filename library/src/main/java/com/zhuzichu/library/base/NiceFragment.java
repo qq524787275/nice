@@ -16,7 +16,7 @@ public abstract class NiceFragment<T> extends BaseFragment {
 
     @Override
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
-
+        
     }
 
     @Nullable

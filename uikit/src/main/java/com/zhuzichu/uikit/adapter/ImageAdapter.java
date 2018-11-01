@@ -18,7 +18,7 @@ import com.zhuzichu.uikit.utils.TeamUtils;
 import com.zhuzichu.uikit.utils.UserInfoUtils;
 
 public class ImageAdapter {
-    private static RequestOptions mCircleOptions = RequestOptions.bitmapTransform(new CircleCrop());
+    public final static RequestOptions mCircleOptions = RequestOptions.bitmapTransform(new CircleCrop());
 
     @BindingAdapter({"avatarUserUrl"})
     public static void loadUserAvatar(ImageView imageView, String url) {
