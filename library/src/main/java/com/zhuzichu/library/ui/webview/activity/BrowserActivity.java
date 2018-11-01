@@ -6,19 +6,27 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.Theme;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
 import com.tencent.smtt.export.external.interfaces.JsResult;
 import com.tencent.smtt.sdk.CookieSyncManager;
 import com.tencent.smtt.sdk.DownloadListener;
+import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -46,6 +54,7 @@ public class BrowserActivity extends SwipeBackActivity {
     private ActivityBrowserBinding mBind;
     private String mPath;
     private X5WebView mWebView;
+    private ValueCallback<Uri> uploadFile;
 
     public static void startActivity(Context context, String path) {
         Intent intent = new Intent();
@@ -103,6 +112,8 @@ public class BrowserActivity extends SwipeBackActivity {
 
             @Override
             public void onPageFinished(WebView webView, String s) {
+                if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16)
+                    changGoForwardButton(webView);
                 if (!redirect) {
                     loadingFinished = true;
                 }
@@ -119,6 +130,7 @@ public class BrowserActivity extends SwipeBackActivity {
                 } else {
                     redirect = false;
                 }
+
             }
 
             @Override
@@ -136,6 +148,11 @@ public class BrowserActivity extends SwipeBackActivity {
         });
 
         mWebView.setWebChromeClient(new WebChromeClient() {
+            View myVideoView;
+            View myNormalView;
+            IX5WebChromeClient.CustomViewCallback callback;
+
+
             @Override
             public boolean onJsConfirm(WebView webView, String s, String s1, JsResult jsResult) {
                 Log.i(TAG, "onJsConfirm: ");
@@ -144,14 +161,28 @@ public class BrowserActivity extends SwipeBackActivity {
 
             @Override
             public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
-                super.onShowCustomView(view, customViewCallback);
                 Log.i(TAG, "onShowCustomView: ");
+                FrameLayout normalView = mBind.webview;
+                ViewGroup viewGroup = (ViewGroup) normalView.getParent();
+                viewGroup.removeView(normalView);
+                viewGroup.addView(view);
+                myVideoView = view;
+                myNormalView = normalView;
+                callback = customViewCallback;
             }
 
             @Override
             public void onHideCustomView() {
-                super.onHideCustomView();
                 Log.i(TAG, "onHideCustomView: ");
+                if (callback != null) {
+                    callback.onCustomViewHidden();
+                    callback = null;
+                }
+                if (myVideoView != null) {
+                    ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
+                    viewGroup.removeView(myVideoView);
+                    viewGroup.addView(myNormalView);
+                }
             }
 
             @Override
@@ -177,12 +208,33 @@ public class BrowserActivity extends SwipeBackActivity {
                 }
                 super.onProgressChanged(webView, newProgress);
             }
+
+            @Override
+            public void onReceivedTitle(WebView webView, String s) {
+                super.onReceivedTitle(webView, s);
+                mBind.topbar.setTitle(s);
+            }
         });
 
         mWebView.setDownloadListener(new DownloadListener() {
             @Override
             public void onDownloadStart(String s, String s1, String s2, String s3, long l) {
                 Log.i(TAG, "onDownloadStart: " + s);
+                new MaterialDialog.Builder(BrowserActivity.this)
+                        .title("友情提示")
+                        .content("确定要下载么？")
+                        .theme(ColorManager.getInstance().getColorConfig().isDark ? Theme.DARK : Theme.LIGHT)
+                        .positiveText("确定")
+                        .onPositive((dialog, which) -> {
+                            Log.i(TAG, "onDownloadStart: s=" + s);
+                            Log.i(TAG, "onDownloadStart: s1=" + s1);
+                            Log.i(TAG, "onDownloadStart: s2=" + s2);
+                        })
+                        .negativeText("取消")
+                        .onNegative((dialog, which) -> {
+
+                        })
+                        .show();
             }
         });
     }
@@ -220,7 +272,7 @@ public class BrowserActivity extends SwipeBackActivity {
     }
 
     private void initTopBar() {
-        mBind.topbar.setTitle("webview");
+        mBind.topbar.setTitle(" ");
         mBind.topbar.setTitleGravity(Gravity.LEFT);
         mBind.topbar.addLeftBackImageButton().setOnClickListener(view -> finish());
         mBind.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_browser_more)
@@ -233,18 +285,76 @@ public class BrowserActivity extends SwipeBackActivity {
 
     @Override
     protected void onDestroy() {
+        if (mWebView != null)
+            mWebView.destroy();
         super.onDestroy();
         QMUIStatusBarHelper.setStatusBarDarkMode(this);
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        if (intent == null || mWebView == null || intent.getData() == null)
+            return;
+        mWebView.loadUrl(mPath);
+    }
+
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
             if (mWebView != null && mWebView.canGoBack()) {
                 mWebView.goBack();
+                if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16)
+                    changGoForwardButton(mWebView);
                 return true;
-            }
+            } else
+                return super.onKeyDown(keyCode, event);
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    /**
+     * @param webview
+     */
+    private void changGoForwardButton(WebView webview) {
+        if (webview.canGoBack())
+            Log.i(TAG, "changGoForwardButton: canGoBack");
+        else
+            Log.i(TAG, "changGoForwardButton: notCanGoBack");
+        if (webview.canGoForward())
+            Log.i(TAG, "changGoForwardButton: canGoForward");
+        else
+            Log.i(TAG, "changGoForwardButton: notCanGoForward");
+        if (webview.getUrl() != null && webview.getUrl().equalsIgnoreCase(mPath)) {
+            Log.i(TAG, "changGoForwardButton: 回到了主页");
+        } else {
+            Log.i(TAG, "changGoForwardButton: 没有回到主页");
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.i(TAG, "onActivityResult: ");
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case 0:
+                    if (null != uploadFile) {
+                        Uri result = data == null || resultCode != RESULT_OK ? null
+                                : data.getData();
+                        uploadFile.onReceiveValue(result);
+                        uploadFile = null;
+                    }
+                    break;
+                default:
+                    break;
+            }
+        } else if (resultCode == RESULT_CANCELED) {
+            if (null != uploadFile) {
+                uploadFile.onReceiveValue(null);
+                uploadFile = null;
+            }
+
+        }
     }
 }
