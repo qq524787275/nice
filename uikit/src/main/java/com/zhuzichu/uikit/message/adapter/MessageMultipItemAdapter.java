@@ -18,6 +18,7 @@ import com.zhuzichu.uikit.message.provider.MsgProviderLocation;
 import com.zhuzichu.uikit.message.provider.MsgProviderNotification;
 import com.zhuzichu.uikit.message.provider.MsgProviderText;
 import com.zhuzichu.uikit.message.provider.MsgProviderTip;
+import com.zhuzichu.uikit.message.provider.MsgProviderVideo;
 
 import java.util.ArrayList;
 
@@ -74,9 +75,9 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
 //            case robot:
 //                type = MSG_ROBOT;
 //                break;
-//            case video:
-//                type = MSG_VIDEO;
-//                break;
+            case video:
+                type = MSG_VIDEO;
+                break;
 //            case custom:
 //                type = MSG_CUSTOM;
 //                break;
@@ -105,6 +106,7 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
         mProviderDelegate.registerProvider(new MsgProviderImage());
         mProviderDelegate.registerProvider(new MsgProviderFile());
         mProviderDelegate.registerProvider(new MsgProviderLocation());
+        mProviderDelegate.registerProvider(new MsgProviderVideo());
     }
 
     @Override

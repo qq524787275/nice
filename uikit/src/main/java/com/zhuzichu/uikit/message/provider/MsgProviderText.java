@@ -16,7 +16,7 @@ public class MsgProviderText extends MsgProviderBase {
 
     @Override
     int getContentResId() {
-        return R.layout.item_messgae_text;
+        return R.layout.item_message_text;
     }
 
     @Override

@@ -67,16 +67,23 @@ public class Nice {
         int BASIC_PERMISSION_REQUEST_CODE = 110;
         //二维码扫描权限 code
         int SCANNER_PERMISSION_REQUEST_CODE = 120;
+        //定位权限
+        int LOCATION_PERMISSION_REQUEST_CODE = 130;
     }
 
     public interface Permission {
         //进入app的基本权限
         String[] BASIC_PERMISSIONS = new String[]{
+                Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.READ_EXTERNAL_STORAGE};
         //二维码扫描权限
         String[] SCANNER_PERMISSION = new String[]{
                 Manifest.permission.CAMERA,
                 Manifest.permission.VIBRATE};
+        //定位权限
+        String[] LOCATION_PERMISSIONS = new String[]{
+                Manifest.permission.ACCESS_FINE_LOCATION,
+        };
     }
 }
