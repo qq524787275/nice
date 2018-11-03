@@ -224,7 +224,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         mLayoutMamnager = new LinearLayoutManager(getContext());
         mBind.listMessage.setLayoutManager(mLayoutMamnager);
         mBind.listMessage.requestDisallowInterceptTouchEvent(false);
-        mAdapter = new MessageMultipItemAdapter();
+        mAdapter = new MessageMultipItemAdapter(this);
         mBind.listMessage.setAdapter(mAdapter);
         mBind.fastScroller.attachRecyclerView(mBind.listMessage);
     }

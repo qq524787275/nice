@@ -1,6 +1,7 @@
 package com.zhuzichu.uikit.message.provider;
 
 import android.text.format.Formatter;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -8,6 +9,7 @@ import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.file.FileIcons;
@@ -24,6 +26,10 @@ public class MsgProviderFile extends MsgProviderBase {
     private TextView fileSize;
     private FileAttachment msgAttachment;
 
+    public MsgProviderFile(BaseFragment fragment) {
+        super(fragment);
+    }
+
     @Override
     public int viewType() {
         return MessageMultipItemAdapter.MSG_FILE;
@@ -36,13 +42,13 @@ public class MsgProviderFile extends MsgProviderBase {
 
     @Override
     void inflateContentView() {
-        fileIcon = view.findViewById(R.id.file_icon);
-        fileName = view.findViewById(R.id.file_name);
-        fileSize = view.findViewById(R.id.file_size);
+        fileIcon = itemView.findViewById(R.id.file_icon);
+        fileName = itemView.findViewById(R.id.file_name);
+        fileSize = itemView.findViewById(R.id.file_size);
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg,View view) {
         RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
     }
 

@@ -1,10 +1,12 @@
 package com.zhuzichu.uikit.message.provider;
 
+import android.view.View;
 import android.widget.TextView;
 
 import com.netease.nimlib.sdk.msg.attachment.LocationAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.utils.DensityUtils;
 import com.zhuzichu.uikit.R;
@@ -17,6 +19,10 @@ public class MsgProviderLocation extends MsgProviderBase {
     private MsgThumbImageView mMap;
     private TextView mAddress;
 
+    public MsgProviderLocation(BaseFragment fragment) {
+        super(fragment);
+    }
+
     @Override
     int getContentResId() {
         return R.layout.item_message_location;
@@ -24,8 +30,8 @@ public class MsgProviderLocation extends MsgProviderBase {
 
     @Override
     void inflateContentView() {
-        mMap = view.findViewById(R.id.location_img);
-        mAddress = view.findViewById(R.id.location_address);
+        mMap = itemView.findViewById(R.id.location_img);
+        mAddress = itemView.findViewById(R.id.location_address);
     }
 
     @Override
@@ -52,7 +58,7 @@ public class MsgProviderLocation extends MsgProviderBase {
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg, View view) {
         LocationAttachment location = (LocationAttachment) msg.getAttachment();
         RxBus.getIntance().post(new ActionMainStartFragmnet(LocationInfoFragment.newInstance(location.getLongitude(), location.getLatitude(), location.getAddress(), msg.getFromAccount())));
     }

@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.provider.BaseItemProvider;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.TimeUtils;
 import com.zhuzichu.uikit.BR;
@@ -22,15 +23,21 @@ import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
  */
 public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, MessageMultipItemAdapter.DataBindingViewHolder> {
     protected IMMessage message;
-    protected View view;
+    protected View itemView;
     protected ItemMessageBinding bind;
     protected MessageMultipItemAdapter.DataBindingViewHolder helper;
+    protected BaseFragment fragment;
+    protected int position;
+
+    public MsgProviderBase(BaseFragment fragment) {
+        this.fragment = fragment;
+    }
 
     abstract int getContentResId();
 
     abstract void inflateContentView();
 
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg, View view) {
     }
 
     abstract void refreshView();
@@ -44,10 +51,11 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
 
     @Override
     public void convert(MessageMultipItemAdapter.DataBindingViewHolder helper, IMMessage item, int position) {
+        this.position = position;
         this.helper = helper;
         this.bind = helper.getBinding();
         this.message = item;
-        this.view = helper.itemView;
+        this.itemView = helper.itemView;
         bind.setVariable(BR.color, ColorManager.getInstance().color);
         //加载头像
         ImageAdapter.loadAvatar(bind.msgAvatar, message.getFromAccount());
@@ -69,13 +77,8 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
         }
         inflateContentView();
         refreshView();
-        setListener(item);
+        bind.msgContent.setOnClickListener(view -> onItemClick(item, helper.itemView));
     }
-
-    private void setListener(IMMessage item) {
-        bind.msgContent.setOnClickListener(view->onItemClick(item));
-    }
-
 
     /**
      * 刷新别人发的消息

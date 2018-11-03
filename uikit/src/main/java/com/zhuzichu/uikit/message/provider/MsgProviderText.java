@@ -1,9 +1,11 @@
 package com.zhuzichu.uikit.message.provider;
 
+import android.view.View;
 import android.widget.Toast;
 
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.view.face.NiceFaceView;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
@@ -14,6 +16,10 @@ import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 public class MsgProviderText extends MsgProviderBase {
     private NiceFaceView textView;
 
+    public MsgProviderText(BaseFragment fragment) {
+        super(fragment);
+    }
+
     @Override
     int getContentResId() {
         return R.layout.item_message_text;
@@ -21,11 +27,11 @@ public class MsgProviderText extends MsgProviderBase {
 
     @Override
     void inflateContentView() {
-        textView = view.findViewById(R.id.msg_text);
+        textView = itemView.findViewById(R.id.msg_text);
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg,View view) {
         Toast.makeText(mContext, "点击了文本", Toast.LENGTH_SHORT).show();
     }
 

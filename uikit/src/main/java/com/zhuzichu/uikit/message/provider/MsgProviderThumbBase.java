@@ -1,5 +1,6 @@
 package com.zhuzichu.uikit.message.provider;
 
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.zhuzichu.library.Nice;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.utils.DensityUtils;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.utils.BitmapDecoder;
@@ -23,14 +25,21 @@ import java.io.File;
 public abstract class MsgProviderThumbBase extends MsgProviderBase {
     MsgThumbImageView thumbnail;
 
+    public MsgProviderThumbBase(BaseFragment fragment) {
+        super(fragment);
+    }
+
 
     @Override
     void inflateContentView() {
-        thumbnail = view.findViewById(R.id.msg_thumbnail);
+        thumbnail = itemView.findViewById(R.id.msg_thumbnail);
     }
+
+    private static final String TAG = "MsgProviderThumbBase";
 
     @Override
     void refreshView() {
+        ViewCompat.setTransitionName(thumbnail, message.getUuid());
         FileAttachment msgAttachment = (FileAttachment) message.getAttachment();
         String path = msgAttachment.getPath();
         String thumbPath = msgAttachment.getThumbPath();

@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.MultipleItemRvAdapter;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
 import com.zhuzichu.uikit.message.provider.MsgProviderFile;
@@ -38,9 +39,11 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
     public static final int MSG_NOTIFICATION = 9;
     public static final int MSG_UNDEF = 10;
     public static final int MSG_CUSTOM = 11;
+    private BaseFragment mFragment;
 
-    public MessageMultipItemAdapter() {
+    public MessageMultipItemAdapter(BaseFragment fragment) {
         super(new ArrayList<>());
+        mFragment = fragment;
         //构造函数若有传其他参数可以在调用finishInitialize()之前进行赋值，赋值给全局变量
         //这样getViewType()和registerItemProvider()方法中可以获取到传过来的值
         //getViewType()中可能因为某些业务逻辑，需要将某个值传递过来进行判断，返回对应的viewType
@@ -100,13 +103,13 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
 
     @Override
     public void registerItemProvider() {
-        mProviderDelegate.registerProvider(new MsgProviderText());
+        mProviderDelegate.registerProvider(new MsgProviderText(mFragment));
         mProviderDelegate.registerProvider(new MsgProviderNotification());
         mProviderDelegate.registerProvider(new MsgProviderTip());
-        mProviderDelegate.registerProvider(new MsgProviderImage());
-        mProviderDelegate.registerProvider(new MsgProviderFile());
-        mProviderDelegate.registerProvider(new MsgProviderLocation());
-        mProviderDelegate.registerProvider(new MsgProviderVideo());
+        mProviderDelegate.registerProvider(new MsgProviderImage(mFragment));
+        mProviderDelegate.registerProvider(new MsgProviderFile(mFragment));
+        mProviderDelegate.registerProvider(new MsgProviderLocation(mFragment));
+        mProviderDelegate.registerProvider(new MsgProviderVideo(mFragment));
     }
 
     @Override
