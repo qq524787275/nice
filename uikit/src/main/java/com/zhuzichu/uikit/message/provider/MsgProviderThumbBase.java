@@ -1,5 +1,6 @@
 package com.zhuzichu.uikit.message.provider;
 
+import android.support.v4.view.ViewCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,6 +32,7 @@ public abstract class MsgProviderThumbBase extends MsgProviderBase {
 
     @Override
     void refreshView() {
+        ViewCompat.setTransitionName(thumbnail, message.getUuid());
         FileAttachment msgAttachment = (FileAttachment) message.getAttachment();
         String path = msgAttachment.getPath();
         String thumbPath = msgAttachment.getThumbPath();

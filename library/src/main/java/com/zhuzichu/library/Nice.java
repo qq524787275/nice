@@ -4,11 +4,14 @@ import android.Manifest;
 import android.content.Context;
 
 import com.zhuzichu.library.comment.color.ColorManager;
+import com.zhuzichu.library.utils.DensityUtils;
 
 public class Nice {
 
     public static String account;
     public static Context context;
+    public static int w;
+    public static int h;
     private volatile static Nice mNice;
 
 
@@ -17,6 +20,8 @@ public class Nice {
      */
     private Nice(Context ctx) {
         context = ctx;
+        w = DensityUtils.getScreenW(ctx);
+        h = DensityUtils.getScreenH(ctx);
         //初始化主题颜色
         ColorManager.getInstance();
     }
@@ -47,6 +52,10 @@ public class Nice {
      */
     public static int getColor(int id) {
         return context.getResources().getColor(id);
+    }
+
+    public static String getString(int id) {
+        return context.getResources().getString(id);
     }
 
     public static String getAccount() {

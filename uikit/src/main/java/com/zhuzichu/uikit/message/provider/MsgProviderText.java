@@ -25,7 +25,7 @@ public class MsgProviderText extends MsgProviderBase {
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg,MessageMultipItemAdapter.DataBindingViewHolder holder) {
         Toast.makeText(mContext, "点击了文本", Toast.LENGTH_SHORT).show();
     }
 

@@ -30,7 +30,7 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
 
     abstract void inflateContentView();
 
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg, MessageMultipItemAdapter.DataBindingViewHolder holder) {
     }
 
     abstract void refreshView();
@@ -69,13 +69,8 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
         }
         inflateContentView();
         refreshView();
-        setListener(item);
+        bind.msgContent.setOnClickListener(view -> onItemClick(item, helper));
     }
-
-    private void setListener(IMMessage item) {
-        bind.msgContent.setOnClickListener(view->onItemClick(item));
-    }
-
 
     /**
      * 刷新别人发的消息

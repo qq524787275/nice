@@ -1,4 +1,4 @@
-package com.zhuzichu.uikit.message.model;
+package com.zhuzichu.uikit.message.viewmodel;
 
 
 import com.zhuzichu.library.base.BaseViewModel;

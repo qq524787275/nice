@@ -52,7 +52,7 @@ public class MsgProviderLocation extends MsgProviderBase {
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg,MessageMultipItemAdapter.DataBindingViewHolder holder) {
         LocationAttachment location = (LocationAttachment) msg.getAttachment();
         RxBus.getIntance().post(new ActionMainStartFragmnet(LocationInfoFragment.newInstance(location.getLongitude(), location.getLatitude(), location.getAddress(), msg.getFromAccount())));
     }

@@ -42,7 +42,7 @@ public class MsgProviderFile extends MsgProviderBase {
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg,MessageMultipItemAdapter.DataBindingViewHolder holder) {
         RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
     }
 
