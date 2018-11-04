@@ -3,11 +3,13 @@ package com.zhuzichu.uikit.message.provider;
 import android.support.v7.app.AppCompatActivity;
 
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 import com.zhuzichu.uikit.preview.PreViewActivity;
 
 public class MsgProviderVideo extends MsgProviderThumbBase {
+
     @Override
     protected String thumbFromSourceFile(String path) {
         return path;

@@ -7,7 +7,10 @@ import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 import com.zhuzichu.uikit.preview.PreViewActivity;
 
+import com.zhuzichu.library.base.BaseFragment;
+
 public class MsgProviderImage extends MsgProviderThumbBase {
+
 
     @Override
     protected String thumbFromSourceFile(String path) {

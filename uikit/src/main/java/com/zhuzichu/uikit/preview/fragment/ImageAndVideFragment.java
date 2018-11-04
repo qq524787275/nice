@@ -1,11 +1,8 @@
 package com.zhuzichu.uikit.preview.fragment;
 
 import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.transition.Transition;
-import android.util.Log;
 import android.view.View;
 
 import com.bumptech.glide.Priority;
@@ -59,8 +56,6 @@ public class ImageAndVideFragment extends NiceFragment<FragmentImageVideoBinding
         loadImageAndVideoMessage();
     }
 
-    private static final String TAG = "ImageAndVideFragment";
-
     private void initView() {
         FileAttachment attachment = (FileAttachment) message.getAttachment();
         img.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
@@ -79,36 +74,7 @@ public class ImageAndVideFragment extends NiceFragment<FragmentImageVideoBinding
                     .fitCenter()
                     .into(img);
         }
-
         mBind.vp.addOnPageChangeListener(this);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getActivity().getWindow().getSharedElementEnterTransition().addListener(new Transition.TransitionListener() {
-                @Override
-                public void onTransitionStart(Transition transition) {
-                    Log.i(TAG, "onTransitionStart: ");
-                }
-
-                @Override
-                public void onTransitionEnd(Transition transition) {
-                    Log.i(TAG, "onTransitionEnd: ");
-                }
-
-                @Override
-                public void onTransitionCancel(Transition transition) {
-                    Log.i(TAG, "onTransitionCancel: ");
-                }
-
-                @Override
-                public void onTransitionPause(Transition transition) {
-                    Log.i(TAG, "onTransitionPause: ");
-                }
-
-                @Override
-                public void onTransitionResume(Transition transition) {
-                    Log.i(TAG, "onTransitionResume: ");
-                }
-            });
-        }
     }
 
     @Override

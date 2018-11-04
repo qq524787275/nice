@@ -14,6 +14,7 @@ import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 public class MsgProviderText extends MsgProviderBase {
     private NiceFaceView textView;
 
+
     @Override
     int getContentResId() {
         return R.layout.item_message_text;
@@ -21,7 +22,7 @@ public class MsgProviderText extends MsgProviderBase {
 
     @Override
     void inflateContentView() {
-        textView = view.findViewById(R.id.msg_text);
+        textView = itemView.findViewById(R.id.msg_text);
     }
 
     @Override

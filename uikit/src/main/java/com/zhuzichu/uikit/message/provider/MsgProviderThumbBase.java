@@ -24,10 +24,9 @@ import java.io.File;
 public abstract class MsgProviderThumbBase extends MsgProviderBase {
     MsgThumbImageView thumbnail;
 
-
     @Override
     void inflateContentView() {
-        thumbnail = view.findViewById(R.id.msg_thumbnail);
+        thumbnail = itemView.findViewById(R.id.msg_thumbnail);
     }
 
     @Override
