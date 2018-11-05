@@ -17,6 +17,7 @@ public class FileUtils {
      * KB与Byte的倍数
      */
     public static final int KB = 1024;
+
     /**
      * 重命名文件.
      */
