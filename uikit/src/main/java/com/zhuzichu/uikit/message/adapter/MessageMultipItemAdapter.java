@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.MultipleItemRvAdapter;
 import com.netease.nimlib.sdk.msg.constant.MsgTypeEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.ItemMessageBinding;
 import com.zhuzichu.uikit.message.provider.MsgProviderFile;
@@ -18,6 +19,7 @@ import com.zhuzichu.uikit.message.provider.MsgProviderLocation;
 import com.zhuzichu.uikit.message.provider.MsgProviderNotification;
 import com.zhuzichu.uikit.message.provider.MsgProviderText;
 import com.zhuzichu.uikit.message.provider.MsgProviderTip;
+import com.zhuzichu.uikit.message.provider.MsgProviderVideo;
 
 import java.util.ArrayList;
 
@@ -74,9 +76,9 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
 //            case robot:
 //                type = MSG_ROBOT;
 //                break;
-//            case video:
-//                type = MSG_VIDEO;
-//                break;
+            case video:
+                type = MSG_VIDEO;
+                break;
 //            case custom:
 //                type = MSG_CUSTOM;
 //                break;
@@ -105,6 +107,7 @@ public class MessageMultipItemAdapter extends MultipleItemRvAdapter<IMMessage, M
         mProviderDelegate.registerProvider(new MsgProviderImage());
         mProviderDelegate.registerProvider(new MsgProviderFile());
         mProviderDelegate.registerProvider(new MsgProviderLocation());
+        mProviderDelegate.registerProvider(new MsgProviderVideo());
     }
 
     @Override

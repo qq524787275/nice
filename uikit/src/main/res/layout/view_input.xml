@@ -49,6 +49,7 @@
                 android:padding="6dp"
                 android:textColor="@{color.textColorPrimary}"
                 android:textColorHint="@{color.textColorSeconday}"
+                android:textCursorDrawable="@null"
                 android:textSize="16sp" />
 
             <FrameLayout

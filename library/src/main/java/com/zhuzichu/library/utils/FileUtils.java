@@ -243,4 +243,8 @@ public class FileUtils {
             e.printStackTrace();
         }
     }
+
+    public static boolean isGif(String extension) {
+        return !TextUtils.isEmpty(extension) && extension.toLowerCase().equals("gif");
+    }
 }

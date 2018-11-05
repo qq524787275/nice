@@ -1,2 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.zhuzichu.uikit" />
+    package="com.zhuzichu.uikit">
+
+    <application>
+        <activity
+            android:name=".preview.PreViewActivity"
+            android:theme="@style/AppTransparentTheme" />
+    </application>
+</manifest>

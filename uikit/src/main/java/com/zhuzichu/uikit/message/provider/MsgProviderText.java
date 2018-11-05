@@ -14,18 +14,19 @@ import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 public class MsgProviderText extends MsgProviderBase {
     private NiceFaceView textView;
 
+
     @Override
     int getContentResId() {
-        return R.layout.item_messgae_text;
+        return R.layout.item_message_text;
     }
 
     @Override
     void inflateContentView() {
-        textView = view.findViewById(R.id.msg_text);
+        textView = itemView.findViewById(R.id.msg_text);
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
+    protected void onItemClick(IMMessage msg,MessageMultipItemAdapter.DataBindingViewHolder holder) {
         Toast.makeText(mContext, "点击了文本", Toast.LENGTH_SHORT).show();
     }
 

@@ -31,6 +31,10 @@ import com.qmuiteam.qmui.alpha.QMUIAlphaImageButton;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.NiceFragment;
+import com.zhuzichu.library.comment.permission.MPermission;
+import com.zhuzichu.library.comment.permission.annotation.OnMPermissionDenied;
+import com.zhuzichu.library.comment.permission.annotation.OnMPermissionGranted;
+import com.zhuzichu.library.comment.permission.annotation.OnMPermissionNeverAskAgain;
 import com.zhuzichu.library.utils.BitmapUtils;
 import com.zhuzichu.library.utils.DensityUtils;
 import com.zhuzichu.library.utils.DrawableUtils;
@@ -80,6 +84,25 @@ public class LocationInfoFragment extends NiceFragment<FragmentLocationInfoBindi
         initTopBar();
         initListener();
         mBind.address.setText(mAddress);
+        requestLocationPermission();
+    }
+
+    private void requestLocationPermission() {
+        MPermission.with(this)
+                .setRequestCode(Nice.PermissionCode.LOCATION_PERMISSION_REQUEST_CODE)
+                .permissions(Nice.Permission.LOCATION_PERMISSIONS)
+                .request();
+    }
+
+    @OnMPermissionGranted(Nice.PermissionCode.LOCATION_PERMISSION_REQUEST_CODE)
+    public void onBasicPermissionSuccess() {
+
+    }
+
+    @OnMPermissionDenied(Nice.PermissionCode.LOCATION_PERMISSION_REQUEST_CODE)
+    @OnMPermissionNeverAskAgain(Nice.PermissionCode.LOCATION_PERMISSION_REQUEST_CODE)
+    public void onBasicPermissionFailed() {
+        pop();
     }
 
     private void initListener() {
@@ -143,9 +166,15 @@ public class LocationInfoFragment extends NiceFragment<FragmentLocationInfoBindi
         uiSettings.setMyLocationButtonEnabled(true);
         setupLocationStyle();
         map.setOnMyLocationChangeListener(location -> {
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            //排除 第一次加载无网情况下失败的情况
+            if (latitude == 0.0 && longitude == 0.0) {
+                return;
+            }
             if (first) {
                 //第一次定位调整视图
-                LatLngBounds bounds = createBounds(mLatitude, mLongitude, location.getLatitude(), location.getLongitude());
+                LatLngBounds bounds = createBounds(mLatitude, mLongitude, latitude, longitude);
                 map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 50), 1000L, null);
                 first = false;
             }
