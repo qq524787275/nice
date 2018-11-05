@@ -29,8 +29,6 @@ import java.util.List;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
-;
-
 public class ImageAndVideFragment extends NiceFragment<FragmentImageVideoBinding> implements ViewPager.OnPageChangeListener {
     private FragmentImageVideoBinding mBind;
     private IMMessage message;

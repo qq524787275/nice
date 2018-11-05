@@ -12,4 +12,19 @@
         android:gravity="center"
         android:padding="0dip"
         android:scaleType="centerCrop" />
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@mipmap/icon_play" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="4dp"
+        android:textColor="@color/white"
+        android:textSize="12sp" />
 </FrameLayout>

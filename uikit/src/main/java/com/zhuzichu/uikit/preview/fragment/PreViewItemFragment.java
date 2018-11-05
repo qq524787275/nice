@@ -3,9 +3,11 @@ package com.zhuzichu.uikit.preview.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.bumptech.glide.Priority;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
+import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.BaseFragment;
@@ -17,20 +19,16 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class PreViewItemFragment extends BaseFragment {
-    private IMMessage message;
-    private ImageViewTouch img;
+    protected IMMessage message;
+    protected ImageViewTouch img;
+    protected ViewGroup container;
+
+    public int getContainer() {
+        return -1;
+    }
 
     public interface Extra {
         String EXTRA_MESSGAE = "extra_messgae";
-    }
-
-    public static PreViewItemFragment newInstance(IMMessage message) {
-
-        Bundle args = new Bundle();
-        args.putSerializable(Extra.EXTRA_MESSGAE, message);
-        PreViewItemFragment fragment = new PreViewItemFragment();
-        fragment.setArguments(args);
-        return fragment;
     }
 
     @Override
@@ -42,6 +40,9 @@ public class PreViewItemFragment extends BaseFragment {
     public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
         paseData();
         img = rootView.findViewById(R.id.img);
+        container = rootView.findViewById(R.id.container);
+        if (getContainer() != -1)
+            getLayoutInflater().inflate(getContainer(), container);
     }
 
     @Override
