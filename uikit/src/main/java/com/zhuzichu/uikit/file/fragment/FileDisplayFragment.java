@@ -3,7 +3,6 @@ package com.zhuzichu.uikit.file.fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.View;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -14,13 +13,12 @@ import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.FileUtils;
+import com.zhuzichu.library.widget.MapTable;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentFileDisplayBinding;
 import com.zhuzichu.uikit.file.FileIcons;
 import com.zhuzichu.uikit.observer.action.ActionAttachmentProgress;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
-
-import java.io.File;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -104,7 +102,6 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
 
     @Override
     public void onDestroyView() {
-        mBind.sfv.onStopDisplay();
         super.onDestroyView();
     }
 
@@ -118,9 +115,10 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
         mBind.fileIcon.setImageResource(FileIcons.bigIcon(mAttachment.getDisplayName()));
         mBind.fileName.setText(mAttachment.getDisplayName());
         if (!TextUtils.isEmpty(mAttachment.getPath())) {
-            mBind.layoutLoad.setVisibility(View.GONE);
-            mBind.sfv.setVisibility(View.VISIBLE);
-            mBind.sfv.displayFile(new File(mAttachment.getPath()), FileIcons.getExtensionName(mAttachment.getDisplayName()));
+            mBind.load.setText("用其他软件打开");
+            mBind.load.setOnClickListener(view -> {
+                MapTable.openFile(getActivity(), mAttachment.getPath() + "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
+            });
         } else {
             mBind.load.setText("未下载");
             mBind.load.setEnabled(true);

@@ -5,7 +5,6 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.netease.nimlib.sdk.msg.model.RecentContact;
-import com.tencent.smtt.sdk.QbSdk;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.action.ActionUnreadCountChange;
 import com.zhuzichu.library.base.BaseFragment;
@@ -112,15 +111,6 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
 
         mMenuPopup.addItem("扫一扫", () -> {
             RxBus.getIntance().post(new ActionMainStartFragmnet(ScannerFragment.newInstance(), ActionMainStartFragmnet.getModalAnimations()));
-        });
-
-        mMenuPopup.addItem("安装X5内核", () -> {
-            if (QbSdk.getTbsVersion(getActivity()) == 0) {
-                Toast.makeText(_mActivity, "还没有安装内核", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(_mActivity, "已经安装了内核", Toast.LENGTH_SHORT).show();
-            }
-            BrowserActivity.startActivity(getActivity(), BrowserActivity.URL_DEBUGTBS);
         });
 
         mMenuPopup.addItem("打开百度", () -> {

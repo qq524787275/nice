@@ -27,7 +27,6 @@ public class PreViewActivity extends BaseActivity {
 
     IMMessage message;
 
-
     public static void startActivity(AppCompatActivity activity, IMMessage msg, ImageView img) {
         Intent intent = new Intent();
         intent.putExtra(Extra.EXTRA_MESSGAE, msg);

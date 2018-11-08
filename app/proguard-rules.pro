@@ -108,6 +108,11 @@
   **[] $VALUES;
   public *;
 }
+#WebView
+-keep class com.just.agentweb.** {
+    *;
+}
+-dontwarn com.just.agentweb.**
 #LiveData
 -dontwarn android.arch.lifecycle.**
 -keep class android.arch.lifecycle.** { *; }

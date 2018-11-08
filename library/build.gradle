@@ -68,6 +68,8 @@ dependencies {
     api 'com.google.zxing:core:3.3.0'
     api 'it.sephiroth.android.library.imagezoom:library:1.0.4'
 
+    api 'com.just.agentweb:agentweb:4.0.2' // (必选)
+
     api 'com.google.android.exoplayer:exoplayer-core:2.9.0'
     api 'com.google.android.exoplayer:exoplayer-ui:2.9.0'
 }

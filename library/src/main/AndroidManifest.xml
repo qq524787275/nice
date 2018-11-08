@@ -8,6 +8,8 @@
         <activity android:name="com.zhuzichu.library.ui.matisse.internal.ui.SelectedPreviewActivity" />
         <activity
             android:name=".ui.webview.activity.BrowserActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
             android:theme="@style/AppTransparentTheme" />
     </application>
 </manifest>

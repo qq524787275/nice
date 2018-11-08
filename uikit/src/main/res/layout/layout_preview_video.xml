@@ -14,9 +14,9 @@
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:shutter_background_color="@color/transparent"
-        app:auto_show="true"
         android:background="@color/transparent"
         android:visibility="gone"
+        app:controller_layout_id="@layout/layout_player_view_controller"
+        app:surface_type="surface_view"
         app:use_controller="true"></com.google.android.exoplayer2.ui.PlayerView>
 </FrameLayout>

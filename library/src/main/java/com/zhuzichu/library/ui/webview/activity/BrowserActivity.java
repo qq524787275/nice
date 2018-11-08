@@ -4,36 +4,28 @@ package com.zhuzichu.library.ui.webview.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.Theme;
+import com.just.agentweb.AgentWeb;
+import com.just.agentweb.DefaultWebClient;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
-import com.tencent.smtt.export.external.interfaces.IX5WebChromeClient;
-import com.tencent.smtt.export.external.interfaces.JsResult;
-import com.tencent.smtt.sdk.CookieSyncManager;
-import com.tencent.smtt.sdk.DownloadListener;
-import com.tencent.smtt.sdk.ValueCallback;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.databinding.ActivityBrowserBinding;
-import com.zhuzichu.library.ui.webview.X5WebView;
+import com.zhuzichu.library.ui.webview.CustomSettings;
+import com.zhuzichu.library.ui.webview.WebLayout;
 import com.zhuzichu.library.utils.DrawableUtils;
-import com.zhuzichu.library.utils.NiceCacheUtils;
 
 import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
 
@@ -41,17 +33,15 @@ import me.yokeyword.fragmentation_swipeback.SwipeBackActivity;
  * Created by wb.zhuzichu18 on 2018/10/30.
  */
 public class BrowserActivity extends SwipeBackActivity {
-    public static final String URL_DEBUGTBS = "http://debugtbs.qq.com/";
     private static final String TAG = "BrowserActivity";
 
     public interface Extra {
         String EXTAR_PATH = "extra_path";
     }
 
+    protected AgentWeb mAgentWeb;
     private ActivityBrowserBinding mBind;
     private String mPath;
-    private X5WebView mWebView;
-    private ValueCallback<Uri> uploadFile;
 
     public static void startActivity(Context context, String path) {
         Intent intent = new Intent();
@@ -69,200 +59,28 @@ public class BrowserActivity extends SwipeBackActivity {
         QMUIStatusBarHelper.translucent(this);
         QMUIStatusBarHelper.setStatusBarLightMode(this);
         parseData();
-        mWebView = mBind.webview;
-        mBind.progress.setMax(100);
         mBind.setColor(ColorManager.getInstance().color);
         initTopBar();
-        initWebListener();
-        initWebSettings();
+        initWebView();
     }
 
-    private void initWebListener() {
-        mWebView.setWebViewClient(new WebViewClient() {
-            boolean loadingFinished = true;
-            boolean redirect = false;
-
-            long last_page_start;
-            long now;
-
-            private void showSplash() {
-                if (mWebView.getVisibility() == View.VISIBLE) {
-                    mWebView.setVisibility(View.GONE);
-                    mBind.splash.setVisibility(View.VISIBLE);
-                }
-            }
-
-            private void removeSplash() {
-                if (last_page_start < now) {
-                    mWebView.setVisibility(View.VISIBLE);
-                    mBind.splash.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
-                Log.i(TAG, "onPageStarted: ");
-                loadingFinished = false;
-                last_page_start = System.nanoTime();
-                showSplash();
-            }
-
-            @Override
-            public void onPageFinished(WebView webView, String s) {
-                if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16)
-                    changGoForwardButton(webView);
-                if (!redirect) {
-                    loadingFinished = true;
-                }
-                //call remove_splash in 500 miSec
-                if (loadingFinished && !redirect) {
-                    now = System.nanoTime();
-                    new android.os.Handler().postDelayed(
-                            new Runnable() {
-                                public void run() {
-                                    removeSplash();
-                                }
-                            },
-                            500);
-                } else {
-                    redirect = false;
-                }
-
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                Log.i(TAG, "shouldOverrideUrlLoading: ");
-                if (!loadingFinished) {
-                    redirect = true;
-                }
-
-                loadingFinished = false;
-                view.loadUrl(url);
-                return false;
-            }
-
-        });
-
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            View myVideoView;
-            View myNormalView;
-            IX5WebChromeClient.CustomViewCallback callback;
-
-
-            @Override
-            public boolean onJsConfirm(WebView webView, String s, String s1, JsResult jsResult) {
-                Log.i(TAG, "onJsConfirm: ");
-                return super.onJsConfirm(webView, s, s1, jsResult);
-            }
-
-            @Override
-            public void onShowCustomView(View view, IX5WebChromeClient.CustomViewCallback customViewCallback) {
-                Log.i(TAG, "onShowCustomView: ");
-                FrameLayout normalView = mBind.webview;
-                ViewGroup viewGroup = (ViewGroup) normalView.getParent();
-                viewGroup.removeView(normalView);
-                viewGroup.addView(view);
-                myVideoView = view;
-                myNormalView = normalView;
-                callback = customViewCallback;
-            }
-
-            @Override
-            public void onHideCustomView() {
-                Log.i(TAG, "onHideCustomView: ");
-                if (callback != null) {
-                    callback.onCustomViewHidden();
-                    callback = null;
-                }
-                if (myVideoView != null) {
-                    ViewGroup viewGroup = (ViewGroup) myVideoView.getParent();
-                    viewGroup.removeView(myVideoView);
-                    viewGroup.addView(myNormalView);
-                }
-            }
-
-            @Override
-            public boolean onJsAlert(WebView webView, String s, String s1, JsResult jsResult) {
-                /**
-                 * 这里写入你自定义的window alert
-                 */
-                Log.i(TAG, "onJsAlert: ");
-                return super.onJsAlert(webView, s, s1, jsResult);
-            }
-
-            @Override
-            public void onProgressChanged(WebView webView, int newProgress) {
-                Log.i(TAG, "onProgressChanged: " + newProgress);
-                if (newProgress == 100) {
-                    mBind.progress.setVisibility(View.GONE);
-                    mBind.progress.setProgress(0);
-                } else {
-                    if (mBind.progress.getVisibility() == View.GONE) {
-                        mBind.progress.setVisibility(View.VISIBLE);
-                    }
-                    mBind.progress.setProgress(newProgress);
-                }
-                super.onProgressChanged(webView, newProgress);
-            }
-
-            @Override
-            public void onReceivedTitle(WebView webView, String s) {
-                super.onReceivedTitle(webView, s);
-                mBind.topbar.setTitle(s);
-            }
-        });
-
-        mWebView.setDownloadListener(new DownloadListener() {
-            @Override
-            public void onDownloadStart(String s, String s1, String s2, String s3, long l) {
-                Log.i(TAG, "onDownloadStart: " + s);
-                new MaterialDialog.Builder(BrowserActivity.this)
-                        .title("友情提示")
-                        .content("确定要下载么？")
-                        .theme(ColorManager.getInstance().getColorConfig().isDark ? Theme.DARK : Theme.LIGHT)
-                        .positiveText("确定")
-                        .onPositive((dialog, which) -> {
-                            Log.i(TAG, "onDownloadStart: s=" + s);
-                            Log.i(TAG, "onDownloadStart: s1=" + s1);
-                            Log.i(TAG, "onDownloadStart: s2=" + s2);
-                        })
-                        .negativeText("取消")
-                        .onNegative((dialog, which) -> {
-
-                        })
-                        .show();
-            }
-        });
+    private void initWebView() {
+        mAgentWeb = AgentWeb.with(this)
+                .setAgentWebParent(mBind.root, new LinearLayout.LayoutParams(-1, -1))
+                .useDefaultIndicator(ColorManager.getInstance().color.colorPrimary)
+                .setAgentWebWebSettings(new CustomSettings())
+                .setWebChromeClient(mWebChromeClient)
+                .setWebViewClient(mWebViewClient)
+                .setMainFrameErrorView(R.layout.agentweb_error_page, -1)
+                .setSecurityType(AgentWeb.SecurityType.STRICT_CHECK)
+                .setWebLayout(new WebLayout())
+                .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
+                .interceptUnkownUrl() //拦截找不到相关页面的Scheme
+                .createAgentWeb()
+                .ready()
+                .go(mPath);
     }
 
-
-    private void initWebSettings() {
-        WebSettings webSetting = mWebView.getSettings();
-        webSetting.setAllowFileAccess(true);
-        webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
-        webSetting.setSupportZoom(true);
-        webSetting.setBuiltInZoomControls(true);
-        webSetting.setUseWideViewPort(true);
-        webSetting.setSupportMultipleWindows(false);
-        // webSetting.setLoadWithOverviewMode(true);
-        webSetting.setAppCacheEnabled(true);
-        // webSetting.setDatabaseEnabled(true);
-        webSetting.setDomStorageEnabled(true);
-        webSetting.setJavaScriptEnabled(true);
-        webSetting.setGeolocationEnabled(true);
-        webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
-        webSetting.setAppCachePath(NiceCacheUtils.getWebViewAppcacheDiskCacheDir(getApplicationContext()).toString());
-        webSetting.setDatabasePath(NiceCacheUtils.getWebViewDatabasesDiskCacheDir(getApplicationContext()).toString());
-        webSetting.setGeolocationDatabasePath(NiceCacheUtils.getWebViewGeolocationDiskCacheDir(getApplicationContext()).toString());
-        // webSetting.setPageCacheCapacity(IX5WebSettings.DEFAULT_CACHE_CAPACITY);
-        webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
-        // webSetting.setRenderPriority(WebSettings.RenderPriority.HIGH);
-        // webSetting.setPreFectch(true);
-        mWebView.loadUrl(mPath);
-        CookieSyncManager.createInstance(this);
-        CookieSyncManager.getInstance().sync();
-    }
 
     private void parseData() {
         mPath = getIntent().getStringExtra(Extra.EXTAR_PATH);
@@ -278,78 +96,67 @@ public class BrowserActivity extends SwipeBackActivity {
         ib.setImageDrawable(DrawableUtils.transformColor(ib.getDrawable(), R.color.color_grey_333333));
     }
 
-    @Override
-    protected void onDestroy() {
-        if (mWebView != null)
-            mWebView.destroy();
-        super.onDestroy();
-        QMUIStatusBarHelper.setStatusBarDarkMode(this);
-    }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        if (intent == null || mWebView == null || intent.getData() == null)
-            return;
-        mWebView.loadUrl(mPath);
-    }
+    private WebViewClient mWebViewClient = new WebViewClient() {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+            return super.shouldOverrideUrlLoading(view, request);
+        }
 
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+
+        }
+    };
+    private WebChromeClient mWebChromeClient = new WebChromeClient() {
+        @Override
+        public void onProgressChanged(WebView view, int newProgress) {
+            //do you work
+//            Log.i("Info","onProgress:"+newProgress);
+        }
+
+        @Override
+        public void onReceivedTitle(WebView view, String title) {
+            super.onReceivedTitle(view, title);
+            if (mBind.topbar != null)
+                mBind.topbar.setTitle(title);
+        }
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mWebView != null && mWebView.canGoBack()) {
-                mWebView.goBack();
-                if (Integer.parseInt(android.os.Build.VERSION.SDK) >= 16)
-                    changGoForwardButton(mWebView);
-                return true;
-            } else
-                return super.onKeyDown(keyCode, event);
+
+        if (mAgentWeb.handleKeyEvent(keyCode, event)) {
+            return true;
         }
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onPause() {
+        mAgentWeb.getWebLifeCycle().onPause();
+        super.onPause();
 
-    /**
-     * @param webview
-     */
-    private void changGoForwardButton(WebView webview) {
-        if (webview.canGoBack())
-            Log.i(TAG, "changGoForwardButton: canGoBack");
-        else
-            Log.i(TAG, "changGoForwardButton: notCanGoBack");
-        if (webview.canGoForward())
-            Log.i(TAG, "changGoForwardButton: canGoForward");
-        else
-            Log.i(TAG, "changGoForwardButton: notCanGoForward");
-        if (webview.getUrl() != null && webview.getUrl().equalsIgnoreCase(mPath)) {
-            Log.i(TAG, "changGoForwardButton: 回到了主页");
-        } else {
-            Log.i(TAG, "changGoForwardButton: 没有回到主页");
-        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        Log.i(TAG, "onActivityResult: ");
-        if (resultCode == RESULT_OK) {
-            switch (requestCode) {
-                case 0:
-                    if (null != uploadFile) {
-                        Uri result = data == null || resultCode != RESULT_OK ? null
-                                : data.getData();
-                        uploadFile.onReceiveValue(result);
-                        uploadFile = null;
-                    }
-                    break;
-                default:
-                    break;
-            }
-        } else if (resultCode == RESULT_CANCELED) {
-            if (null != uploadFile) {
-                uploadFile.onReceiveValue(null);
-                uploadFile = null;
-            }
+    protected void onResume() {
+        mAgentWeb.getWebLifeCycle().onResume();
+        super.onResume();
+    }
 
-        }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.i(TAG, "onActivityResult: " + "onResult:" + requestCode + " onResult:" + resultCode);
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        QMUIStatusBarHelper.setStatusBarDarkMode(this);
+        mAgentWeb.getWebLifeCycle().onDestroy();
     }
 }

@@ -2,7 +2,6 @@ package com.zhuzichu.nice;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
 import android.support.multidex.MultiDex;
 import android.text.TextUtils;
 
@@ -11,13 +10,11 @@ import com.netease.nimlib.sdk.SDKOptions;
 import com.netease.nimlib.sdk.auth.LoginInfo;
 import com.netease.nimlib.sdk.util.NIMUtil;
 import com.squareup.leakcanary.LeakCanary;
-import com.tencent.smtt.sdk.QbSdk;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.utils.NiceCacheUtils;
 import com.zhuzichu.library.utils.UserPreferences;
 import com.zhuzichu.uikit.message.provider.MsgProviderImage;
 
-import java.io.IOException;
 
 public class NiceApp extends Application {
 

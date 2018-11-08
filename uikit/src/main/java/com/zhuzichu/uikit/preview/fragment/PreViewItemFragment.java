@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Priority;
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
-import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.base.BaseFragment;
@@ -43,12 +42,12 @@ public class PreViewItemFragment extends BaseFragment {
         container = rootView.findViewById(R.id.container);
         if (getContainer() != -1)
             getLayoutInflater().inflate(getContainer(), container);
-    }
+        initView();
+     }
 
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
-        initView();
     }
 
     private void paseData() {

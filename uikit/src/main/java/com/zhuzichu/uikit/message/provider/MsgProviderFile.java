@@ -1,7 +1,6 @@
 package com.zhuzichu.uikit.message.provider;
 
 import android.text.format.Formatter;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,7 +8,6 @@ import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
-import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.file.FileIcons;

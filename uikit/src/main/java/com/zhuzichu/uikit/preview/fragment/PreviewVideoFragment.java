@@ -57,12 +57,7 @@ public class PreviewVideoFragment extends PreViewItemFragment {
         initView();
         initExo();
         initObserver();
-        img.setSingleTapListener(() -> {
-            mPlayer.setVisibility(View.VISIBLE);
-//            img.setVisibility(View.GONE);
-        });
     }
-
 
     private void initObserver() {
         Disposable dispProgress = RxBus.getIntance().toObservable(ActionAttachmentProgress.class)
@@ -114,8 +109,6 @@ public class PreviewVideoFragment extends PreViewItemFragment {
                 Log.i(TAG, "onPlayerStateChanged-----playWhenReady:" + playWhenReady + ",playbackState:" + playbackState);
                 switch (playbackState) {
                     case Player.STATE_ENDED:
-                        img.setVisibility(View.VISIBLE);
-                        mPlayer.setVisibility(View.GONE);
                         break;
                     case Player.STATE_READY:
                         break;
@@ -149,7 +142,9 @@ public class PreviewVideoFragment extends PreViewItemFragment {
         if (path != null) {
             ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(new FileDataSourceFactory()).createMediaSource(Uri.fromFile(new File(path)));
             simpleExoPlayer.prepare(mediaSource);
-            mPlayer.setVisibility(View.GONE);
+            mPlayer.setVisibility(View.VISIBLE);
+            simpleExoPlayer.setPlayWhenReady(true);
+            mPlayer.hideController();
         } else {
             NIMClient.getService(MsgService.class).downloadAttachment(message, false);
         }
@@ -158,12 +153,13 @@ public class PreviewVideoFragment extends PreViewItemFragment {
     public void initView() {
         img.setScaleEnabled(false);
         img.setDoubleTapEnabled(false);
+        img.setVisibility(View.GONE);
         mPlayer = container.findViewById(R.id.player);
     }
 
     @Override
     public int getContainer() {
-        return R.layout.layout_preview_video_control;
+        return R.layout.layout_preview_video;
     }
 
 
@@ -203,6 +199,9 @@ public class PreviewVideoFragment extends PreViewItemFragment {
 
     @Override
     public boolean onBackPressedSupport() {
+        Log.i(TAG, "onBackPressedSupport: ");
+        mPlayer.setVisibility(View.GONE);
+        container.removeView(mPlayer);
         return super.onBackPressedSupport();
     }
 }

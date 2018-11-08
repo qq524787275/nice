@@ -10,6 +10,7 @@
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/root"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -27,27 +28,5 @@
             app:qmui_topbar_left_back_drawable_id="@mipmap/icon_tobar_cancel"
             app:qmui_topbar_title_color="@color/color_grey_333333" />
 
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
-
-            <com.zhuzichu.library.ui.webview.X5WebView
-                android:id="@+id/webview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"></com.zhuzichu.library.ui.webview.X5WebView>
-
-            <ProgressBar
-                android:id="@+id/progress"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="3dp" />
-
-            <com.qmuiteam.qmui.widget.QMUILoadingView
-                android:id="@+id/splash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-        </FrameLayout>
     </LinearLayout>
 </layout>
