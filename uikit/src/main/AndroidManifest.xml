@@ -3,7 +3,7 @@
 
     <application>
         <activity
-            android:name=".preview.PreViewActivity"
+            android:name=".message.activity.WatchPicAndVideoActivity"
             android:theme="@style/AppTransparentTheme" />
     </application>
 </manifest>

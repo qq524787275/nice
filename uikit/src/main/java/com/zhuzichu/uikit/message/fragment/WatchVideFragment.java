@@ -1,8 +1,8 @@
-package com.zhuzichu.uikit.preview.fragment;
-
+package com.zhuzichu.uikit.message.fragment;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
@@ -18,11 +18,13 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.FileDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
 import com.netease.nimlib.sdk.msg.attachment.VideoAttachment;
 import com.netease.nimlib.sdk.msg.constant.AttachStatusEnum;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.observer.action.ActionAttachmentProgress;
@@ -34,28 +36,36 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
-/**
- * Created by wb.zhuzichu18 on 2018/11/5.
- */
-public class PreviewVideoFragment extends PreViewItemFragment {
-    private static final String TAG = "PreviewVideoFragment";
-    private PlayerView mPlayer;
-    private SimpleExoPlayer simpleExoPlayer;
+public class WatchVideFragment extends BaseFragment {
 
-    public static PreViewItemFragment newInstance(IMMessage message) {
+    public interface Extra {
+        String EXTRA_MESSGAE = "extra_messgae";
+    }
+
+    private static final String TAG = "WatchVideFragment";
+    private PlayerView mPlayerView;
+    private SimpleExoPlayer mPlayer;
+    private IMMessage message;
+
+    public static WatchVideFragment newInstance(IMMessage message) {
 
         Bundle args = new Bundle();
         args.putSerializable(Extra.EXTRA_MESSGAE, message);
-        PreViewItemFragment fragment = new PreviewVideoFragment();
+        WatchVideFragment fragment = new WatchVideFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
     @Override
-    public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        super.onEnterAnimationEnd(savedInstanceState);
-        initView();
-        initExo();
+    public Object setLayout() {
+        return R.layout.fragment_watch_video;
+    }
+
+    @Override
+    public void onBindView(@Nullable Bundle savedInstanceState, View rootView) {
+        mPlayerView = rootView.findViewById(R.id.pv);
+        message = (IMMessage) getArguments().getSerializable(Extra.EXTRA_MESSGAE);
+        initPlayer();
         initObserver();
     }
 
@@ -97,13 +107,13 @@ public class PreviewVideoFragment extends PreViewItemFragment {
         RxBus.getIntance().addSubscription(this.getClass().getSimpleName() + message.getUuid(), dispMessageStatus, dispProgress);
     }
 
-    private void initExo() {
-        simpleExoPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(),
+    private void initPlayer() {
+        mPlayer = ExoPlayerFactory.newSimpleInstance(getActivity(),
                 new DefaultRenderersFactory(getActivity()),
                 new DefaultTrackSelector(), new DefaultLoadControl());
-        mPlayer.setPlayer(simpleExoPlayer);
+        mPlayerView.setPlayer(mPlayer);
 
-        simpleExoPlayer.addListener(new Player.EventListener() {
+        mPlayer.addListener(new Player.EventListener() {
             @Override
             public void onPlayerStateChanged(boolean playWhenReady, int playbackState) {
                 Log.i(TAG, "onPlayerStateChanged-----playWhenReady:" + playWhenReady + ",playbackState:" + playbackState);
@@ -141,44 +151,73 @@ public class PreviewVideoFragment extends PreViewItemFragment {
         String path = attachment.getPath();
         if (path != null) {
             ExtractorMediaSource mediaSource = new ExtractorMediaSource.Factory(new FileDataSourceFactory()).createMediaSource(Uri.fromFile(new File(path)));
-            simpleExoPlayer.prepare(mediaSource);
-            mPlayer.setVisibility(View.VISIBLE);
-            simpleExoPlayer.setPlayWhenReady(true);
-            mPlayer.hideController();
+            mPlayer.prepare(mediaSource);
         } else {
             NIMClient.getService(MsgService.class).downloadAttachment(message, false);
         }
     }
 
-    public void initView() {
-        img.setScaleEnabled(false);
-        img.setDoubleTapEnabled(false);
-        img.setVisibility(View.GONE);
-        mPlayer = container.findViewById(R.id.player);
+    @Override
+    public void onLazyInitView(@Nullable Bundle savedInstanceState) {
+        super.onLazyInitView(savedInstanceState);
+        mPlayerView.hideController();
     }
 
     @Override
-    public int getContainer() {
-        return R.layout.layout_preview_video;
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (mPlayer != null) {
+                mPlayerView.onResume();
+            }
+        } else {
+            if (mPlayer != null) {
+                mPlayerView.onPause();
+            }
+        }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (Util.SDK_INT > 23) {
+//            initializePlayer();
+            if (mPlayerView != null) {
+                mPlayerView.onResume();
+            }
+        }
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.i(TAG, "onResume: ");
-        if (simpleExoPlayer != null) {
-            mPlayer.onResume();
+        if (Util.SDK_INT <= 23 || mPlayer == null) {
+//            initializePlayer();
+            if (mPlayerView != null) {
+                mPlayerView.onResume();
+            }
         }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        Log.i(TAG, "onPause: ");
-        if (simpleExoPlayer != null) {
-            simpleExoPlayer.stop();
-            mPlayer.onPause();
+        if (Util.SDK_INT <= 23) {
+            if (mPlayerView != null) {
+                mPlayerView.onPause();
+            }
+            releasePlayer();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (Util.SDK_INT > 23) {
+            if (mPlayerView != null) {
+                mPlayerView.onPause();
+            }
+            releasePlayer();
         }
     }
 
@@ -186,22 +225,14 @@ public class PreviewVideoFragment extends PreViewItemFragment {
     public void onDestroy() {
         super.onDestroy();
         Log.i(TAG, "onDestroy: ");
-        releasePlayer();
         RxBus.getIntance().unSubscribe(this.getClass().getSimpleName() + message.getUuid());
     }
 
     private void releasePlayer() {
-        if (simpleExoPlayer != null) {
-            simpleExoPlayer.release();
-            simpleExoPlayer = null;
+        if (mPlayer != null) {
+            mPlayer.release();
+            mPlayer = null;
         }
     }
 
-    @Override
-    public boolean onBackPressedSupport() {
-        Log.i(TAG, "onBackPressedSupport: ");
-        mPlayer.setVisibility(View.GONE);
-        container.removeView(mPlayer);
-        return super.onBackPressedSupport();
-    }
 }
