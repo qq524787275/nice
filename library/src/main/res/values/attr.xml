@@ -81,7 +81,11 @@
         <attr name="cardExpanded" format="boolean" />
     </declare-styleable>
 
+
+    <attr name="outlineWidth" format="dimension" />
     <attr name="chipViewStyle" format="reference" />
+    <attr name="radius" format="dimension" />
+
     <declare-styleable name="ChipView">
         <attr name="android:checked" />
         <attr name="android:text" />
@@ -90,10 +94,18 @@
         <attr name="android:color" />
         <attr name="android:padding" />
         <attr name="android:strokeColor" />
-        <attr name="outlineWidth" format="dimension" />
+        <attr name="outlineWidth" />
         <attr name="clearIcon" format="reference" />
         <attr name="foreground" format="reference" />
         <attr name="showIcons" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="DownLoadView">
+        <attr name="android:strokeColor" />
+        <attr name="outlineWidth" />
+        <attr name="radius" />
+        <attr name="android:color" />
+        <attr name="android:textColor" />
+        <attr name="android:textSize" />
+    </declare-styleable>
 </resources>
