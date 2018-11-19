@@ -26,7 +26,6 @@ public class ClearableEditTextWithIcon extends FrameLayout {
         this(context, attrs, 0);
     }
 
-
     public ClearableEditTextWithIcon(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         LayoutInflater.from(context).inflate(R.layout.view_clearab_edittext, this);
@@ -36,10 +35,7 @@ public class ClearableEditTextWithIcon extends FrameLayout {
     private void initView() {
         clear = findViewById(R.id.clear);
         edit = findViewById(R.id.edit);
-
         clear.setVisibility(TextUtils.isEmpty(edit.getText().toString()) ? View.INVISIBLE : View.VISIBLE);
-
-
         edit.addTextChangedListener(new TextWatcherWrapper() {
             @Override
             public void afterTextChanged(Editable s) {

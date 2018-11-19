@@ -1,18 +1,16 @@
-package com.zhuzichu.library.widget;
+package com.zhuzichu.library.utils;
 
 import android.content.ActivityNotFoundException;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.provider.MediaStore;
 import android.widget.Toast;
 
-import java.io.File;
+/**
+ * Created by wb.zhuzichu18 on 2018/11/12.
+ */
+public class OpenAnyFileUtils {
 
-public class MapTable {
     /**
      * -- MIME 列表 --
      */
@@ -455,6 +453,19 @@ public class MapTable {
             {"", "*/*"}
     };
 
+    public static void openFile(Context context, String file) {
+        try {
+            Intent intent = new Intent();
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setAction(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse(file),getMIMEType(file));
+            context.startActivity(intent);
+            Intent.createChooser(intent, "请选择对应的软件打开该附件！");
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(context, "没有在系统中找到合适的软件来打开该附件，请去下载对应的打开软件", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     /**
      * --获取文件类型 --
      */
@@ -478,50 +489,5 @@ public class MapTable {
             }
         }
         return type;
-    }
-
-    public static void openFile(Context context, String file) {
-        try {
-            Intent intent = new Intent();
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setAction(Intent.ACTION_VIEW);
-            Uri uri = null;
-            // 支持Android7.0，Android 7.0以后，用了Content Uri 替换了原本的File Uri
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                uri = getImageContentUri(context, file);
-            } else {
-                uri = Uri.fromFile(new File(file));
-            }
-            intent.setDataAndType(uri, MapTable.getMIMEType(file));
-            context.startActivity(intent);
-            Intent.createChooser(intent, "请选择对应的软件打开该附件！");
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(context, "sorry附件不能打开，请下载相关软件！", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private static Uri getImageContentUri(Context context, String filePath) {
-        File imageFile = new File(filePath);
-        Cursor cursor = context.getContentResolver().query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                new String[]{MediaStore.Images.Media._ID},
-                MediaStore.Images.Media.DATA + "=? ",
-                new String[]{filePath}, null);
-
-        if (cursor != null && cursor.moveToFirst()) {
-            int id = cursor.getInt(cursor
-                    .getColumnIndex(MediaStore.MediaColumns._ID));
-            Uri baseUri = Uri.parse("content://media/external/images/media");
-            return Uri.withAppendedPath(baseUri, "" + id);
-        } else {
-            if (imageFile.exists()) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.Images.Media.DATA, filePath);
-                return context.getContentResolver().insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-            } else {
-                return null;
-            }
-        }
     }
 }

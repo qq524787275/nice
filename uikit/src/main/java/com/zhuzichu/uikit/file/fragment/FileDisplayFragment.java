@@ -13,7 +13,7 @@ import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.FileUtils;
-import com.zhuzichu.library.widget.MapTable;
+import com.zhuzichu.library.utils.OpenAnyFileUtils;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentFileDisplayBinding;
 import com.zhuzichu.uikit.file.FileIcons;
@@ -117,7 +117,7 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
         if (!TextUtils.isEmpty(mAttachment.getPath())) {
             mBind.load.setText("用其他软件打开");
             mBind.load.setOnClickListener(view -> {
-                MapTable.openFile(getActivity(), mAttachment.getPath() + "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
+                OpenAnyFileUtils.openFile(getActivity(), mAttachment.getPath() + "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
             });
         } else {
             mBind.load.setText("未下载");
