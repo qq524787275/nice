@@ -20,8 +20,8 @@ public class WorkFragment extends NiceFragment<FragmentWorkBinding> {
     @Override
     public void init(FragmentWorkBinding binding) {
         binding.setColor(ColorManager.getInstance().color);
-        binding.btn.setOnClickListener((view)->{
-
+        binding.btn.setOnClickListener((view) -> {
+            binding.load.start();
         });
     }
 

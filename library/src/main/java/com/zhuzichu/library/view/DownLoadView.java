@@ -13,17 +13,30 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
+import android.view.animation.LinearInterpolator;
 
 import com.qmuiteam.qmui.util.QMUIColorHelper;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.utils.DensityUtils;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by wb.zhuzichu18 on 2018/11/19.
  */
 public class DownLoadView extends View {
 
+    public interface State {
+        //正常状态
+        int NORMAL = 0;
+        //下载状态
+        int LOADING = 1;
+        //下载完成状态
+        int FINISH = 2;
+    }
+
+    private Canvas canvas;
     private int colorPrimary;
     private int backgroundColor;
     private Paint mOutlinePaint;
@@ -34,6 +47,9 @@ public class DownLoadView extends View {
     private int radius;
     private float progress;
     private ObjectAnimator progressAnimator;
+    //当前状态
+    private int state;
+    private DecimalFormat df;
 
     public DownLoadView(Context context) {
         this(context, null);
@@ -49,7 +65,17 @@ public class DownLoadView extends View {
     }
 
     private void init(AttributeSet attrs) {
+        df = new DecimalFormat("#.##");
+        state = State.NORMAL;
         progressAnimator = ObjectAnimator.ofFloat(this, "progress", 0f, 1f);
+        progressAnimator.setDuration(10 * 1000);
+        progressAnimator.setInterpolator(new LinearInterpolator());
+        progressAnimator.addUpdateListener(animation -> {
+            progress = (float) (animation.getAnimatedValue());
+            if (progress == 1f)
+                state = State.FINISH;
+            invalidate();
+        });
 
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.DownLoadView);
         radius = DensityUtils.dip2px(getContext(), typedArray.getDimension(R.styleable.DownLoadView_radius, 25));
@@ -90,19 +116,52 @@ public class DownLoadView extends View {
             });
     }
 
+    public void start() {
+        state = State.LOADING;
+        progressAnimator.start();
+    }
+
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //画边框
-        canvas.drawRoundRect(new RectF(0, 0, w, h), radius, radius, mOutlinePaint);
-        //画底色
-        canvas.drawColor(backgroundColor);
-        //画进度条
-        canvas.drawRoundRect(new RectF(0, 0, w * progress, h), radius, radius, mColorPrimaryPaint);
-        //画百分比
+        this.canvas = canvas;
+        switch (state) {
+            case State.NORMAL:
+                canvas.drawColor(colorPrimary);
+                drawTextCenter("开始下载");
+                setOnClickListener(v -> {
+                    start();
+                });
+                break;
+            case State.FINISH:
+                canvas.drawColor(colorPrimary);
+                drawTextCenter("下载完成");
+                setOnClickListener(v -> {
+                    start();
+                });
+                break;
+            case State.LOADING:
+                //画边框
+                canvas.drawRoundRect(new RectF(0, 0, w, h), radius, radius, mOutlinePaint);
+                //画底色
+                canvas.drawColor(backgroundColor);
+                //画进度条
+                canvas.drawRoundRect(new RectF(0, 0, w * progress, h), radius, radius, mColorPrimaryPaint);
+                //画百分比
+                String text = df.format(progress * 100) + "%";
+                drawTextCenter(text);
+                setOnClickListener(v -> {
+
+                });
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void drawTextCenter(String text) {
         canvas.save();
         canvas.translate(w / 2, h / 2);
-        String text = progress * 100 + "%";
         float textWidth = mColorText.measureText(text);
         float baseLineY = Math.abs(mColorText.ascent() + mColorText.descent()) / 2;
         canvas.drawText(text, -textWidth / 2, baseLineY, mColorText);
