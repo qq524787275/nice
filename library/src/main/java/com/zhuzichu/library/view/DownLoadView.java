@@ -3,6 +3,7 @@ package com.zhuzichu.library.view;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.graphics.Canvas;
 import android.graphics.Outline;
 import android.graphics.Paint;
@@ -19,6 +20,7 @@ import com.qmuiteam.qmui.util.QMUIColorHelper;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.utils.DensityUtils;
+import com.zhuzichu.library.view.layout.StateLayout;
 
 import java.text.DecimalFormat;
 
@@ -93,7 +95,9 @@ public class DownLoadView extends View {
 
         mColorText = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         mColorText.setColor(typedArray.getColor(R.styleable.DownLoadView_android_textColor, Nice.getColor(R.color.white)));
-        mColorText.setTextSize(typedArray.getDimension(R.styleable.DownLoadView_android_textSize, 20));
+
+        int textSize = DensityUtils.dip2px(getContext(), typedArray.getDimension(R.styleable.DownLoadView_android_textSize, 16));
+        mColorText.setTextSize(textSize);
 
         typedArray.recycle();
 
@@ -146,6 +150,7 @@ public class DownLoadView extends View {
                 //画底色
                 canvas.drawColor(backgroundColor);
                 //画进度条
+                mColorPrimaryPaint.setColor(colorPrimary);
                 canvas.drawRoundRect(new RectF(0, 0, w * progress, h), radius, radius, mColorPrimaryPaint);
                 //画百分比
                 String text = df.format(progress * 100) + "%";
@@ -226,5 +231,16 @@ public class DownLoadView extends View {
 
     public void setProgress(float progress) {
         this.progress = progress;
+    }
+
+    public void setColorPrimary(int colorPrimary) {
+        this.colorPrimary = colorPrimary;
+        backgroundColor = QMUIColorHelper.computeColor(colorPrimary, Nice.getColor(R.color.white), 0.5f);
+        invalidate();
+    }
+
+    @BindingAdapter("colorPrimary")
+    public static void setColorPrimary(DownLoadView downLoadView, int color) {
+        downLoadView.setColorPrimary(color);
     }
 }

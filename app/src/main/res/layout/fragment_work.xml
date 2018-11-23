@@ -24,6 +24,7 @@
             android:layout_marginRight="20dp"
             android:clickable="true"
             android:foreground="?attr/selectableItemBackground"
+            app:colorPrimary="@{color.colorPrimary}"
             app:radius="5dp" />
 
         <android.support.v7.widget.AppCompatImageView
