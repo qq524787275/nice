@@ -16,16 +16,35 @@
         android:gravity="center"
         android:orientation="vertical">
 
+        <com.zhuzichu.library.view.DownLoadView
+            android:id="@+id/load"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:clickable="true"
+            android:foreground="?attr/selectableItemBackground"
+            app:colorPrimary="@{color.colorPrimary}"
+            app:radius="5dp" />
+
         <android.support.v7.widget.AppCompatImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/nice_empty" />
+            android:src="@mipmap/nice_empty"
+            android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="暂未开发"
+            android:visibility="gone"
             app:textColor="@{color.textColorPrimary}" />
+
+        <Button
+            android:id="@+id/btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="开始" />
     </LinearLayout>
 </layout>

@@ -14,7 +14,6 @@ import com.zhuzichu.uikit.file.FileIcons;
 import com.zhuzichu.uikit.file.fragment.FileDisplayFragment;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 
-
 /**
  * Created by wb.zhuzichu18 on 2018/10/29.
  */
@@ -42,7 +41,7 @@ public class MsgProviderFile extends MsgProviderBase {
     }
 
     @Override
-    protected void onItemClick(IMMessage msg,MessageMultipItemAdapter.DataBindingViewHolder holder) {
+    protected void onItemClick(IMMessage msg, MessageMultipItemAdapter.DataBindingViewHolder holder) {
         RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
     }
 
