@@ -2,11 +2,7 @@ package com.zhuzichu.uikit.message.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.Editable;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
@@ -19,11 +15,9 @@ import com.zhuzichu.library.action.ActionSoftKeyboard;
 import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
-import com.zhuzichu.library.view.button.StateButton;
 import com.zhuzichu.library.widget.EmojiKeyboard;
 import com.zhuzichu.library.widget.NiceRequestCallback;
 import com.zhuzichu.library.widget.OnClickListener;
-import com.zhuzichu.library.widget.TextWatcherWrapper;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentMessageBinding;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
@@ -44,9 +38,9 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         String EXTRA_SESSION_TYPE = "extra_session_type";
     }
 
-    public EditText mEtMessage;
-    public ImageView mIvMore;
-    public StateButton mSbSend;
+    //    public EditText mEtMessage;
+//    public ImageView mIvMore;
+//    public StateButton mSbSend;
     public MessageMultipItemAdapter mAdapter;
     public LinearLayoutManager mLayoutMamnager;
     // p2p对方Account或者群id
@@ -74,7 +68,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
     @Override
     public void init(FragmentMessageBinding binding) {
         binding.setColor(ColorManager.getInstance().color);
-        binding.layoutInput.setColor(ColorManager.getInstance().color);
+//        binding.layoutInput.setColor(ColorManager.getInstance().color);
         mBind = binding;
         parseExtras();
         initView();
@@ -163,30 +157,30 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
      */
     private void initListener() {
         //文本输入框监听事件
-        mEtMessage.addTextChangedListener(new TextWatcherWrapper() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(s.toString())) {
-                    mSbSend.setVisibility(View.VISIBLE);
-                    mIvMore.setVisibility(View.GONE);
-                } else {
-                    mSbSend.setVisibility(View.GONE);
-                    mIvMore.setVisibility(View.VISIBLE);
-                }
-            }
-        });
+//        mEtMessage.addTextChangedListener(new TextWatcherWrapper() {
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if (!TextUtils.isEmpty(s.toString())) {
+//                    mSbSend.setVisibility(View.VISIBLE);
+//                    mIvMore.setVisibility(View.GONE);
+//                } else {
+//                    mSbSend.setVisibility(View.GONE);
+//                    mIvMore.setVisibility(View.VISIBLE);
+//                }
+//            }
+//        });
 
         //发送
-        mSbSend.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onNoDoubleClick(View view) {
-                IMMessage textMessage = createTextMessage(mEtMessage.getText().toString());
-                sendMessage(textMessage, false);
-                mAdapter.addData(textMessage);
-                smoothToBottom();
-                mEtMessage.setText("");
-            }
-        });
+//        mSbSend.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onNoDoubleClick(View view) {
+//                IMMessage textMessage = createTextMessage(mEtMessage.getText().toString());
+//                sendMessage(textMessage, false);
+//                mAdapter.addData(textMessage);
+//                smoothToBottom();
+//                mEtMessage.setText("");
+//            }
+//        });
 
         mBind.tvNewMessage.setOnClickListener(new OnClickListener() {
             @Override
@@ -213,13 +207,14 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
     }
 
     private void initView() {
+        mBind.input.initContentView(mBind.layoutContent);
         //findView
-        {
-            mEtMessage = mBind.layoutInput.etInputMessage;
-            mIvMore = mBind.layoutInput.ivMore;
-            mSbSend = mBind.layoutInput.sbSend;
-        }
-        mEmojiKeyboard = new EmojiKeyboard(getActivity(), mEtMessage, mBind.layoutPanelWarpper, mIvMore, mBind.layoutContent, mBind.listMessage);
+//        {
+//            mEtMessage = mBind.layoutInput.etInputMessage;
+//            mIvMore = mBind.layoutInput.ivMore;
+//            mSbSend = mBind.layoutInput.sbSend;
+//        }
+//        mEmojiKeyboard = new EmojiKeyboard(getActivity(), mEtMessage, mBind.layoutPanelWarpper, mIvMore, mBind.layoutContent, mBind.listMessage);
         mLayoutMamnager = new LinearLayoutManager(getContext());
         mBind.listMessage.setLayoutManager(mLayoutMamnager);
         mBind.listMessage.requestDisallowInterceptTouchEvent(false);
@@ -231,7 +226,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
 
     @Override
     public boolean onBackPressedSupport() {
-        if (!mEmojiKeyboard.interceptBackPress()) {
+        if (!mBind.input.interceptBackPress()) {
             return false;
         }
         return true;
@@ -268,7 +263,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         int position = mAdapter.getData().size() - 1;
         if (position >= 0) {
             mLayoutMamnager.scrollToPositionWithOffset(position, 0);
-            mEtMessage.post(() -> mBind.listMessage.scrollBy(0, -1));
+//            mEtMessage.post(() -> mBind.listMessage.scrollBy(0, -1));
         }
     }
 
@@ -279,7 +274,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         int position = mAdapter.getData().size() - 1;
         if (position < 0)
             return;
-        mEtMessage.postDelayed(() -> mBind.listMessage.scrollToPosition(position), 200);
+//        mEtMessage.postDelayed(() -> mBind.listMessage.scrollToPosition(position), 200);
 //        mEtMessage.postDelayed(() -> mBind.listMessage.smoothScrollToPosition(position), 200);
 //        mEtMessage.postDelayed(() -> mLayoutMamnager.scrollToPosition(position), 200);
 //        mEtMessage.postDelayed(() -> mLayoutMamnager.scrollToPositionWithOffset(position,0), 200);

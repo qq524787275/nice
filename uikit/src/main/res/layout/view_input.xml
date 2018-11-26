@@ -1,132 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <data>
-
-        <variable
-            name="color"
-            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
-    </data>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{color.bottomBackgroud}"
-        android:orientation="vertical">
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
-        <RelativeLayout
+        <FrameLayout
+            android:id="@+id/layout_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/layout_input"
+            android:animateLayoutChanges="true">
+
+            <ImageView
+                android:id="@+id/voice"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:src="@drawable/msg_input_voice" />
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/layout_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@+id/layout_right"
+            android:layout_toRightOf="@+id/layout_left"
+            android:animateLayoutChanges="true"
+            android:gravity="center_vertical">
 
-            <FrameLayout
-                android:id="@+id/layout_left"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/layout_input"
-                android:animateLayoutChanges="true">
-
-                <ImageView
-                    android:id="@+id/voice_text_switch_iv"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:adjustViewBounds="true"
-                    android:clickable="true"
-                    android:src="@drawable/msg_input_voice" />
-            </FrameLayout>
-
-
-            <FrameLayout
-                android:id="@+id/layout_input"
+            <EditText
+                android:id="@+id/input_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@+id/layout_right"
-                android:layout_toRightOf="@+id/layout_left"
-                android:animateLayoutChanges="true"
-                android:gravity="center_vertical">
+                android:background="@drawable/edit_bg"
+                android:gravity="center_vertical"
+                android:hint="点击输入文字"
+                android:lineSpacingExtra="4dp"
+                android:maxLines="4"
+                android:paddingLeft="10dp"
+                android:paddingTop="6dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp"
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                android:visibility="visible" />
 
-                <EditText
-                    android:id="@+id/et_inputMessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/edit_bg"
-                    android:gravity="center_vertical"
-                    android:hint="点击输入文字"
-                    android:lineSpacingExtra="4dp"
-                    android:maxLines="4"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="6dp"
-                    android:paddingRight="10dp"
-                    android:paddingBottom="10dp"
-                    android:textColor="@{color.textColorPrimary}"
-                    android:textColorHint="@{color.textColorSeconday}"
-                    android:textCursorDrawable="@null"
-                    android:textSize="16sp"
-                    android:visibility="visible" />
+            <com.zhuzichu.library.view.button.StateButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="按住 说话"
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:sb_normalBackgroundColor="@color/white"
+                app:sb_normalStrokeColor="@color/color_grey_999999"
+                app:sb_normalStrokeWidth="1dp"
+                app:sb_normalTextColor="@color/color_grey_999999"
+                app:sb_pressedBackgroundColor="@color/color_grey_999999"
+                app:sb_pressedTextColor="@android:color/white"
+                app:sb_radius="5dp" />
 
-                <com.zhuzichu.library.view.button.StateButton
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clickable="true"
-                    android:gravity="center"
-                    android:padding="5dp"
-                    android:text="按住 说话"
-                    android:textSize="15sp"
-                    android:visibility="gone"
-                    app:sb_normalBackgroundColor="@color/white"
-                    app:sb_normalStrokeColor="@color/color_grey_999999"
-                    app:sb_normalStrokeWidth="1dp"
-                    app:sb_normalTextColor="@color/color_grey_999999"
-                    app:sb_pressedBackgroundColor="@color/color_grey_999999"
-                    app:sb_pressedTextColor="@android:color/white"
-                    app:sb_radius="5dp" />
-
-            </FrameLayout>
+        </FrameLayout>
 
 
-            <FrameLayout
-                android:id="@+id/layout_right"
+        <FrameLayout
+            android:id="@+id/layout_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/layout_input"
+            android:layout_alignParentRight="true"
+            android:animateLayoutChanges="true">
+
+            <com.zhuzichu.library.view.button.StateButton
+                android:id="@+id/send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/layout_input"
-                android:layout_alignParentRight="true"
-                android:animateLayoutChanges="true">
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:padding="5dp"
+                android:text="发送"
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:sb_normalTextColor="@android:color/white"
+                app:sb_pressedBackgroundColor="@color/color_grey_999999"
+                app:sb_pressedTextColor="@android:color/white"
+                app:sb_radius="5dp"
+                app:sb_unableBackgroundColor="@color/color_grey_999999"
+                app:sb_unableTextColor="@android:color/white" />
 
-                <com.zhuzichu.library.view.button.StateButton
-                    android:id="@+id/sb_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:clickable="true"
-                    android:padding="5dp"
-                    android:text="发送"
-                    android:textSize="15sp"
-                    android:visibility="gone"
-                    app:sb_normalBackgroundColor="@{color.colorPrimary}"
-                    app:sb_normalTextColor="@android:color/white"
-                    app:sb_pressedBackgroundColor="@color/color_grey_999999"
-                    app:sb_pressedTextColor="@android:color/white"
-                    app:sb_radius="5dp"
-                    app:sb_unableBackgroundColor="@color/color_grey_999999"
-                    app:sb_unableTextColor="@android:color/white" />
+            <ImageView
+                android:id="@+id/plus"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:src="@drawable/msg_input_plus"
+                android:visibility="visible" />
+        </FrameLayout>
+    </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/iv_more"
-                    android:layout_width="35dp"
-                    android:layout_height="35dp"
-                    android:adjustViewBounds="true"
-                    android:clickable="true"
-                    android:src="@drawable/msg_input_plus"
-                    android:visibility="visible" />
-            </FrameLayout>
-        </RelativeLayout>
+    <LinearLayout
+        android:id="@+id/layout_panel_warpper"
+        style="@style/Panel"
+        android:visibility="gone">
+
+        <include
+            android:id="@+id/layout_panel"
+            layout="@layout/view_emoji_panel" />
     </LinearLayout>
-</layout>
+</LinearLayout>

@@ -68,20 +68,12 @@
         </FrameLayout>
 
 
-        <include
-            android:id="@+id/layout_input"
-            layout="@layout/view_input" />
-
-        <LinearLayout
-            android:id="@+id/layout_panel_warpper"
-            style="@style/Panel"
-            android:visibility="gone">
-
-            <include
-                android:id="@+id/layout_panel"
-                layout="@layout/view_emoji_panel" />
-        </LinearLayout>
-
+        <com.zhuzichu.uikit.widget.InputView
+            android:id="@+id/input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:inputBackgroundColor="@{color.bottomBackgroud}"
+            app:inputTextColor="@{color.textColorPrimary}"
+            app:sendColor="@{color.colorPrimary}" />
     </LinearLayout>
-
 </layout>
