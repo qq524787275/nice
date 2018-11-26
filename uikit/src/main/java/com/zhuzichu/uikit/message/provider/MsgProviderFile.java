@@ -1,25 +1,18 @@
 package com.zhuzichu.uikit.message.provider;
 
 import android.text.format.Formatter;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.netease.nimlib.sdk.msg.attachment.FileAttachment;
-import com.netease.nimlib.sdk.msg.attachment.MsgAttachment;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.comment.bus.RxBus;
-import com.zhuzichu.library.ui.webview.activity.BrowserActivity;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.file.FileIcons;
 import com.zhuzichu.uikit.file.fragment.FileDisplayFragment;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 
 /**
  * Created by wb.zhuzichu18 on 2018/10/29.
@@ -47,14 +40,9 @@ public class MsgProviderFile extends MsgProviderBase {
         fileSize = itemView.findViewById(R.id.file_size);
     }
 
-    private static final String TAG = "MsgProviderFile";
-
     @Override
     protected void onItemClick(IMMessage msg, MessageMultipItemAdapter.DataBindingViewHolder holder) {
         RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
-        FileAttachment attachment = (FileAttachment) msg.getAttachment();
-        Log.i(TAG, "onItemClick: " + attachment.getOriginalUrl());
-        BrowserActivity.startActivity(fileIcon.getContext(), "https://view.officeapps.live.com/op/embed.aspx?src=" + attachment.getOriginalUrl());
     }
 
     @Override

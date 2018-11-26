@@ -20,7 +20,6 @@ import com.qmuiteam.qmui.util.QMUIColorHelper;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.R;
 import com.zhuzichu.library.utils.DensityUtils;
-import com.zhuzichu.library.view.layout.StateLayout;
 
 import java.text.DecimalFormat;
 
@@ -51,7 +50,11 @@ public class DownLoadView extends View {
     private ObjectAnimator progressAnimator;
     //当前状态
     private int state;
+    private String normalText = "未下载";
+    private String finishText = "下载完成";
     private DecimalFormat df;
+    private OnFilishClickListener onFilishClickListener;
+    private OnNormalClickListener onNormalClickListener;
 
     public DownLoadView(Context context) {
         this(context, null);
@@ -132,16 +135,18 @@ public class DownLoadView extends View {
         switch (state) {
             case State.NORMAL:
                 canvas.drawColor(colorPrimary);
-                drawTextCenter("开始下载");
+                drawTextCenter(normalText);
                 setOnClickListener(v -> {
-                    start();
+                    if (onNormalClickListener != null)
+                        onNormalClickListener.onNormalClick();
                 });
                 break;
             case State.FINISH:
                 canvas.drawColor(colorPrimary);
-                drawTextCenter("下载完成");
+                drawTextCenter(finishText);
                 setOnClickListener(v -> {
-                    start();
+                    if (onFilishClickListener != null)
+                        onFilishClickListener.onFilishClick();
                 });
                 break;
             case State.LOADING:
@@ -231,6 +236,8 @@ public class DownLoadView extends View {
 
     public void setProgress(float progress) {
         this.progress = progress;
+        setState(State.LOADING);
+        invalidate();
     }
 
     public void setColorPrimary(int colorPrimary) {
@@ -242,5 +249,36 @@ public class DownLoadView extends View {
     @BindingAdapter("colorPrimary")
     public static void setColorPrimary(DownLoadView downLoadView, int color) {
         downLoadView.setColorPrimary(color);
+    }
+
+    public void setNormalText(String text) {
+        this.normalText = text;
+        invalidate();
+    }
+
+    public void setFinishText(String text) {
+        this.finishText = text;
+        invalidate();
+    }
+
+    public interface OnNormalClickListener {
+        void onNormalClick();
+    }
+
+    public interface OnFilishClickListener {
+        void onFilishClick();
+    }
+
+    public void setOnFilishClickListener(OnFilishClickListener onFilishClickListener) {
+        this.onFilishClickListener = onFilishClickListener;
+    }
+
+    public void setOnNormalClickListener(OnNormalClickListener onNormalClickListener) {
+        this.onNormalClickListener = onNormalClickListener;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+        invalidate();
     }
 }

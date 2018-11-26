@@ -13,6 +13,7 @@ import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.TimeUtils;
 import com.zhuzichu.library.view.drop.DropFake;
 import com.zhuzichu.library.view.drop.DropManager;
+import com.zhuzichu.library.view.face.NiceFaceView;
 import com.zhuzichu.uikit.BR;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.adapter.ImageAdapter;
@@ -60,8 +61,10 @@ public class SessionListAdapter extends BaseDataBindingAdapter<RecentContact, It
         } else {
             binding.setVariable(BR.onTop, true);
         }
-        helper.setText(R.id.item_content, item.getContent())
-                .setText(R.id.item_time, TimeUtils.getTimeShowString(item.getTime(), false));
+        NiceFaceView faceView = helper.getView(R.id.item_content);
+
+        faceView.setText(item.getContent());
+        helper.setText(R.id.item_time, TimeUtils.getTimeShowString(item.getTime(), false));
         ImageAdapter.loadAvatar(binding.itemAvatar, binding.itemName, item.getContactId(), item.getSessionType());
 
         helper.addOnClickListener(R.id.item_unread);
