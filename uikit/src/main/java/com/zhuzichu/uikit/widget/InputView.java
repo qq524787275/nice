@@ -33,7 +33,7 @@ public class InputView extends LinearLayout {
     private InputMethodManager inputMethodManager;
     private SharedPreferences sharedPreferences;
 
-    private static final String EMOJI_KEYBOARD = "InputView";
+    private static final String EMOJI_KEYBOARD = "EmojiKeyboard";
     private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight";
     private static final int SOFT_KEYBOARD_HEIGHT_DEFAULT = 654;
     private Handler handler;
@@ -108,7 +108,6 @@ public class InputView extends LinearLayout {
         input = findViewById(R.id.input_msg);
         plus = findViewById(R.id.plus);
         send = findViewById(R.id.send);
-
 
         input.addTextChangedListener(new TextWatcherWrapper() {
             @Override
@@ -260,6 +259,17 @@ public class InputView extends LinearLayout {
         input.setTextColor(color);
     }
 
+    public void setSendClickListener(OnClickListener sendClickListener) {
+        send.setOnClickListener(sendClickListener);
+    }
+
+    public String getInputText() {
+        return input.getText().toString();
+    }
+
+    public void cleanInput() {
+        input.setText("");
+    }
 
     @BindingAdapter({"inputBackgroundColor"})
     public static void inputBackgroundColor(InputView view, int color) {
