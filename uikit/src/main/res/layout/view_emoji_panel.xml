@@ -12,17 +12,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:weightSum="4">
 
         <TextView
             style="@style/PanelItem"
-            android:drawableTop="@mipmap/icon_file"
-            android:text="文件" />
+            android:drawableTop="@drawable/msg_photo"
+            android:text="相册" />
 
         <TextView
             style="@style/PanelItem"
-            android:drawableTop="@mipmap/icon_photo"
-            android:text="拍照" />
+            android:drawableTop="@drawable/msg_video"
+            android:text="拍摄" />
+
+        <TextView
+            style="@style/PanelItem"
+            android:drawableTop="@drawable/msg_location"
+            android:text="位置" />
+
     </LinearLayout>
-
 </merge>
