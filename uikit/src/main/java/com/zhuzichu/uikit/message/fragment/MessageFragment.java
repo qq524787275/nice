@@ -188,7 +188,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
     }
 
     private void initView() {
-        mBind.input.initContentView(mBind.layoutContent);
+        mBind.input.initContentView(mBind.layoutContent, this);
         mLayoutMamnager = new LinearLayoutManager(getContext());
         mBind.listMessage.setLayoutManager(mLayoutMamnager);
         mBind.listMessage.requestDisallowInterceptTouchEvent(false);

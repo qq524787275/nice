@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
+        android:animateLayoutChanges="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:paddingTop="8dp"
@@ -24,11 +25,20 @@
 
             <ImageView
                 android:id="@+id/voice"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:clickable="true"
                 android:src="@drawable/msg_input_voice" />
+
+            <ImageView
+                android:id="@+id/keyboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:src="@drawable/msg_input_keyboard"
+                android:visibility="gone" />
         </FrameLayout>
 
 
@@ -38,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@+id/layout_right"
+            android:layout_toLeftOf="@+id/emotion"
             android:layout_toRightOf="@+id/layout_left"
             android:animateLayoutChanges="true"
             android:gravity="center_vertical">
@@ -52,26 +62,24 @@
                 android:hint="点击输入文字"
                 android:lineSpacingExtra="4dp"
                 android:maxLines="4"
-                android:paddingLeft="10dp"
-                android:paddingTop="6dp"
-                android:paddingRight="10dp"
-                android:paddingBottom="10dp"
+                android:padding="6dp"
                 android:textCursorDrawable="@null"
                 android:textSize="16sp"
                 android:visibility="visible" />
 
             <com.zhuzichu.library.view.button.StateButton
+                android:id="@+id/record"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:gravity="center"
-                android:padding="5dp"
+                android:padding="6dp"
                 android:text="按住 说话"
-                android:textSize="15sp"
+                android:textSize="16sp"
                 android:visibility="gone"
                 app:sb_normalBackgroundColor="@color/white"
                 app:sb_normalStrokeColor="@color/color_grey_999999"
-                app:sb_normalStrokeWidth="1dp"
+                app:sb_normalStrokeWidth="0.5dp"
                 app:sb_normalTextColor="@color/color_grey_999999"
                 app:sb_pressedBackgroundColor="@color/color_grey_999999"
                 app:sb_pressedTextColor="@android:color/white"
@@ -79,6 +87,18 @@
 
         </FrameLayout>
 
+
+        <ImageView
+            android:id="@+id/emotion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/layout_input"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/layout_right"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:src="@drawable/msg_input_emotion"
+            android:visibility="visible" />
 
         <FrameLayout
             android:id="@+id/layout_right"
@@ -107,8 +127,8 @@
 
             <ImageView
                 android:id="@+id/plus"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:adjustViewBounds="true"
                 android:clickable="true"
                 android:src="@drawable/msg_input_plus"
@@ -116,13 +136,20 @@
         </FrameLayout>
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/qmui_divider" />
+
     <LinearLayout
         android:id="@+id/layout_panel_warpper"
         style="@style/Panel"
         android:visibility="gone">
 
-        <include
+        <FrameLayout
             android:id="@+id/layout_panel"
-            layout="@layout/view_emoji_panel" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 </LinearLayout>

@@ -37,17 +37,24 @@ public class BrowserActivity extends SwipeBackActivity {
 
     public interface Extra {
         String EXTAR_PATH = "extra_path";
+        String EXTRA_CONTENT_TYPE = "extra_content_type";
     }
 
     protected AgentWeb mAgentWeb;
     private ActivityBrowserBinding mBind;
     private String mPath;
+    private String mContentType;
 
-    public static void startActivity(Context context, String path) {
+    public static void startActivity(Context context, String path, String contentType) {
         Intent intent = new Intent();
         intent.putExtra(Extra.EXTAR_PATH, path);
+        intent.putExtra(Extra.EXTRA_CONTENT_TYPE, contentType);
         intent.setClass(context, BrowserActivity.class);
         context.startActivity(intent);
+    }
+
+    public static void startActivity(Context context, String path) {
+        startActivity(context, path, null);
     }
 
     @Override
@@ -75,6 +82,7 @@ public class BrowserActivity extends SwipeBackActivity {
                 .setSecurityType(AgentWeb.SecurityType.STRICT_CHECK)
                 .setWebLayout(new WebLayout())
                 .setOpenOtherPageWays(DefaultWebClient.OpenOtherPageWays.ASK)//打开其他应用时，弹窗咨询用户是否前往其他应用
+                .additionalHttpHeader("content-type", mContentType)
                 .interceptUnkownUrl() //拦截找不到相关页面的Scheme
                 .createAgentWeb()
                 .ready()
@@ -84,6 +92,7 @@ public class BrowserActivity extends SwipeBackActivity {
 
     private void parseData() {
         mPath = getIntent().getStringExtra(Extra.EXTAR_PATH);
+        mContentType = getIntent().getStringExtra(Extra.EXTRA_CONTENT_TYPE);
     }
 
     private void initTopBar() {

@@ -17,26 +17,37 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.zhuzichu.library.base.BaseFragment;
 import com.zhuzichu.library.utils.ScreenUtils;
 import com.zhuzichu.library.view.button.StateButton;
 import com.zhuzichu.library.widget.TextWatcherWrapper;
 import com.zhuzichu.uikit.R;
+import com.zhuzichu.uikit.message.fragment.MessageEmotionFragment;
+import com.zhuzichu.uikit.message.fragment.MessagePlusFragment;
 
-public class InputView extends LinearLayout {
-    private View contentView;
-    //文本输入框
-    private EditText input;
-    //表情面板
-    private View emojiPanelView;
-    private StateButton send;
-    private View plus;
-    private InputMethodManager inputMethodManager;
-    private SharedPreferences sharedPreferences;
+public class InputView extends LinearLayout implements View.OnClickListener {
+    private View mContentView;
+    private EditText mInput;
+    private View mPanelWarpper;
+    private StateButton mSend;
+    private View mPlus;
+    private View mEmotion;
+    private View mVoice;
+    private View mKeyboard;
+    private StateButton mRecord;
+    private InputMethodManager mInputMethodManager;
+    private SharedPreferences mSharedPreferences;
+    private Handler mHandler;
+    private BaseFragment mFragment;
+    private MessagePlusFragment mPlushFragment;
+    private MessageEmotionFragment mEmotionFragment;
 
     private static final String EMOJI_KEYBOARD = "EmojiKeyboard";
     private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight";
     private static final int SOFT_KEYBOARD_HEIGHT_DEFAULT = 654;
-    private Handler handler;
+
+    //当前id
+    private int currentId;
 
     public InputView(Context context) {
         this(context, null);
@@ -52,11 +63,45 @@ public class InputView extends LinearLayout {
         init();
     }
 
-    public void initContentView(View contentView) {
-        this.contentView = contentView;
+    public void initContentView(View contentView, BaseFragment baseFragment) {
+        this.mContentView = contentView;
+        this.mFragment = baseFragment;
+        mPlushFragment = MessagePlusFragment.newInstance();
+        mEmotionFragment = MessageEmotionFragment.newInstance();
+        //用于弹出表情面板的View
+        mPlus.setOnClickListener(this);
+        mEmotion.setOnClickListener(this);
 
-        this.input.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP && this.emojiPanelView.isShown()) {
+        mVoice.setOnClickListener(v -> {
+            if (mPanelWarpper.isShown()) {
+                hideEmojiPanel(false);
+            } else if (isSoftKeyboardShown()) {
+                hideSoftKeyboard();
+            }
+            mKeyboard.setVisibility(VISIBLE);
+            mVoice.setVisibility(GONE);
+            mRecord.setVisibility(VISIBLE);
+            mInput.setVisibility(GONE);
+        });
+
+        mKeyboard.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mPanelWarpper.isShown()) {
+                    hideEmojiPanel(false);
+                } else if (isSoftKeyboardShown()) {
+                    hideSoftKeyboard();
+                }
+
+                mKeyboard.setVisibility(GONE);
+                mVoice.setVisibility(VISIBLE);
+                mRecord.setVisibility(GONE);
+                mInput.setVisibility(VISIBLE);
+            }
+        });
+
+        this.mInput.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP && mPanelWarpper.isShown()) {
                 lockContentViewHeight();
                 hideEmojiPanel(true);
                 unlockContentViewHeight();
@@ -64,9 +109,9 @@ public class InputView extends LinearLayout {
             return false;
         });
 
-        this.contentView.setOnTouchListener((view, motionEvent) -> {
+        this.mContentView.setOnTouchListener((view, motionEvent) -> {
             if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                if (this.emojiPanelView.isShown()) {
+                if (mPanelWarpper.isShown()) {
                     hideEmojiPanel(false);
                 } else if (isSoftKeyboardShown()) {
                     hideSoftKeyboard();
@@ -74,50 +119,37 @@ public class InputView extends LinearLayout {
             }
             return false;
         });
-        //用于弹出表情面板的View
-        plus.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (InputView.this.emojiPanelView.isShown()) {
-                    lockContentViewHeight();
-                    hideEmojiPanel(true);
-                    unlockContentViewHeight();
-                } else {
-                    if (isSoftKeyboardShown()) {
-                        lockContentViewHeight();
-                        showEmojiPanel();
-                        unlockContentViewHeight();
-                    } else {
-                        showEmojiPanel();
-                    }
-                }
-            }
-        });
-        this.inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        this.sharedPreferences = getContext().getSharedPreferences(EMOJI_KEYBOARD, Context.MODE_PRIVATE);
-        ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        this.handler = new Handler();
 
-        if (!sharedPreferences.contains(KEY_SOFT_KEYBOARD_HEIGHT)) {
-            handler.postDelayed(() -> showSoftKeyboard(true), 200);
+
+        mInputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        mSharedPreferences = getContext().getSharedPreferences(EMOJI_KEYBOARD, Context.MODE_PRIVATE);
+        ((Activity) getContext()).getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mHandler = new Handler();
+
+        if (!mSharedPreferences.contains(KEY_SOFT_KEYBOARD_HEIGHT)) {
+            mHandler.postDelayed(() -> showSoftKeyboard(true), 200);
         }
     }
 
     private void init() {
-        emojiPanelView = findViewById(R.id.layout_panel_warpper);
-        input = findViewById(R.id.input_msg);
-        plus = findViewById(R.id.plus);
-        send = findViewById(R.id.send);
+        mPanelWarpper = findViewById(R.id.layout_panel_warpper);
+        mInput = findViewById(R.id.input_msg);
+        mPlus = findViewById(R.id.plus);
+        mSend = findViewById(R.id.send);
+        mEmotion = findViewById(R.id.emotion);
+        mVoice = findViewById(R.id.voice);
+        mKeyboard = findViewById(R.id.keyboard);
+        mRecord = findViewById(R.id.record);
 
-        input.addTextChangedListener(new TextWatcherWrapper() {
+        mInput.addTextChangedListener(new TextWatcherWrapper() {
             @Override
             public void afterTextChanged(Editable s) {
                 if (!TextUtils.isEmpty(s.toString())) {
-                    send.setVisibility(View.VISIBLE);
-                    plus.setVisibility(View.GONE);
+                    mSend.setVisibility(View.VISIBLE);
+                    mPlus.setVisibility(View.GONE);
                 } else {
-                    send.setVisibility(View.GONE);
-                    plus.setVisibility(View.VISIBLE);
+                    mPlus.setVisibility(View.VISIBLE);
+                    mSend.setVisibility(View.GONE);
                 }
             }
         });
@@ -127,7 +159,7 @@ public class InputView extends LinearLayout {
      * 当点击返回键时需要先隐藏表情面板
      */
     public boolean interceptBackPress() {
-        if (emojiPanelView.isShown()) {
+        if (mPanelWarpper.isShown()) {
             hideEmojiPanel(false);
             return true;
         }
@@ -138,8 +170,8 @@ public class InputView extends LinearLayout {
      * 锁定内容View以防止跳闪
      */
     private void lockContentViewHeight() {
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) contentView.getLayoutParams();
-        layoutParams.height = contentView.getHeight();
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mContentView.getLayoutParams();
+        layoutParams.height = mContentView.getHeight();
         layoutParams.weight = 0;
     }
 
@@ -147,7 +179,7 @@ public class InputView extends LinearLayout {
      * 释放锁定的内容View
      */
     private void unlockContentViewHeight() {
-        handler.postDelayed(() -> ((LinearLayout.LayoutParams) contentView.getLayoutParams()).weight = 1, 200);
+        mHandler.postDelayed(() -> ((LinearLayout.LayoutParams) mContentView.getLayoutParams()).weight = 1, 200);
     }
 
     /**
@@ -164,7 +196,7 @@ public class InputView extends LinearLayout {
         int softInputHeight = availableHeight - displayHeight - ScreenUtils.getStatusBarHeight(((Activity) getContext()));
         if (softInputHeight != 0) {
             // 因为考虑到用户可能会主动调整键盘高度，所以只能是每次获取到键盘高度时都将其存储起来
-            sharedPreferences.edit().putInt(KEY_SOFT_KEYBOARD_HEIGHT, softInputHeight).apply();
+            mSharedPreferences.edit().putInt(KEY_SOFT_KEYBOARD_HEIGHT, softInputHeight).apply();
         }
         return softInputHeight;
     }
@@ -173,7 +205,7 @@ public class InputView extends LinearLayout {
      * 获取本地存储的键盘高度值或者是返回默认值
      */
     private int getSoftKeyboardHeightLocalValue() {
-        return sharedPreferences.getInt(KEY_SOFT_KEYBOARD_HEIGHT, SOFT_KEYBOARD_HEIGHT_DEFAULT);
+        return mSharedPreferences.getInt(KEY_SOFT_KEYBOARD_HEIGHT, SOFT_KEYBOARD_HEIGHT_DEFAULT);
     }
 
     /**
@@ -187,10 +219,10 @@ public class InputView extends LinearLayout {
      * 令编辑框获取焦点并显示键盘
      */
     private void showSoftKeyboard(boolean saveSoftKeyboardHeight) {
-        input.requestFocus();
-        inputMethodManager.showSoftInput(input, 0);
+        mInput.requestFocus();
+        mInputMethodManager.showSoftInput(mInput, 0);
         if (saveSoftKeyboardHeight) {
-            handler.postDelayed(() -> getSoftKeyboardHeight(), 200);
+            mHandler.postDelayed(() -> getSoftKeyboardHeight(), 200);
         }
     }
 
@@ -198,21 +230,29 @@ public class InputView extends LinearLayout {
      * 隐藏键盘
      */
     private void hideSoftKeyboard() {
-        inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
+        mInputMethodManager.hideSoftInputFromWindow(mInput.getWindowToken(), 0);
     }
 
     /**
      * 显示表情面板
      */
-    private void showEmojiPanel() {
+    private void showEmojiPanel(View view) {
+        if (view.getId() == R.id.plus) {
+            //加载MessagePlusFragment
+            mFragment.loadRootFragment(R.id.layout_panel, mPlushFragment, false, true);
+        } else if (view.getId() == R.id.emotion) {
+            //加载MessageEmotionFragment
+            mFragment.loadRootFragment(R.id.layout_panel, mEmotionFragment, false, true);
+        }
+
         int softKeyboardHeight = getSoftKeyboardHeight();
         if (softKeyboardHeight == 0) {
             softKeyboardHeight = getSoftKeyboardHeightLocalValue();
         } else {
             hideSoftKeyboard();
         }
-        emojiPanelView.getLayoutParams().height = softKeyboardHeight;
-        emojiPanelView.setVisibility(View.VISIBLE);
+        mPanelWarpper.getLayoutParams().height = softKeyboardHeight;
+        mPanelWarpper.setVisibility(View.VISIBLE);
         if (emojiPanelVisibilityChangeListener != null) {
             emojiPanelVisibilityChangeListener.onShowEmojiPanel();
         }
@@ -222,8 +262,8 @@ public class InputView extends LinearLayout {
      * 隐藏表情面板，同时指定是否随后开启键盘
      */
     private void hideEmojiPanel(boolean showSoftKeyboard) {
-        if (emojiPanelView.isShown()) {
-            emojiPanelView.setVisibility(View.GONE);
+        if (mPanelWarpper.isShown()) {
+            mPanelWarpper.setVisibility(View.GONE);
             if (showSoftKeyboard) {
                 showSoftKeyboard(false);
             }
@@ -231,6 +271,19 @@ public class InputView extends LinearLayout {
                 emojiPanelVisibilityChangeListener.onHideEmojiPanel();
             }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        com.zhuzichu.library.widget.OnClickListener.noDoubleClick(() -> {
+            if (isSoftKeyboardShown()) {
+                lockContentViewHeight();
+                showEmojiPanel(v);
+                unlockContentViewHeight();
+            } else {
+                showEmojiPanel(v);
+            }
+        });
     }
 
     public interface OnEmojiPanelVisibilityChangeListener {
@@ -247,7 +300,7 @@ public class InputView extends LinearLayout {
     }
 
     public void setSendColor(int color) {
-        send.setNormalBackgroundColor(color);
+        mSend.setNormalBackgroundColor(color);
     }
 
     public void setInputBackgroundColor(int color) {
@@ -256,19 +309,19 @@ public class InputView extends LinearLayout {
 
 
     public void setInputTextColor(int color) {
-        input.setTextColor(color);
+        mInput.setTextColor(color);
     }
 
     public void setSendClickListener(OnClickListener sendClickListener) {
-        send.setOnClickListener(sendClickListener);
+        mSend.setOnClickListener(sendClickListener);
     }
 
     public String getInputText() {
-        return input.getText().toString();
+        return mInput.getText().toString();
     }
 
     public void cleanInput() {
-        input.setText("");
+        mInput.setText("");
     }
 
     @BindingAdapter({"inputBackgroundColor"})
