@@ -5,7 +5,7 @@
 
         <variable
             name="color"
-            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+            type="com.zhuzichu.library.comment.color.ColorConfig" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -43,7 +43,7 @@
                     android:id="@+id/list_message"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:overScrollMode="never"></android.support.v7.widget.RecyclerView>
+                    android:overScrollMode="never" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <com.zhuzichu.library.view.recyclerview.RecyclerFastScroller
