@@ -53,7 +53,7 @@
             android:animateLayoutChanges="true"
             android:gravity="center_vertical">
 
-            <EditText
+            <com.zhuzichu.library.view.face.emoji.EmojiconEditText
                 android:id="@+id/input_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -151,6 +152,7 @@ public class InputView extends LinearLayout implements View.OnClickListener {
                     mPlus.setVisibility(View.VISIBLE);
                     mSend.setVisibility(View.GONE);
                 }
+
             }
         });
     }

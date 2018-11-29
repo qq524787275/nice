@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.view.face.NiceFaceView;
+import com.zhuzichu.library.view.face.emoji.EmojiconTextView;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 
@@ -12,7 +13,7 @@ import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
  * Created by wb.zhuzichu18 on 2018/10/16.
  */
 public class MsgProviderText extends MsgProviderBase {
-    private NiceFaceView textView;
+    private EmojiconTextView textView;
 
 
     @Override
