@@ -10,7 +10,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
-        android:animateLayoutChanges="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:paddingTop="8dp"
@@ -50,7 +49,6 @@
             android:layout_marginRight="8dp"
             android:layout_toLeftOf="@+id/emotion"
             android:layout_toRightOf="@+id/layout_left"
-            android:animateLayoutChanges="true"
             android:gravity="center_vertical">
 
             <com.zhuzichu.library.view.face.emoji.EmojiconEditText
