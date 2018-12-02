@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <declare-styleable name="HeadImageView">
-        <attr name="avatar_size">
-            <enum name="large" value="0" />
-            <enum name="medium" value="1" />
-            <enum name="small" value="2" />
-        </attr>
+        <attr name="android:layout_width" />
+        <attr name="android:layout_height" />
     </declare-styleable>
 </resources>

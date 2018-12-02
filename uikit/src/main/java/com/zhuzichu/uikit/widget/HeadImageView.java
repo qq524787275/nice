@@ -6,15 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.netease.nimlib.sdk.team.model.Team;
 import com.netease.nimlib.sdk.uinfo.model.UserInfo;
 import com.zhuzichu.library.utils.DensityUtils;
+import com.zhuzichu.library.widget.CircleImageView;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.utils.UserInfoUtils;
 
@@ -23,9 +24,10 @@ import com.zhuzichu.uikit.utils.UserInfoUtils;
  */
 public class HeadImageView extends FrameLayout {
 
-    private ImageView avatar;
+    private CircleImageView avatar;
     //尺寸大小
-    private int size;
+    private int w;
+    private int h;
 
     public HeadImageView(@NonNull Context context) {
         this(context, null);
@@ -43,46 +45,36 @@ public class HeadImageView extends FrameLayout {
 
     private void init(AttributeSet attrs) {
         avatar = findViewById(R.id.avatar);
-
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.HeadImageView);
-        //默认尺寸为中号 总共有large-0，medium-1，small-2
-        int sizeValue = typedArray.getInt(R.styleable.HeadImageView_avatar_size, 1);
-        switch (sizeValue) {
-            case 0:
-                size = DensityUtils.dip2px(getContext(), 60);
-                break;
-            case 1:
-                size = DensityUtils.dip2px(getContext(), 50);
-                break;
-            case 2:
-                size = DensityUtils.dip2px(getContext(), 40);
-                break;
-            default:
-                size = DensityUtils.dip2px(getContext(), 40);
-                break;
-        }
+        w = typedArray.getLayoutDimension(R.styleable.HeadImageView_android_layout_width, DensityUtils.dip2px(getContext(), 50));
+        h = typedArray.getLayoutDimension(R.styleable.HeadImageView_android_layout_height, DensityUtils.dip2px(getContext(), 50));
         typedArray.recycle();
+
+        ViewGroup.LayoutParams avatarParams = avatar.getLayoutParams();
+        avatarParams.width = w;
+        avatarParams.height = h;
     }
 
-    private void loadTeamGroupAvatar(Team team) {
-        doLoadImage(team != null ? team.getIcon() : null, R.mipmap.avatar_group, size);
+    public void loadTeamGroupAvatar(Team team) {
+        doLoadImage(team != null ? team.getIcon() : null, R.mipmap.avatar_group);
     }
 
-    private void loadAvatar(String account) {
+    public void loadAvatar(String account) {
         final UserInfo userInfo = UserInfoUtils.getUserInfo(account).get();
-        doLoadImage(userInfo != null ? userInfo.getAvatar() : null, R.mipmap.avatar_default, size);
+        doLoadImage(userInfo != null ? userInfo.getAvatar() : null, R.mipmap.avatar_default);
     }
 
     /**
      * ImageLoader异步加载
      */
-    private void doLoadImage(final String url, final int defaultResId, final int thumbSize) {
-        RequestOptions requestOptions = RequestOptions.bitmapTransform(new CircleCrop())
+    private void doLoadImage(final String url, final int defaultResId) {
+        RequestOptions requestOptions = RequestOptions.overrideOf(w, h)
                 .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
                 .placeholder(defaultResId)
-                .error(defaultResId)
-                .override(thumbSize, thumbSize);
-        Glide.with(getContext().getApplicationContext()).asBitmap()
+                .error(defaultResId);
+
+        Glide.with(getContext().getApplicationContext())
                 .load(url)
                 .apply(requestOptions)
                 .into(avatar);

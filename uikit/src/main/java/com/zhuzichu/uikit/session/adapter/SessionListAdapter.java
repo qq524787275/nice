@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.common.base.Optional;
 import com.google.common.collect.Ordering;
 import com.google.common.primitives.Longs;
+import com.netease.nimlib.sdk.msg.constant.SessionTypeEnum;
 import com.netease.nimlib.sdk.msg.model.RecentContact;
 import com.zhuzichu.library.base.BaseDataBindingAdapter;
 import com.zhuzichu.library.comment.color.ColorManager;
@@ -16,9 +17,10 @@ import com.zhuzichu.library.view.drop.DropManager;
 import com.zhuzichu.library.view.face.NiceFaceView;
 import com.zhuzichu.uikit.BR;
 import com.zhuzichu.uikit.R;
-import com.zhuzichu.uikit.adapter.ImageAdapter;
 import com.zhuzichu.uikit.databinding.ItemRecentSessionBinding;
 import com.zhuzichu.uikit.session.fragment.SessionListFragment;
+import com.zhuzichu.uikit.utils.TeamUtils;
+import com.zhuzichu.uikit.utils.UserInfoUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -65,7 +67,14 @@ public class SessionListAdapter extends BaseDataBindingAdapter<RecentContact, It
 
         faceView.setText(item.getContent());
         helper.setText(R.id.item_time, TimeUtils.getTimeShowString(item.getTime(), false));
-        ImageAdapter.loadAvatar(binding.itemAvatar, binding.itemName, item.getContactId(), item.getSessionType());
+//        ImageAdapter.loadAvatar(binding.itemAvatar, binding.itemName, item.getContactId(), item.getSessionType());
+        if (item.getSessionType() == SessionTypeEnum.P2P) {
+            binding.itemAvatar.loadAvatar(item.getContactId());
+            binding.itemName.setText(UserInfoUtils.getUserName(item.getContactId()).get());
+        } else if (item.getSessionType() == SessionTypeEnum.Team) {
+            binding.itemAvatar.loadTeamGroupAvatar(TeamUtils.getTeam(item.getContactId()).get());
+            binding.itemName.setText(TeamUtils.getTeamName(item.getContactId()).get());
+        }
 
         helper.addOnClickListener(R.id.item_unread);
         int unreadNum = item.getUnreadCount();
