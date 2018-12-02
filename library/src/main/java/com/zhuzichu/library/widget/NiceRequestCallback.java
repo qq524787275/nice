@@ -1,12 +1,14 @@
 package com.zhuzichu.library.widget;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.netease.nimlib.sdk.RequestCallback;
 import com.zhuzichu.library.enmu.ErrorEnmu;
 import com.zhuzichu.library.utils.DialogUtils;
 
 public abstract class NiceRequestCallback<T> implements RequestCallback<T> {
+    private static final String TAG = "NiceRequestCallback";
     private Context mContext;
 
     public void finish() {
@@ -32,7 +34,8 @@ public abstract class NiceRequestCallback<T> implements RequestCallback<T> {
 
     @Override
     public void onException(Throwable exception) {
-        DialogUtils.showInfoDialog(mContext, "数据异常");
+        exception.printStackTrace();
+        Log.i(TAG, "onException: 数据异常");
         finish();
     }
 }
