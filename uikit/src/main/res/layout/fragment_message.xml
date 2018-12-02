@@ -65,6 +65,8 @@
                 android:text="有新消息"
                 android:textColor="@color/white"
                 android:visibility="gone" />
+
+
         </FrameLayout>
 
 

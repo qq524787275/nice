@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -46,9 +47,6 @@ public class InputView extends LinearLayout implements View.OnClickListener {
     private static final String KEY_SOFT_KEYBOARD_HEIGHT = "SoftKeyboardHeight";
     private static final int SOFT_KEYBOARD_HEIGHT_DEFAULT = 654;
 
-    //当前id
-    private int currentId;
-
     public InputView(Context context) {
         this(context, null);
     }
@@ -82,6 +80,9 @@ public class InputView extends LinearLayout implements View.OnClickListener {
             mVoice.setVisibility(GONE);
             mRecord.setVisibility(VISIBLE);
             mInput.setVisibility(GONE);
+
+            mPlus.setVisibility(VISIBLE);
+            mSend.setVisibility(GONE);
         });
 
         mKeyboard.setOnClickListener(new OnClickListener() {
@@ -97,6 +98,15 @@ public class InputView extends LinearLayout implements View.OnClickListener {
                 mVoice.setVisibility(VISIBLE);
                 mRecord.setVisibility(GONE);
                 mInput.setVisibility(VISIBLE);
+                showSoftKeyboard(false);
+
+                if (!TextUtils.isEmpty(mInput.getText().toString())) {
+                    mSend.setVisibility(View.VISIBLE);
+                    mPlus.setVisibility(View.GONE);
+                } else {
+                    mPlus.setVisibility(View.VISIBLE);
+                    mSend.setVisibility(View.GONE);
+                }
             }
         });
 

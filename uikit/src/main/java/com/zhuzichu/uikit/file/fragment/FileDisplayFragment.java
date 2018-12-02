@@ -130,7 +130,7 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
         });
         downLoadView.setFinishText("用其他软件打开");
         downLoadView.setOnFilishClickListener(() -> {
-            OpenAnyFileUtils.openFile(getActivity(), mAttachment.getPath() + "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
+            OpenAnyFileUtils.openFile(getActivity(), mAttachment.getPath() , "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
         });
         if (TextUtils.isEmpty(mAttachment.getPath())) {
             //说明没有下载该文件

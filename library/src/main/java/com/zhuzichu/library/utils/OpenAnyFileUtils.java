@@ -453,12 +453,12 @@ public class OpenAnyFileUtils {
             {"", "*/*"}
     };
 
-    public static void openFile(Context context, String file) {
+    public static void openFile(Context context, String file,String extension) {
         try {
             Intent intent = new Intent();
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setAction(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.parse(file),getMIMEType(file));
+            intent.setDataAndType(Uri.parse(file),getMIMEType(extension));
             context.startActivity(intent);
             Intent.createChooser(intent, "请选择对应的软件打开该附件！");
         } catch (ActivityNotFoundException e) {
