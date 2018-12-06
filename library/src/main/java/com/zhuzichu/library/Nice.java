@@ -2,6 +2,8 @@ package com.zhuzichu.library;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.support.v4.content.ContextCompat;
 
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.DensityUtils;
@@ -52,6 +54,10 @@ public class Nice {
      */
     public static int getColor(int id) {
         return context.getResources().getColor(id);
+    }
+
+    public static ColorStateList getColortateList(int id) {
+        return ContextCompat.getColorStateList(context, id);
     }
 
     public static String getString(int id) {

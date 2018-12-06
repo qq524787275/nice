@@ -9,6 +9,8 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.comment.bus.RxBus;
+import com.zhuzichu.library.ui.webview.activity.BrowserActivity;
+import com.zhuzichu.library.utils.OpenAnyFileUtils;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.file.FileIcons;
 import com.zhuzichu.uikit.file.fragment.FileDisplayFragment;
@@ -42,7 +44,10 @@ public class MsgProviderFile extends MsgProviderBase {
 
     @Override
     protected void onItemClick(IMMessage msg, MessageMultipItemAdapter.DataBindingViewHolder holder) {
-        RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
+//        RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
+        FileAttachment attachment = (FileAttachment) msg.getAttachment();
+        BrowserActivity.startActivity(fileIcon.getContext(), "https://view.officeapps.live.com/op/embed.aspx?src=" + attachment.getOriginalUrl(), OpenAnyFileUtils.getMIMEType("." + attachment.getExtension()));
+
     }
 
     @Override

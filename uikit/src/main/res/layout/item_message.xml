@@ -32,7 +32,7 @@
             app:sb_pressedBackgroundColor="@color/color_gray_d9d9d9"
             app:sb_radius="4dp" />
 
-        <android.support.v7.widget.AppCompatImageView
+        <com.zhuzichu.uikit.widget.HeadImageView
             android:id="@+id/msg_avatar"
             android:layout_width="40dp"
             android:layout_height="40dp"

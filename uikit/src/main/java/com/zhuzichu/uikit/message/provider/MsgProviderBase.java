@@ -4,6 +4,7 @@ package com.zhuzichu.uikit.message.provider;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.provider.BaseItemProvider;
 import com.netease.nimlib.sdk.msg.constant.MsgStatusEnum;
@@ -54,7 +55,7 @@ public abstract class MsgProviderBase extends BaseItemProvider<IMMessage, Messag
         this.itemView = helper.itemView;
         bind.setVariable(BR.color, ColorManager.getInstance().color);
         //加载头像
-        ImageAdapter.loadAvatar(bind.msgAvatar, message.getFromAccount());
+        bind.msgAvatar.loadAvatar(message.getFromAccount());
         //刷新时间
         refreshMsgTime();
         //判断消息是否是自己的

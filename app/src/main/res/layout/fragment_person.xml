@@ -38,13 +38,13 @@
             android:layout_height="90dp"
             android:onClick="@{view->presenter.goDetail(view)}">
 
-            <android.support.v7.widget.AppCompatImageView
+            <com.zhuzichu.uikit.widget.HeadImageView
                 android:id="@+id/avatar"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_alignParentEnd="true"
                 android:layout_margin="15dp"
-                app:avatarUserUrl='@{viewmodel.avatar}' />
+                app:loadAvatarByUrl='@{viewmodel.avatar}' />
 
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="wrap_content"

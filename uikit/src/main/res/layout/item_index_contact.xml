@@ -16,7 +16,7 @@
         android:background="@{color.itemBackground}"
         android:foreground="?attr/selectableItemBackground">
 
-        <android.support.v7.widget.AppCompatImageView
+        <com.zhuzichu.uikit.widget.HeadImageView
             android:id="@+id/item_avatar"
             android:layout_width="42dp"
             android:layout_height="42dp"

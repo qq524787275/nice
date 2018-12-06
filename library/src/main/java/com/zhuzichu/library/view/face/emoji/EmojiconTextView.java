@@ -1,14 +1,15 @@
 package com.zhuzichu.library.view.face.emoji;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
-import com.qmuiteam.qmui.widget.textview.QMUISpanTouchFixTextView;
+import com.qmuiteam.qmui.widget.textview.QMUILinkTextView;
 
 
-public class EmojiconTextView extends QMUISpanTouchFixTextView {
+public class EmojiconTextView extends QMUILinkTextView {
     private int mEmojiconSize;
     private int mEmojiconTextSize;
     private int mTextStart = 0;
@@ -20,17 +21,19 @@ public class EmojiconTextView extends QMUISpanTouchFixTextView {
         init(null);
     }
 
+    public EmojiconTextView(Context context, ColorStateList linkTextColor, ColorStateList linkBgColor) {
+        super(context, linkTextColor, linkBgColor);
+        init(null);
+    }
+
     public EmojiconTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public EmojiconTextView(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        init(attrs);
-    }
 
     private void init(AttributeSet attrs) {
+        setNeedForceEventToParent(true);
         mEmojiconTextSize = (int) getTextSize();
         mEmojiconSize = (int) getTextSize();
         setText(getText());

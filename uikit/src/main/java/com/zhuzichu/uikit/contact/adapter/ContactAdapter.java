@@ -54,7 +54,7 @@ public class ContactAdapter extends IndexableAdapter<FriendBean> {
         ItemIndexContactBinding bind = holderContact.getBind();
         bind.setColor(ColorManager.getInstance().color);
         NimUserInfo item = entity.getUserInfo();
-        ImageAdapter.loadUserAvatar(bind.itemAvatar, item.getAvatar());
+        bind.itemAvatar.loadAvatarByUrl(item.getAvatar());
         bind.itemName.setText(item.getName());
         String onlineStateContent = OnlineStateEventManager.getSimpleDisplay(item.getAccount());
         if (TextUtils.isEmpty(onlineStateContent)) {

@@ -2,6 +2,7 @@ package com.zhuzichu.uikit.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.databinding.BindingAdapter;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -44,7 +45,7 @@ public class HeadImageView extends FrameLayout {
     }
 
     private void init(AttributeSet attrs) {
-        avatar = findViewById(R.id.avatar);
+        avatar = findViewById(R.id.view_avatar);
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.HeadImageView);
         w = typedArray.getLayoutDimension(R.styleable.HeadImageView_android_layout_width, DensityUtils.dip2px(getContext(), 50));
         h = typedArray.getLayoutDimension(R.styleable.HeadImageView_android_layout_height, DensityUtils.dip2px(getContext(), 50));
@@ -64,6 +65,10 @@ public class HeadImageView extends FrameLayout {
         doLoadImage(userInfo != null ? userInfo.getAvatar() : null, R.mipmap.avatar_default);
     }
 
+    public void loadAvatarByUrl(String url) {
+        doLoadImage(url, R.mipmap.avatar_default);
+    }
+
     /**
      * ImageLoader异步加载
      */
@@ -78,5 +83,10 @@ public class HeadImageView extends FrameLayout {
                 .load(url)
                 .apply(requestOptions)
                 .into(avatar);
+    }
+
+    @BindingAdapter("loadAvatarByUrl")
+    public static void loadAvatarByUrl(HeadImageView headImageView, String url) {
+        headImageView.loadAvatarByUrl(url);
     }
 }

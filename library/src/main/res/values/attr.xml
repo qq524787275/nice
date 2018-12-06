@@ -115,4 +115,9 @@
         <attr name="civ_border_overlay" format="boolean" />
         <attr name="civ_fill_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="EmojiconTextView">
+        <attr name="nice_linkBackgroundColor" format="color" />
+        <attr name="nice_linkTextColor" format="color" />
+    </declare-styleable>
 </resources>

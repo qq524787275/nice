@@ -4,7 +4,7 @@
     android:layout_height="wrap_content">
 
     <com.zhuzichu.library.widget.CircleImageView
-        android:id="@+id/avatar"
+        android:id="@+id/view_avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 </FrameLayout>

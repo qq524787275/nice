@@ -5,7 +5,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
-    android:autoLink="phone|email|web"
     android:clickable="false"
     android:gravity="center_vertical|left"
     android:includeFontPadding="false"
