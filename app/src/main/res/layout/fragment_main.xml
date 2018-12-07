@@ -5,7 +5,7 @@
 
         <variable
             name="color"
-            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
+            type="com.zhuzichu.library.comment.color.ColorConfig" />
     </data>
 
     <com.zhuzichu.library.view.reveal.widget.RevealFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -56,6 +56,6 @@
             android:id="@+id/fish"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"></com.zhuzichu.library.view.layout.FishDrawableView>
+            android:visibility="visible" />
     </com.zhuzichu.library.view.reveal.widget.RevealFrameLayout>
 </layout>
