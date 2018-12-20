@@ -60,7 +60,6 @@ public class LocationInfoFragment extends NiceFragment<FragmentLocationInfoBindi
     private String mAddress;
     private MapView mapView;
     private AMap map;
-    private FragmentLocationInfoBinding mBind;
     private float mZoomLevel = 14;
     private boolean first = true;
 
@@ -77,8 +76,8 @@ public class LocationInfoFragment extends NiceFragment<FragmentLocationInfoBindi
     }
 
     @Override
-    public void init(FragmentLocationInfoBinding binding) {
-        mBind = binding;
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         QMUIStatusBarHelper.setStatusBarLightMode(getActivity());
         initStatusBar();
         initTopBar();
@@ -129,8 +128,8 @@ public class LocationInfoFragment extends NiceFragment<FragmentLocationInfoBindi
     }
 
     private void initStatusBar() {
-        _status.autoColorPrimary(false);
-        _status.setColor(R.color.color_white_f8f8f8);
+        mStatus.autoColorPrimary(false);
+        mStatus.setColor(R.color.color_white_f8f8f8);
     }
 
     @Override

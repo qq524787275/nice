@@ -29,7 +29,6 @@ import com.zhuzichu.nice.work.WorkFragment;
 import io.reactivex.disposables.Disposable;
 
 public class MainFragment extends NiceFragment<FragmentMainBinding> {
-    private FragmentMainBinding mBind;
     private NiceFragment[] mFragments = new NiceFragment[4];
     public static final int SESSION = 0;
     public static final int WORK = 1;
@@ -47,14 +46,6 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     @Override
     public Object setLayout() {
         return R.layout.fragment_main;
-    }
-
-    @Override
-    public void init(FragmentMainBinding binding) {
-        mBind = binding;
-        mBind.setColor(ColorManager.getInstance().color);
-        getLifecycle().addObserver(mBind.fish);
-        initView();
     }
 
     @Override
@@ -148,7 +139,10 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        _status.hide();
+        mStatus.hide();
+        mBind.setColor(ColorManager.getInstance().color);
+        getLifecycle().addObserver(mBind.fish);
+        initView();
     }
 
     private void initFragments() {

@@ -46,7 +46,6 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
         String SESSION_ON_TOP = "session_on_top";
     }
 
-    private FragmentSessionListBinding mBinding;
     private SessionListAdapter mAdapter;
     private RecentContactCallBack mCallBack;
     private static final String TAG = "SessionListFragment";
@@ -69,16 +68,12 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        _status.hide();
-    }
-
-    @Override
-    public void init(FragmentSessionListBinding binding) {
-        mBinding = binding;
-        mBinding.setColor(ColorManager.getInstance().color);
+        mStatus.hide();
+        mBind.setColor(ColorManager.getInstance().color);
         initView();
         initListener();
     }
+
 
     private void initData() {
         NIMClient.getService(MsgService.class).queryRecentContacts().setCallback(new NiceRequestCallback<List<RecentContact>>(getActivity()) {
@@ -86,7 +81,7 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
             public void success(List<RecentContact> data) {
                 mData.addAll(data);
                 mAdapter.sortRefresh();
-                mBinding.empty.hide();
+                mBind.empty.hide();
                 initObserve();
             }
         });
@@ -181,8 +176,8 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
     private void initView() {
         mData = new ArrayList<>();
         mAdapter = new SessionListAdapter(mData, mCallBack);
-        mBinding.rvList.setLayoutManager(new LinearLayoutManager(getContext()));
-        mBinding.rvList.setAdapter(mAdapter);
+        mBind.rvList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mBind.rvList.setAdapter(mAdapter);
         EmptyView emptyView = new EmptyView(getActivity());
         emptyView.setTitle(R.string.without_messgae);
         mAdapter.setEmptyView(emptyView);

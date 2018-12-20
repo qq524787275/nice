@@ -21,7 +21,6 @@ import com.zhuzichu.nice.R;
 import com.zhuzichu.nice.databinding.FragmentLoginBinding;
 
 public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
-    private FragmentLoginBinding mBind;
     private QMUITipDialog mLoading;
     private AbortableFuture<LoginInfo> mLoginRequest;
 
@@ -39,14 +38,6 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
         return R.layout.fragment_login;
     }
 
-    @Override
-    public void init(FragmentLoginBinding binding) {
-        mBind = binding;
-        initTopBar();
-        initView();
-        initListener();
-    }
-
     private void initListener() {
         mBind.btnSubmit.setOnClickListener(view -> doLogin(mBind.etAccount.getText().toString(), MD5.getStringMD5(mBind.tietPassword.getText().toString())));
     }
@@ -54,8 +45,11 @@ public class LoginFragment extends NiceFragment<FragmentLoginBinding> {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        _status.setColor(R.color.qmui_config_color_white);
+        mStatus.setColor(R.color.qmui_config_color_white);
         QMUIStatusBarHelper.setStatusBarLightMode(getActivity());
+        initTopBar();
+        initView();
+        initListener();
     }
 
     private void initView() {

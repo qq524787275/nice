@@ -1,7 +1,9 @@
 package com.zhuzichu.nice.contact;
 
 import android.os.Bundle;
-import android.view.Gravity;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.View;
 
 import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.comment.color.ColorManager;
@@ -10,7 +12,6 @@ import com.zhuzichu.nice.databinding.FragmentContactBinding;
 import com.zhuzichu.uikit.contact.ContactListFragment;
 
 public class ContactFragment extends NiceFragment<FragmentContactBinding> {
-    private FragmentContactBinding mBind;
     private ContactListFragment mContactListFragment;
 
 
@@ -29,13 +30,14 @@ public class ContactFragment extends NiceFragment<FragmentContactBinding> {
     }
 
     @Override
-    public void init(FragmentContactBinding binding) {
-        mBind = binding;
-        binding.setColor(ColorManager.getInstance().color);
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mBind.setColor(ColorManager.getInstance().color);
         mContactListFragment = ContactListFragment.newInstance();
         loadRootFragment(R.id.list_contact, mContactListFragment);
         initTopBar();
     }
+
 
     private void initTopBar() {
         mBind.topbar.setTitle(R.string.main_contact);

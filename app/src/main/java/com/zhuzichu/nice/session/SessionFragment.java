@@ -1,7 +1,10 @@
 package com.zhuzichu.nice.session;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.netease.nimlib.sdk.msg.model.RecentContact;
@@ -28,7 +31,6 @@ import com.zhuzichu.uikit.widget.OnlineStatusView;
 import io.reactivex.disposables.Disposable;
 
 public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
-    private FragmentSessionBinding mBind;
     private MenuPopup mMenuPopup;
     private SessionListFragment mSessListFragment;
 
@@ -47,8 +49,8 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
     }
 
     @Override
-    public void init(FragmentSessionBinding binding) {
-        mBind = binding;
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mBind.setColor(ColorManager.getInstance().color);
         getLifecycle().addObserver(mBind.multiport);
         mSessListFragment = SessionListFragment.newInstance();
@@ -58,7 +60,6 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         initObserve();
         initListener();
     }
-
 
     private void initListener() {
         mSessListFragment.setRecentContactCallBack(new SessionListFragment.RecentContactCallBack() {
