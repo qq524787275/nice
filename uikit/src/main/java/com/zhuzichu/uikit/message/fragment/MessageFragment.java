@@ -2,12 +2,7 @@ package com.zhuzichu.uikit.message.fragment;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.text.Editable;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MessageBuilder;
@@ -20,16 +15,13 @@ import com.zhuzichu.library.action.ActionSoftKeyboard;
 import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
+import com.zhuzichu.library.widget.NiceRequestCallback;
+import com.zhuzichu.library.widget.OnClickListener;
+import com.zhuzichu.uikit.R;
+import com.zhuzichu.uikit.databinding.FragmentMessageBinding;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
 import com.zhuzichu.uikit.observer.action.ActionReceiveMessage;
-import com.zhuzichu.library.view.button.StateButton;
-import com.zhuzichu.library.widget.EmojiKeyboard;
-import com.zhuzichu.library.widget.NiceRequestCallback;
-import com.zhuzichu.library.widget.OnClickListener;
-import com.zhuzichu.library.widget.TextWatcherWrapper;
-import com.zhuzichu.uikit.R;
-import com.zhuzichu.uikit.databinding.FragmentMessageBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,23 +31,18 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
-    private static final String TAG = "MessageFragment";
 
     public interface Extras {
         String EXTRA_SESSION_ID = "extra_session_id";
         String EXTRA_SESSION_TYPE = "extra_session_type";
     }
 
-    public EditText mEtMessage;
-    public ImageView mIvMore;
-    public StateButton mSbSend;
     public MessageMultipItemAdapter mAdapter;
     public LinearLayoutManager mLayoutMamnager;
     // p2p对方Account或者群id
     public String mSessionId;
     public SessionTypeEnum mSessionType;
     public FragmentMessageBinding mBind;
-    public EmojiKeyboard mEmojiKeyboard;
     public boolean mIsFirstLoad = true;
 
     @Override
@@ -76,7 +63,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
     @Override
     public void init(FragmentMessageBinding binding) {
         binding.setColor(ColorManager.getInstance().color);
-        binding.layoutInput.setColor(ColorManager.getInstance().color);
         mBind = binding;
         parseExtras();
         initView();
@@ -114,7 +100,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                     if (list.size() == 0)
                         return;
                     mAdapter.addData(list);
-                    Log.i(TAG, "第一回合: ");
                     if (isLastMessageVisible()) {
                         smoothToBottom();
                     } else {
@@ -135,7 +120,6 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
                         if (item.getUuid().equals(msg.getUuid())) {
                             data.set(i,msg);
                             mAdapter.refreshNotifyItemChanged(i);
-                            Log.i(TAG, "第二回合: ");
                             break;
                         }
                     }
@@ -166,29 +150,16 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
      * 初始化监听事件
      */
     private void initListener() {
-        //文本输入框监听事件
-        mEtMessage.addTextChangedListener(new TextWatcherWrapper() {
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (!TextUtils.isEmpty(s.toString())) {
-                    mSbSend.setVisibility(View.VISIBLE);
-                    mIvMore.setVisibility(View.GONE);
-                } else {
-                    mSbSend.setVisibility(View.GONE);
-                    mIvMore.setVisibility(View.VISIBLE);
-                }
-            }
-        });
 
         //发送
-        mSbSend.setOnClickListener(new OnClickListener() {
+        mBind.input.setSendClickListener(new OnClickListener() {
             @Override
             public void onNoDoubleClick(View view) {
-                IMMessage textMessage = createTextMessage(mEtMessage.getText().toString());
+                IMMessage textMessage = createTextMessage(mBind.input.getInputText());
                 sendMessage(textMessage, false);
                 mAdapter.addData(textMessage);
                 smoothToBottom();
-                mEtMessage.setText("");
+                mBind.input.cleanInput();
             }
         });
 
@@ -217,13 +188,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
     }
 
     private void initView() {
-        //findView
-        {
-            mEtMessage = mBind.layoutInput.etInputMessage;
-            mIvMore = mBind.layoutInput.ivMore;
-            mSbSend = mBind.layoutInput.sbSend;
-        }
-        mEmojiKeyboard = new EmojiKeyboard(getActivity(), mEtMessage, mBind.layoutPanelWarpper, mIvMore, mBind.layoutContent, mBind.listMessage);
+        mBind.input.initContentView(mBind.layoutContent, this);
         mLayoutMamnager = new LinearLayoutManager(getContext());
         mBind.listMessage.setLayoutManager(mLayoutMamnager);
         mBind.listMessage.requestDisallowInterceptTouchEvent(false);
@@ -234,7 +199,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
 
     @Override
     public boolean onBackPressedSupport() {
-        if (!mEmojiKeyboard.interceptBackPress()) {
+        if (!mBind.input.interceptBackPress()) {
             return false;
         }
         return true;
@@ -272,7 +237,7 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
         int position = mAdapter.getData().size() - 1;
         if (position >= 0) {
             mLayoutMamnager.scrollToPositionWithOffset(position, 0);
-            mEtMessage.post(() -> mBind.listMessage.scrollBy(0, -1));
+            mBind.listMessage.postDelayed(() -> mBind.listMessage.scrollBy(0, -1), 50);
         }
     }
 
@@ -280,14 +245,10 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
      * 滑动到底
      */
     public void smoothToBottom() {
-        Log.i(TAG, "smoothToBottom: 当前线程:" + Thread.currentThread().getName());
         int position = mAdapter.getData().size() - 1;
         if (position < 0)
             return;
-        mEtMessage.postDelayed(() -> mBind.listMessage.scrollToPosition(position), 200);
-//        mEtMessage.postDelayed(() -> mBind.listMessage.smoothScrollToPosition(position), 200);
-//        mEtMessage.postDelayed(() -> mLayoutMamnager.scrollToPosition(position), 200);
-//        mEtMessage.postDelayed(() -> mLayoutMamnager.scrollToPositionWithOffset(position,0), 200);
+        mBind.listMessage.postDelayed(() -> mBind.listMessage.scrollToPosition(position), 200);
     }
 
     /**
@@ -325,9 +286,5 @@ public class MessageFragment extends NiceSwipeFragment<FragmentMessageBinding> {
     public IMMessage createTextMessage(String text) {
         IMMessage textMessage = MessageBuilder.createTextMessage(mSessionId, mSessionType, text);
         return textMessage;
-    }
-
-    public void clearUnreadCount() {
-        NIMClient.getService(MsgService.class).clearUnreadCount(mSessionId, mSessionType);
     }
 }

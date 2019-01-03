@@ -2,8 +2,8 @@ package com.zhuzichu.uikit.file.fragment;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.util.Log;
-import android.view.View;
 
 import com.netease.nimlib.sdk.NIMClient;
 import com.netease.nimlib.sdk.msg.MsgService;
@@ -14,13 +14,16 @@ import com.zhuzichu.library.base.NiceSwipeFragment;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.utils.FileUtils;
+import com.zhuzichu.library.utils.OpenAnyFileUtils;
+import com.zhuzichu.library.view.DownLoadView;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentFileDisplayBinding;
 import com.zhuzichu.uikit.file.FileIcons;
 import com.zhuzichu.uikit.observer.action.ActionAttachmentProgress;
 import com.zhuzichu.uikit.observer.action.ActionMessageStatus;
 
-import java.io.File;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -31,6 +34,9 @@ import io.reactivex.schedulers.Schedulers;
  * Created by wb.zhuzichu18 on 2018/10/29.
  */
 public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBinding> {
+
+    private DownLoadView downLoadView;
+
     public interface Extra {
         String EXTRA_MESSAGE = "extra_message";
     }
@@ -68,8 +74,9 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                 .map(action -> action.data)
                 .filter(progress -> progress.getUuid().equals(msg.getUuid()))
                 .subscribe(progress -> {
-                    Log.i(TAG, "initObserver: ");
-                    Log.i(TAG, "initObserver ------Total: " + progress.getTotal() + ";-----Transferred:" + progress.getTransferred());
+                    BigDecimal divide = BigDecimal.valueOf(progress.getTransferred()).divide(BigDecimal.valueOf(progress.getTotal()), 2, RoundingMode.UP);
+                    Log.i(TAG, "initObserver: " + divide.floatValue());
+                    downLoadView.setProgress(divide.floatValue());
                 });
 
         Disposable dispMessageStatus = RxBus.getIntance().toObservable(ActionMessageStatus.class)
@@ -78,6 +85,8 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                 .map(action -> action.data)
                 .filter(messgae -> messgae.getUuid().equals(msg.getUuid()))
                 .subscribe(messgae -> {
+                    msg = messgae;
+                    mAttachment = (FileAttachment) messgae.getAttachment();
                     AttachStatusEnum status = messgae.getAttachStatus();
                     switch (status) {
                         case def:
@@ -87,8 +96,8 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
                             Log.i(TAG, "initObserver: transferring");
                             break;
                         case transferred:
-                            FileAttachment attachment = (FileAttachment) messgae.getAttachment();
-                            FileUtils.copyFile(attachment.getPath(), attachment.getPath() + "." + FileIcons.getExtensionName(attachment.getDisplayName().toLowerCase()));
+//                            FileUtils.copyFile(mAttachment.getPath(), mAttachment.getPath() + "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
+                            downLoadView.setState(DownLoadView.State.FINISH);
                             Log.i(TAG, "initObserver: transferred");
                             break;
                         case fail:
@@ -102,7 +111,6 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
 
     @Override
     public void onDestroyView() {
-        mBind.sfv.onStopDisplay();
         super.onDestroyView();
     }
 
@@ -113,18 +121,23 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
     }
 
     private void initView() {
+        downLoadView = mBind.load;
         mBind.fileIcon.setImageResource(FileIcons.bigIcon(mAttachment.getDisplayName()));
         mBind.fileName.setText(mAttachment.getDisplayName());
-        if (!TextUtils.isEmpty(mAttachment.getPath())) {
-            mBind.layoutLoad.setVisibility(View.GONE);
-            mBind.sfv.setVisibility(View.VISIBLE);
-            mBind.sfv.displayFile(new File(mAttachment.getPath()), getExtensionName(mAttachment.getDisplayName()));
+        downLoadView.setNormalText("下载(" + Formatter.formatFileSize(getActivity(), mAttachment.getSize()) + ")");
+        downLoadView.setOnNormalClickListener(() -> {
+            NIMClient.getService(MsgService.class).downloadAttachment(msg, false);
+        });
+        downLoadView.setFinishText("用其他软件打开");
+        downLoadView.setOnFilishClickListener(() -> {
+            OpenAnyFileUtils.openFile(getActivity(), mAttachment.getPath() , "." + FileIcons.getExtensionName(mAttachment.getDisplayName().toLowerCase()));
+        });
+        if (TextUtils.isEmpty(mAttachment.getPath())) {
+            //说明没有下载该文件
+            downLoadView.setState(DownLoadView.State.NORMAL);
         } else {
-            mBind.load.setText("未下载");
-            mBind.load.setEnabled(true);
-            mBind.load.setOnClickListener(view -> {
-                NIMClient.getService(MsgService.class).downloadAttachment(msg, false);
-            });
+            //说明已经下载了改文件
+            downLoadView.setState(DownLoadView.State.FINISH);
         }
     }
 
@@ -132,18 +145,6 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
         super.onEnterAnimationEnd(savedInstanceState);
 
-    }
-
-
-    // 获取文件扩展名
-    public static String getExtensionName(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length() - 1))) {
-                return filename.substring(dot + 1);
-            }
-        }
-        return "";
     }
 
     @Override
@@ -155,5 +156,4 @@ public class FileDisplayFragment extends NiceSwipeFragment<FragmentFileDisplayBi
         mBind.topbar.setTitle("文件预览");
         mBind.topbar.addLeftBackImageButton().setOnClickListener(view -> pop());
     }
-
 }

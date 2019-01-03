@@ -1,6 +1,5 @@
 package com.zhuzichu.uikit.session.fragment;
 
-import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,13 +17,13 @@ import com.zhuzichu.library.base.NiceFragment;
 import com.zhuzichu.library.bean.TempBean;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
+import com.zhuzichu.library.widget.NiceRequestCallback;
 import com.zhuzichu.library.widget.OnClickListener;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.databinding.FragmentSessionListBinding;
 import com.zhuzichu.uikit.observer.action.ActionRecentContact;
 import com.zhuzichu.uikit.search.fragment.SearchFragment;
 import com.zhuzichu.uikit.session.adapter.SessionListAdapter;
-import com.zhuzichu.uikit.session.viewmodel.SessionListViewModel;
 import com.zhuzichu.uikit.widget.EmptyView;
 
 import java.util.ArrayList;
@@ -41,15 +40,12 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SessionListFragment extends NiceFragment<FragmentSessionListBinding> {
 
-    private SessionListViewModel mViewModel;
-
     // 置顶功能可直接使用，也可作为思路，供开发者充分利用RecentContact的tag字段
     public interface Extras {
         //会话置顶key
         String SESSION_ON_TOP = "session_on_top";
     }
 
-    private FragmentSessionListBinding mBinding;
     private SessionListAdapter mAdapter;
     private RecentContactCallBack mCallBack;
     private static final String TAG = "SessionListFragment";
@@ -72,21 +68,22 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        _status.hide();
-    }
-
-    @Override
-    public void init(FragmentSessionListBinding binding) {
-        mBinding = binding;
-        mBinding.setColor(ColorManager.getInstance().color);
-        mViewModel = ViewModelProviders.of(this).get(SessionListViewModel.class);
+        mStatus.hide();
+        mBind.setColor(ColorManager.getInstance().color);
         initView();
         initListener();
-        mViewModel.getLiveSessionList().observe(this, data -> {
-            mData.addAll(data);
-            mAdapter.sortRefresh();
-            mBinding.empty.hide();
-            initObserve();
+    }
+
+
+    private void initData() {
+        NIMClient.getService(MsgService.class).queryRecentContacts().setCallback(new NiceRequestCallback<List<RecentContact>>(getActivity()) {
+            @Override
+            public void success(List<RecentContact> data) {
+                mData.addAll(data);
+                mAdapter.sortRefresh();
+                mBind.empty.hide();
+                initObserve();
+            }
         });
     }
 
@@ -173,14 +170,14 @@ public class SessionListFragment extends NiceFragment<FragmentSessionListBinding
 
     @Override
     public void onEnterAnimationEnd(Bundle savedInstanceState) {
-        mViewModel.loadSessionList();
+        initData();
     }
 
     private void initView() {
         mData = new ArrayList<>();
         mAdapter = new SessionListAdapter(mData, mCallBack);
-        mBinding.rvList.setLayoutManager(new LinearLayoutManager(getContext()));
-        mBinding.rvList.setAdapter(mAdapter);
+        mBind.rvList.setLayoutManager(new LinearLayoutManager(getContext()));
+        mBind.rvList.setAdapter(mAdapter);
         EmptyView emptyView = new EmptyView(getActivity());
         emptyView.setTitle(R.string.without_messgae);
         mAdapter.setEmptyView(emptyView);

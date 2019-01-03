@@ -9,11 +9,12 @@ import com.netease.nimlib.sdk.msg.model.IMMessage;
 import com.zhuzichu.library.Nice;
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.comment.bus.RxBus;
+import com.zhuzichu.library.ui.webview.activity.BrowserActivity;
+import com.zhuzichu.library.utils.OpenAnyFileUtils;
 import com.zhuzichu.uikit.R;
 import com.zhuzichu.uikit.file.FileIcons;
 import com.zhuzichu.uikit.file.fragment.FileDisplayFragment;
 import com.zhuzichu.uikit.message.adapter.MessageMultipItemAdapter;
-
 
 /**
  * Created by wb.zhuzichu18 on 2018/10/29.
@@ -36,14 +37,17 @@ public class MsgProviderFile extends MsgProviderBase {
 
     @Override
     void inflateContentView() {
-        fileIcon = view.findViewById(R.id.file_icon);
-        fileName = view.findViewById(R.id.file_name);
-        fileSize = view.findViewById(R.id.file_size);
+        fileIcon = itemView.findViewById(R.id.file_icon);
+        fileName = itemView.findViewById(R.id.file_name);
+        fileSize = itemView.findViewById(R.id.file_size);
     }
 
     @Override
-    protected void onItemClick(IMMessage msg) {
-        RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
+    protected void onItemClick(IMMessage msg, MessageMultipItemAdapter.DataBindingViewHolder holder) {
+//        RxBus.getIntance().post(new ActionMainStartFragmnet(FileDisplayFragment.newInstance(msg)));
+        FileAttachment attachment = (FileAttachment) msg.getAttachment();
+        BrowserActivity.startActivity(fileIcon.getContext(), "https://view.officeapps.live.com/op/embed.aspx?src=" + attachment.getOriginalUrl(), OpenAnyFileUtils.getMIMEType("." + attachment.getExtension()));
+
     }
 
     @Override

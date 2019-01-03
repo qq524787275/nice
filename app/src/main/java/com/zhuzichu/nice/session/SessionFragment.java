@@ -1,7 +1,10 @@
 package com.zhuzichu.nice.session;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.netease.nimlib.sdk.msg.model.RecentContact;
@@ -13,6 +16,7 @@ import com.zhuzichu.library.bean.CountryBean;
 import com.zhuzichu.library.comment.bus.RxBus;
 import com.zhuzichu.library.comment.color.ColorManager;
 import com.zhuzichu.library.ui.scaner.ScannerFragment;
+import com.zhuzichu.library.ui.webview.activity.BrowserActivity;
 import com.zhuzichu.library.view.popou.MenuPopup;
 import com.zhuzichu.nice.MainFragment;
 import com.zhuzichu.nice.R;
@@ -27,7 +31,6 @@ import com.zhuzichu.uikit.widget.OnlineStatusView;
 import io.reactivex.disposables.Disposable;
 
 public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
-    private FragmentSessionBinding mBind;
     private MenuPopup mMenuPopup;
     private SessionListFragment mSessListFragment;
 
@@ -46,8 +49,8 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
     }
 
     @Override
-    public void init(FragmentSessionBinding binding) {
-        mBind = binding;
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         mBind.setColor(ColorManager.getInstance().color);
         getLifecycle().addObserver(mBind.multiport);
         mSessListFragment = SessionListFragment.newInstance();
@@ -57,7 +60,6 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         initObserve();
         initListener();
     }
-
 
     private void initListener() {
         mSessListFragment.setRecentContactCallBack(new SessionListFragment.RecentContactCallBack() {
@@ -103,11 +105,17 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         RxBus.getIntance().unSubscribe(this);
     }
 
+    private static final String TAG = "SessionFragment";
+
     private void initMenuPopup() {
         mMenuPopup = new MenuPopup(getActivity());
 
         mMenuPopup.addItem("扫一扫", () -> {
             RxBus.getIntance().post(new ActionMainStartFragmnet(ScannerFragment.newInstance(), ActionMainStartFragmnet.getModalAnimations()));
+        });
+
+        mMenuPopup.addItem("打开百度", () -> {
+            BrowserActivity.startActivity(getActivity(), "https://www.baidu.com/");
         });
     }
 
@@ -119,6 +127,7 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
         mBind.topbar.addLeftView(statusView, R.id.topbar_left_online_status);
         mBind.topbar.addRightImageButton(R.mipmap.icon_topbar_overflow, R.id.topbar_right_session_menu)
                 .setOnClickListener(view -> mMenuPopup.show(mBind.topbar));
+
     }
 
 }

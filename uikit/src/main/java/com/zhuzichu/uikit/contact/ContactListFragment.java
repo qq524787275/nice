@@ -2,9 +2,11 @@ package com.zhuzichu.uikit.contact;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
+import android.view.View;
 
 import com.zhuzichu.library.action.ActionMainStartFragmnet;
 import com.zhuzichu.library.base.NiceFragment;
@@ -37,7 +39,6 @@ import me.yokeyword.indexablerv.IndexableLayout;
  * 通讯录
  */
 public class ContactListFragment extends NiceFragment<FragmentContactListBinding> {
-    private FragmentContactListBinding mBind;
     private ContactAdapter mAdapter;
     private ContactViewModel mViewModel;
     private List<FriendBean> mData;
@@ -57,10 +58,9 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
     }
 
     @Override
-    public void init(FragmentContactListBinding binding) {
-        mBind = binding;
-        _status.hide();
-        initView();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mStatus.hide();
         mViewModel = ViewModelProviders.of(this).get(ContactViewModel.class);
         mViewModel.getLiveFriends().observe(this, friendBeans -> {
             mData.clear();
@@ -69,6 +69,7 @@ public class ContactListFragment extends NiceFragment<FragmentContactListBinding
             initObserver();
             subscribeOnlineEvnent(mData);
         });
+        initView();
     }
 
     private void subscribeOnlineEvnent(List<FriendBean> mData) {

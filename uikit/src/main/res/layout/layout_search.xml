@@ -13,7 +13,7 @@
         android:layout_marginBottom="5dp"
         android:padding="5dp"
         app:sl_normalBackgroundColor="@color/color_grey_eaeaea"
-        app:sl_pressedBackgroundColor="@color/color_grey_eaeaea"
+        app:sl_pressedBackgroundColor="#22000000"
         app:sl_radius="5dp">
 
         <LinearLayout

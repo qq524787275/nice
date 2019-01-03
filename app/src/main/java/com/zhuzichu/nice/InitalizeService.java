@@ -4,7 +4,6 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
-import android.support.multidex.MultiDex;
 import android.util.Log;
 
 /**
@@ -36,7 +35,7 @@ public class InitalizeService extends IntentService {
 
     private void performInit() {
         long start = System.currentTimeMillis();
-        MultiDex.install(this.getApplication());
+
         long end = System.currentTimeMillis();
         Log.i(TAG, "performInit: 初始化消耗时间:" + (end - start));
     }

@@ -10,12 +10,12 @@ import android.support.v7.widget.AppCompatImageView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.request.RequestOptions;
 import com.zhuzichu.library.comment.glide.GlideApp;
+import com.zhuzichu.library.utils.FileUtils;
 import com.zhuzichu.uikit.R;
-
-import java.io.File;
 
 public class MsgThumbImageView extends AppCompatImageView {
     public MsgThumbImageView(Context context) {
@@ -105,8 +105,8 @@ public class MsgThumbImageView extends AppCompatImageView {
         setBlendDrawable(maskId);
 
         RequestBuilder builder;
-        if (isGif(ext)) {
-            builder = GlideApp.with(getContext().getApplicationContext()).asGif().load(new File(path));
+        if (FileUtils.isGif(ext)) {
+            builder = GlideApp.with(this).load(path).priority(Priority.HIGH);
         } else {
             RequestOptions options = new RequestOptions()
                     .override(width, height)
@@ -114,19 +114,15 @@ public class MsgThumbImageView extends AppCompatImageView {
                     .placeholder(R.drawable.image_default)
                     .error(R.drawable.image_default);
 
-            builder = GlideApp.with(getContext().getApplicationContext())
-                    .asBitmap()
-                    .apply(options)
-                    .load(new File(path));
+            builder = GlideApp.with(this)
+                    .load(path)
+                    .priority(Priority.HIGH)
+                    .apply(options);
         }
         builder.into(this);
     }
 
     private void setBlendDrawable(int maskId) {
         mask = maskId != 0 ? getResources().getDrawable(maskId) : null;
-    }
-
-    public static boolean isGif(String extension) {
-        return !TextUtils.isEmpty(extension) && extension.toLowerCase().equals("gif");
     }
 }

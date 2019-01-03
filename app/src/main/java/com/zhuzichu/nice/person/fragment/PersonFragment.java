@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
@@ -27,7 +28,6 @@ import com.zhuzichu.nice.person.presenter.PersonPresenter;
 import com.zhuzichu.nice.person.viewmodel.PersonViewModel;
 
 public class PersonFragment extends NiceFragment<FragmentPersonBinding> {
-    private FragmentPersonBinding mBind;
     private PersonViewModel mViewModel;
 
     public static PersonFragment newInstance() {
@@ -40,12 +40,12 @@ public class PersonFragment extends NiceFragment<FragmentPersonBinding> {
     }
 
     @Override
-    public void init(FragmentPersonBinding binding) {
-        binding.setColor(ColorManager.getInstance().color);
-        binding.setPresenter(getPresenter());
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mBind.setColor(ColorManager.getInstance().color);
+        mBind.setPresenter(getPresenter());
         mViewModel = ViewModelProviders.of(this).get(PersonViewModel.class);
-        binding.setViewmodel(mViewModel);
-        mBind = binding;
+        mBind.setViewmodel(mViewModel);
         initTopBar();
     }
 
@@ -58,7 +58,7 @@ public class PersonFragment extends NiceFragment<FragmentPersonBinding> {
 
             @Override
             public void goSetting(View view) {
-                RxBus.getIntance().post(new ActionMainStartFragmnet(SettingFragment.newInstance() ));
+                RxBus.getIntance().post(new ActionMainStartFragmnet(SettingFragment.newInstance()));
             }
 
             @Override

@@ -22,7 +22,7 @@
         android:background="@{onTop?color.itemBackgroundDark:color.itemBackground}"
         android:foreground="?attr/selectableItemBackground">
 
-        <android.support.v7.widget.AppCompatImageView
+        <com.zhuzichu.uikit.widget.HeadImageView
             android:id="@+id/item_avatar"
             android:layout_width="50dp"
             android:layout_height="50dp"
@@ -44,7 +44,7 @@
             app:textColor="@{color.textColorPrimary}"
             tools:text="姓名" />
 
-        <android.support.v7.widget.AppCompatTextView
+        <com.zhuzichu.library.view.face.NiceFaceView
             android:id="@+id/item_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

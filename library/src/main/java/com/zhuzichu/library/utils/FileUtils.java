@@ -17,6 +17,7 @@ public class FileUtils {
      * KB与Byte的倍数
      */
     public static final int KB = 1024;
+
     /**
      * 重命名文件.
      */
@@ -241,5 +242,9 @@ public class FileUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean isGif(String extension) {
+        return !TextUtils.isEmpty(extension) && extension.toLowerCase().equals("gif");
     }
 }

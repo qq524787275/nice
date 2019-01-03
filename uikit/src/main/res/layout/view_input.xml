@@ -1,90 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <data>
-
-        <variable
-            name="color"
-            type="com.zhuzichu.library.comment.color.ColorConfig"></variable>
-    </data>
-
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@{color.bottomBackgroud}"
-        android:orientation="vertical">
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
+        <FrameLayout
+            android:id="@+id/layout_left"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp">
+            android:layout_alignBottom="@+id/layout_input"
+            android:animateLayoutChanges="true">
 
             <ImageView
-                android:id="@+id/voice_text_switch_iv"
+                android:id="@+id/voice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/et_inputMessage"
                 android:adjustViewBounds="true"
-                android:src="@mipmap/icon_voice" />
+                android:clickable="true"
+                android:src="@drawable/msg_input_voice" />
 
-            <EditText
-                android:id="@+id/et_inputMessage"
+            <ImageView
+                android:id="@+id/keyboard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:src="@drawable/msg_input_keyboard"
+                android:visibility="gone" />
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:id="@+id/layout_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_toLeftOf="@+id/emotion"
+            android:layout_toRightOf="@+id/layout_left"
+            android:gravity="center_vertical">
+
+            <com.zhuzichu.library.view.face.emoji.EmojiconEditText
+                android:id="@+id/input_msg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_toLeftOf="@+id/layout_right"
-                android:layout_toRightOf="@+id/voice_text_switch_iv"
                 android:background="@drawable/edit_bg"
                 android:gravity="center_vertical"
                 android:hint="点击输入文字"
                 android:lineSpacingExtra="4dp"
                 android:maxLines="4"
                 android:padding="6dp"
-                android:textColor="@{color.textColorPrimary}"
-                android:textColorHint="@{color.textColorSeconday}"
-                android:textSize="16sp" />
+                android:textCursorDrawable="@null"
+                android:textSize="16sp"
+                android:visibility="visible" />
 
-            <FrameLayout
-                android:id="@+id/layout_right"
+            <com.zhuzichu.library.view.button.StateButton
+                android:id="@+id/record"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="6dp"
+                android:text="按住 说话"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:sb_normalBackgroundColor="@color/white"
+                app:sb_normalStrokeColor="@color/color_grey_999999"
+                app:sb_normalStrokeWidth="0.5dp"
+                app:sb_normalTextColor="@color/color_grey_999999"
+                app:sb_pressedBackgroundColor="@color/color_grey_999999"
+                app:sb_pressedTextColor="@android:color/white"
+                app:sb_radius="5dp" />
+
+        </FrameLayout>
+
+
+        <ImageView
+            android:id="@+id/emotion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/layout_input"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@+id/layout_right"
+            android:adjustViewBounds="true"
+            android:clickable="true"
+            android:src="@drawable/msg_input_emotion"
+            android:visibility="visible" />
+
+        <FrameLayout
+            android:id="@+id/layout_right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/layout_input"
+            android:layout_alignParentRight="true"
+            android:animateLayoutChanges="true">
+
+            <com.zhuzichu.library.view.button.StateButton
+                android:id="@+id/send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/et_inputMessage"
-                android:layout_alignParentRight="true">
+                android:layout_gravity="center_horizontal"
+                android:clickable="true"
+                android:padding="5dp"
+                android:text="发送"
+                android:textSize="15sp"
+                android:visibility="gone"
+                app:sb_normalTextColor="@android:color/white"
+                app:sb_pressedBackgroundColor="@color/color_grey_999999"
+                app:sb_pressedTextColor="@android:color/white"
+                app:sb_radius="5dp"
+                app:sb_unableBackgroundColor="@color/color_grey_999999"
+                app:sb_unableTextColor="@android:color/white" />
 
-                <com.zhuzichu.library.view.button.StateButton
-                    android:id="@+id/sb_send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:clickable="true"
-                    android:padding="5dp"
-                    android:text="发送"
-                    android:textSize="15sp"
-                    android:visibility="gone"
-                    app:sb_normalBackgroundColor="@{color.colorPrimary}"
-                    app:sb_normalTextColor="@android:color/white"
-                    app:sb_pressedBackgroundColor="@color/color_grey_999999"
-                    app:sb_pressedTextColor="@android:color/white"
-                    app:sb_radius="5dp"
-                    app:sb_unableBackgroundColor="@color/color_grey_999999"
-                    app:sb_unableTextColor="@android:color/white" />
+            <ImageView
+                android:id="@+id/plus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:adjustViewBounds="true"
+                android:clickable="true"
+                android:src="@drawable/msg_input_plus"
+                android:visibility="visible" />
+        </FrameLayout>
+    </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/iv_more"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:clickable="true"
-                    android:src="@mipmap/icon_more"
-                    android:visibility="visible" />
-            </FrameLayout>
-        </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@drawable/qmui_divider" />
+
+    <LinearLayout
+        android:id="@+id/layout_panel_warpper"
+        style="@style/Panel"
+        android:visibility="gone">
+
+        <FrameLayout
+            android:id="@+id/layout_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
-</layout>
+</LinearLayout>

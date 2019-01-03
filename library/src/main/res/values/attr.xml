@@ -81,7 +81,11 @@
         <attr name="cardExpanded" format="boolean" />
     </declare-styleable>
 
+
+    <attr name="outlineWidth" format="dimension" />
     <attr name="chipViewStyle" format="reference" />
+    <attr name="radius" format="dimension" />
+
     <declare-styleable name="ChipView">
         <attr name="android:checked" />
         <attr name="android:text" />
@@ -90,10 +94,30 @@
         <attr name="android:color" />
         <attr name="android:padding" />
         <attr name="android:strokeColor" />
-        <attr name="outlineWidth" format="dimension" />
+        <attr name="outlineWidth" />
         <attr name="clearIcon" format="reference" />
         <attr name="foreground" format="reference" />
         <attr name="showIcons" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="DownLoadView">
+        <attr name="android:strokeColor" />
+        <attr name="outlineWidth" />
+        <attr name="radius" />
+        <attr name="android:color" />
+        <attr name="android:textColor" />
+        <attr name="android:textSize" />
+    </declare-styleable>
+
+    <declare-styleable name="CircleImageView">
+        <attr name="civ_border_width" format="dimension" />
+        <attr name="civ_border_color" format="color" />
+        <attr name="civ_border_overlay" format="boolean" />
+        <attr name="civ_fill_color" format="color" />
+    </declare-styleable>
+
+    <declare-styleable name="EmojiconTextView">
+        <attr name="nice_linkBackgroundColor" format="color" />
+        <attr name="nice_linkTextColor" format="color" />
+    </declare-styleable>
 </resources>

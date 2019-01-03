@@ -35,7 +35,7 @@ public class AndroidBug5497Workaround {
         //如果两次高度不一致
         if (usableHeightNow != usableHeightPrevious) {
             //将计算的可视高度设置成视图的高度  修复在Android 19 版本下 布局异常
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 frameLayoutParams.height = usableHeightNow;
             } else {
                 frameLayoutParams.height = usableHeightNow - QMUIStatusBarHelper.getStatusbarHeight(Nice.context);
