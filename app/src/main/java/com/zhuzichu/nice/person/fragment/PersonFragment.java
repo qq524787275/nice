@@ -53,7 +53,7 @@ public class PersonFragment extends NiceFragment<FragmentPersonBinding> {
         return new PersonPresenter() {
             @Override
             public void goDetail(View view) {
-                Toast.makeText(_mActivity, "去详情", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "去详情", Toast.LENGTH_SHORT).show();
             }
 
             @Override

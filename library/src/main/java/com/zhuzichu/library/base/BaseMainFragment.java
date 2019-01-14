@@ -17,10 +17,10 @@ public abstract class BaseMainFragment extends BaseFragment {
     @Override
     public boolean onBackPressedSupport() {
         if (System.currentTimeMillis() - TOUCH_TIME < WAIT_TIME) {
-            _mActivity.finish();
+            mActivity.finish();
         } else {
             TOUCH_TIME = System.currentTimeMillis();
-            Toast.makeText(_mActivity, getResources().getString(R.string.press_again_exit), Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, getResources().getString(R.string.press_again_exit), Toast.LENGTH_SHORT).show();
         }
         return true;
     }

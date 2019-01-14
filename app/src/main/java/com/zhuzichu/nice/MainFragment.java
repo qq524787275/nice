@@ -112,10 +112,10 @@ public class MainFragment extends NiceFragment<FragmentMainBinding> {
     private void initView() {
 
         mBind.bottomBar
-                .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon0, getString(R.string.main_session)))
-                .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon1, getString(R.string.main_work)))
-                .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon2, getString(R.string.main_contact)))
-                .addItem(new BottomBarTab(_mActivity, R.mipmap.main_tab_icon3, getString(R.string.main_person)));
+                .addItem(new BottomBarTab(mActivity, R.mipmap.main_tab_icon0, getString(R.string.main_session)))
+                .addItem(new BottomBarTab(mActivity, R.mipmap.main_tab_icon1, getString(R.string.main_work)))
+                .addItem(new BottomBarTab(mActivity, R.mipmap.main_tab_icon2, getString(R.string.main_contact)))
+                .addItem(new BottomBarTab(mActivity, R.mipmap.main_tab_icon3, getString(R.string.main_person)));
 
         mBind.bottomBar.setOnTabSelectedListener(new BottomBar.OnTabSelectedListener() {
             @Override
