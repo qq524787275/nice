@@ -24,7 +24,6 @@ public class WorkFragment extends NiceFragment<FragmentWorkBinding> {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mBind.setColor(ColorManager.getInstance().color);
-        mBind.btn.setOnClickListener(v -> mBind.load.start());
     }
 
     @Override

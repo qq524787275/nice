@@ -93,7 +93,7 @@ public class SessionFragment extends NiceFragment<FragmentSessionBinding> {
 
 
     private void initObserve() {
-        Disposable disposable = RxBus.getIntance().doSubscribe(CountryBean.class, bean -> Toast.makeText(_mActivity, bean.getLabel(), Toast.LENGTH_SHORT).show());
+        Disposable disposable = RxBus.getIntance().doSubscribe(CountryBean.class, bean -> Toast.makeText(mActivity, bean.getLabel(), Toast.LENGTH_SHORT).show());
 
 
         RxBus.getIntance().addSubscription(this, disposable);

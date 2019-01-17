@@ -20,7 +20,7 @@ import me.yokeyword.fragmentation.anim.FragmentAnimator;
 
 public abstract class BaseFragment extends Fragment implements ISupportFragment {
     final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
-    protected FragmentActivity _mActivity;
+    protected FragmentActivity mActivity;
 
     public abstract Object setLayout();
 
@@ -44,9 +44,8 @@ public abstract class BaseFragment extends Fragment implements ISupportFragment 
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mDelegate.onAttach(activity);
-        _mActivity = mDelegate.getActivity();
+        mActivity = mDelegate.getActivity();
     }
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
